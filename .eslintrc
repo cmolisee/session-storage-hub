@@ -1,0 +1,26 @@
+{
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+    },
+    "rules": {
+        "arrow-body-style": ["error", "always"],
+        "curly": "error",
+        "default-case": "error",
+        "eqeqeq": "error",
+        "no-nested-ternary": "error",
+        "one-var": ["error", "always"],
+        "prefer-const": "error",
+        "array-bracket-newline": ["error", "always"],
+        "array-bracket-spacing": ["error", "always"],
+        "arrow-parens": ["error", "always"],
+        "block-spacing": ["error", "never"],
+        "arrow-spacing": ["error", { "before": true, "after": true }],
+        "comma-dangle": ["error", "always"],
+        "quotes": ["error", "single"],
+    }
+}

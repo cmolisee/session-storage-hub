@@ -1,0 +1,29 @@
+{
+    "manifest_version": 3,
+    "name": "Session Storage Utilities",
+    "description": "Utilities for session storage.",
+    "version": "1.0.0",
+    "default_locale": "en",
+    "author": "molisee.cody@gmail.com",
+    "background": {
+        "service_worker": "service-worker.js"
+      },
+    "icons": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-64.png",
+      "128": "icons/icon-96.png"
+    },
+    "action": {
+      "default_popup": "popup/popup.html"
+    },
+    "host_permissions": [
+      "https://developer.chrome.com/*"
+    ],
+    "permissions": [
+        "tabs",
+        "activeTab",
+        "debugger",
+        "storage"
+      ],
+  }
