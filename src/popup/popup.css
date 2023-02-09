@@ -1,0 +1,156 @@
+:root {
+    --bg-color: #403d39;
+    --text-color: #ccc5b9;
+    --border-color: #252422;
+    --orange: #f46036;
+    --green: #1b998b;
+    --blue: #5aa9e6;
+
+}
+
+* {
+    color: var(--text-color);
+}
+
+body {
+    background-color: var(--bg-color);
+    width: 35rem;
+}
+
+.extUtil {
+}
+
+.extUtil__title,
+.extUtil__author {
+    margin: 0.325rem auto;
+}
+
+.extUtil__notificationBar {
+    display: flex;
+    border: 2px solid var(--text-color);
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.extUtil__notification {
+    display: flex;
+    padding: 0.3125rem;
+    align-items: center;
+}
+
+.extUtil__notificationIcon {
+    height: 100%;
+    width: 3rem;
+    display: flex;
+    border-right: 3px solid var(--orange);
+    align-items: center;
+    margin-right: 1rem;
+    padding: 0 0.825rem;
+    justify-content: center;
+}
+
+.extUtil__notificationIcon i {
+    width: 1.5rem;
+	height: 1.5rem;
+	background-size: cover;
+	background-repeat: no-repeat;
+	display: inline-block;
+	background-image: url("../icons/notification-48.png");
+}
+
+.extUtil__notificationText {
+    color: var(--orange);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.extUtil__content {}
+
+.extUtil__contentInfo {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.extUtil__tabItem {
+    display: flex;
+    flex-direction: column;
+}
+
+.extUtil__tabItemControls {
+    margin: 0.625rem 0;
+}
+
+.extUtil__tabItemContent {
+    display: none;
+    margin: 0.25rem;
+    border: 1px solid var(--text-color);
+    padding: 0.325rem;
+}
+
+.extUtil__tabItemContent em {
+    margin-bottom: 0.25rem;
+}
+
+.extUtil__table {
+    display: grid;
+    grid-template-areas: "list view";
+    grid-template-columns: 2fr 6fr;
+}
+
+.extUtil__tableList {
+    grid-area: list;
+    border-right: 1px solid var(--text-color);
+    padding: 0.325rem;
+}
+
+.extUtil__ssItem {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 0;
+    font-size: 0.825rem;
+}
+
+.extUtil__tableView {
+    grid-area: view;
+    margin-left: 1rem;
+    font-size: 0.825rem
+}
+
+.note {
+    font-style: italic;
+    margin: 1rem 0;
+}
+
+.btn {
+    background-color: transparent;
+    border: 2px solid var(--text-color);
+    border-radius: 0.325rem;
+    color: var(--text-color);
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 800;
+    padding: 0.25rem 1rem;
+    margin: 0 0.325rem;
+    text-align: center;
+}
+
+.btn--toggle {
+    background-color: var(--orange);
+    color: var(--bg-color);
+    border-color: var(--orange);
+}
+
+.btn--toggle:hover {
+    background-color: transparent;
+    color: var(--orange);
+}
+
+.btn--copy:hover {
+    border-color: var(--green);
+    color: var(--green);
+}
+
+.btn--paste:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+}

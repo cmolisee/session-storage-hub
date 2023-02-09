@@ -5,7 +5,7 @@
     },
     "parserOptions": {
         "ecmaVersion": "latest",
-        "sourceType": "module",
+        "sourceType": "module"
     },
     "rules": {
         "arrow-body-style": ["error", "always"],
@@ -21,6 +21,6 @@
         "block-spacing": ["error", "never"],
         "arrow-spacing": ["error", { "before": true, "after": true }],
         "comma-dangle": ["error", "always"],
-        "quotes": ["error", "single"],
+        "quotes": ["error", "single"]
     }
 }

@@ -1,23 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="color-scheme"
+            content="light dark" />
+        <meta
+            name="theme-color"
+            content="#ffffff"
+            media="(prefers-color-scheme: light)" />
+        <meta
+            name="theme-color"
+            content="#232323"
+            media="(prefers-color-scheme: dark)" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-<head>
-    <meta charset="utf-8">
-    <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#232323" media="(prefers-color-scheme: dark)">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="options.css" />
 
-    <link rel="stylesheet" type="text/css" href="options.css">
+        <script
+            type="text/javascript"
+            src="options.js"></script>
+    </head>
 
-    <script type="text/javascript" src="options.js"></script>
-</head>
-
-<body>
-    <div class="popupContainer">
-        <h1>Session Storage Utilities</h1>
-        <h4>By Cody M.</h4>
-    </div>
-</body>
-
+    <body>
+        <div class="optionsContainer">
+            <h1>Options</h1>
+            <label>
+                <input
+                    type="checkbox"
+                    id="check1" />
+                <span data-i18n="option a"></span>
+            </label>
+            <label>
+                <input
+                    type="checkbox"
+                    id="check2" />
+                <span data-i18n="option b"></span>
+            </label>
+        </div>
+    </body>
 </html>

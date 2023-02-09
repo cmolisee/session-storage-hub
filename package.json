@@ -1,27 +1,30 @@
 {
-  "name": "session-storage-browser-extension",
-  "version": "1.0.0",
-  "description": "Browser extension for session storage utilities.",
-  "main": "index.js",
-  "repository": "https://github.com/cmolisee/session-storage-browser-extension.git",
-  "author": "codymolisee <cody.molisee@creditone.com>",
-  "license": "MIT",
-  "private": false,
-  "scripts": {
-    "lint": "eslint --fix --ext .js .",
-    "format": "prettier --write .",
-    "zip": "zip -r dist/$npm_package_name-$npm_package_version.zip src"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "eslint": "^8.33.0",
-    "husky": "^8.0.3",
-    "prettier": "^2.8.4",
-    "pretty-quick": "^3.1.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
+    "name": "session-storage-browser-extension",
+    "version": "1.0.0",
+    "description": "Browser extension for session storage utilities.",
+    "main": "index.js",
+    "repository": "https://github.com/cmolisee/session-storage-browser-extension.git",
+    "author": "codymolisee <cody.molisee@creditone.com>",
+    "license": "MIT",
+    "private": false,
+    "type": "module",
+    "scripts": {
+        "lint": "eslint --fix --ext .js .",
+        "format": "prettier --write .",
+        "zip": "cd tooling/ && ./zip.sh $npm_package_name $npm_package_version"
+    },
+    "dependencies": {
+        "json-viewer-js": "^1.0.8"
+    },
+    "devDependencies": {
+        "eslint": "^8.33.0",
+        "husky": "^8.0.3",
+        "prettier": "^2.8.4",
+        "pretty-quick": "^3.1.3"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "pretty-quick --staged"
+        }
     }
-  }
 }

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="color-scheme"
+            content="light dark" />
+        <meta
+            name="theme-color"
+            content="#ffffff"
+            media="(prefers-color-scheme: light)" />
+        <meta
+            name="theme-color"
+            content="#232323"
+            media="(prefers-color-scheme: dark)" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="popup.css" />
+    </head>
+
+    <body>
+        <div class="extUtil">
+            <h1 class="extUtil__title">Session Storage Utilities</h1>
+            <p class="extUtil__author">By Cody M.</p>
+
+            <!-- notification bar at top under title to contain notification for things like
+                    what tabs ss is currently coppied -->
+            <div class="extUtil__notificationBar">
+                <div class="extUtil__notification">
+                    <div class="extUtil__notificationIcon"><i></i></div>
+                    <div class="extUtil__notificationText">This text is to notify you that the session storage content was coppied!</div>
+                </div>
+            </div>
+            <div class="extUtil__content">
+                <div class="extUtil__contentInfo">
+                    Available Tabs <em>(Click the button to display each tabs session storage information)</em>
+                </div>
+                <div class="extUtil__tabItem">
+                    <div class="extUtil__tabItemControls">
+                        <button class="btn btn--toggle" type="button">
+                            Tab 1
+                        </button>
+                        <button class="btn btn--copy" type="button">
+                            Copy
+                        </button>
+                        <button class="btn btn--paste" type="button">
+                            Paste
+                        </button>
+                    </div>
+                    <div class="extUtil__tabItemContent">
+                        <p class="note">Use the checkboxes to include or exclude the corresponding session storage object/item.</p>
+                        <div class="extUtil__table">
+                            <div class="extUtil__tableList">
+                                <div class="extUtil__ssItem">
+                                    <input type="checkbox" id="ssItem1" name="ssItem1" value="true" checked>
+                                    <label for="ssItem1">ss-item-1</label>
+                                </div>
+                                <div class="extUtil__ssItem">
+                                    <input type="checkbox" id="ssItem2" name="ssItem2" value="true" checked>
+                                    <label for="ssItem2">ss-item-2</label>
+                                </div>
+                                <div class="extUtil__ssItem">
+                                    <input type="checkbox" id="ssItem3" name="ssItem3" value="true" checked>
+                                    <label for="ssItem3">ss-item-3</label>
+                                </div>
+                                <div class="extUtil__ssItem">
+                                    <input type="checkbox" id="ssItem4" name="ssItem4" value="true" checked>
+                                    <label for="ssItem4">ss-item-4</label>
+                                </div>
+                            </div>
+                            <div class="extUtil__tableView"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- vertical list of buttons where each row has tab name, copy, and paste -->
+                <!-- can click on tab to show that tabs ss items -->
+                <!-- additional content opens down -->
+                <!-- can check on/off any items to conditionally copy them -->
+            </div>
+        </div>
+    </body>
+    <script type="module" src="popup.js"></script>
+</html>
