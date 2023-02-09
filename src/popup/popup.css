@@ -5,7 +5,6 @@
     --orange: #f46036;
     --green: #1b998b;
     --blue: #5aa9e6;
-
 }
 
 * {
@@ -51,11 +50,11 @@ body {
 
 .extUtil__notificationIcon i {
     width: 1.5rem;
-	height: 1.5rem;
-	background-size: cover;
-	background-repeat: no-repeat;
-	display: inline-block;
-	background-image: url("../icons/notification-48.png");
+    height: 1.5rem;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: inline-block;
+    background-image: url('../icons/notification-48.png');
 }
 
 .extUtil__notificationText {
@@ -64,7 +63,8 @@ body {
     font-weight: 500;
 }
 
-.extUtil__content {}
+.extUtil__content {
+}
 
 .extUtil__contentInfo {
     font-size: 0.875rem;
@@ -93,7 +93,7 @@ body {
 
 .extUtil__table {
     display: grid;
-    grid-template-areas: "list view";
+    grid-template-areas: 'list view';
     grid-template-columns: 2fr 6fr;
 }
 
@@ -113,7 +113,7 @@ body {
 .extUtil__tableView {
     grid-area: view;
     margin-left: 1rem;
-    font-size: 0.825rem
+    font-size: 0.825rem;
 }
 
 .note {

@@ -7,48 +7,58 @@
 // key
 // value
 
+export default function JSONViewer(config,) {
+    this.config = Object.assign({ data: {}, parentEle: null, }, config,);
 
-function JSONViewer (data, parentEle) {
-    if (!parentElement) throw new Error('JSONViewer object requires the parentEle argument...');
-
-    this.data = data || {};
-    this.parentEle = parentEle
+    if (this.config.parentEle === null) {
+        throw new Error('JSONViewer object requires the parentEle argument...',);
+    }
     this.render();
 }
 
 JSONViewer.prototype.render = function () {
-    const obj = this.data
+    const obj = this.config.data;
+    const parentEle = this.config.parentEle;
 
+    console.log(obj,);
+    console.log(parentEle,);
+    // this.recursiveParse(obj, parentEle);
+};
 
-    // recursive iteration
+JSONViewer.prototype.recursiveParse = function (obj, element,) {
+    const jsonObjEle = document.createElement('div',);
+    jsonObjEle.classList.add('jsonObj',);
+    element.appendChild(jsonObjEle,);
 
-    // for each item
-        // recursively render the key then value
-}
-
-JSONViewer.prototype.recursiveParse = function (obj, element) {
     for (var key in obj) {
-        // create the element for key
-        // add the key to the element
-        
-        // if value is an object do this
-        if (typeof obj[key] == "object" && obj[key] !== null) {
-            this.recursiveParse(obj[key]);
+        const keyEle = this.createKeyEle(key,);
+        jsonObjEle.appendChild(keyEle,);
+
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+            this.recursiveParse(obj[key], keyEle,);
         } else {
-            // create the object for the value
-            // add the value to the element
+            keyEle.appendChild(this.createValueEle(obj[key],),);
         }
     }
-}
+};
 
-JSONViewer.prototype.createKeyEle = function (val) {
-    // create key element from val
-    // might need extra argument for handling the toggle of the element
-}
+JSONViewer.prototype.createKeyEle = function (val,) {
+    const keyEle = document.createElement('div',);
 
-JSONViewer.prototype.createValueEle = function (val) {
-    // create value element from val
-    // might need extra argument for handling the toggle of the element
-}
+    keyEle.innerHTML = val;
+    keyEle.classList.add('jsonKey',);
 
+    return keyEle;
+};
+
+JSONViewer.prototype.createValueEle = function (val,) {
+    const valEle = document.createElement('div',);
+
+    valEle.innerHTML = val;
+    valEle.classList.add('jsonVal',);
+
+    return valEle;
+};
+
+// handle arrays
 // toggle value - adds event listener to toggle the value
