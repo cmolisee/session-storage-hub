@@ -20,32 +20,43 @@ JSONViewer.prototype.render = function () {
     const obj = this.config.data;
     const parentEle = this.config.parentEle;
 
-    console.log(obj,);
-    console.log(parentEle,);
-    // this.recursiveParse(obj, parentEle);
+    this.recursiveParse(obj, parentEle);
 };
 
 JSONViewer.prototype.recursiveParse = function (obj, element,) {
-    const jsonObjEle = document.createElement('div',);
-    jsonObjEle.classList.add('jsonObj',);
-    element.appendChild(jsonObjEle,);
-
     for (var key in obj) {
+        const objEle = this.createObjEle();
+        element.appendChild(objEle);
+
+        if (element === this.config.parentEle) {
+            objEle.classList.remove('hidden');
+        }
+
         const keyEle = this.createKeyEle(key,);
-        jsonObjEle.appendChild(keyEle,);
+        objEle.appendChild(keyEle,);
 
         if (typeof obj[key] === 'object' && obj[key] !== null) {
             this.recursiveParse(obj[key], keyEle,);
         } else {
-            keyEle.appendChild(this.createValueEle(obj[key],),);
+            objEle.appendChild(this.createValueEle(obj[key] || "null",),);
         }
     }
 };
 
-JSONViewer.prototype.createKeyEle = function (val,) {
+JSONViewer.prototype.createObjEle = function () {
+    const jsonObjEle = document.createElement('div',);
+
+    jsonObjEle.classList.add('jsonObj',);
+    jsonObjEle.classList.add('hidden');
+    this.addToggleListener(jsonObjEle);
+    
+    return jsonObjEle;
+}
+
+JSONViewer.prototype.createKeyEle = function (key,) {
     const keyEle = document.createElement('div',);
 
-    keyEle.innerHTML = val;
+    keyEle.innerHTML = key;
     keyEle.classList.add('jsonKey',);
 
     return keyEle;
@@ -60,5 +71,23 @@ JSONViewer.prototype.createValueEle = function (val,) {
     return valEle;
 };
 
-// handle arrays
-// toggle value - adds event listener to toggle the value
+
+JSONViewer.prototype.addToggleListener = function (element,) {
+    element.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (this.classList.contains('active')) {
+            const childObjElems = this.querySelectorAll('.jsonObj');
+            childObjElems.forEach((child) => {
+                child.classList.remove('active');
+                child.classList.add('hidden');
+            });
+            this.classList.remove('active');
+        } else {
+            const immediateChildElems = this.querySelector('.jsonKey').children;
+            Array.from(immediateChildElems).forEach(child => child.classList.remove('hidden'));
+            this.classList.add('active');
+        }
+    });
+};

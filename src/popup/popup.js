@@ -2,17 +2,17 @@ import JSONViewer from '../utils/json-viewer.js';
 
 console.log('it is working...',);
 
-const buttonEle = document.querySelector('button.btn--toggle',),
- contentEle = document.querySelector('.extUtil__tabItemContent',),
- viewEle = document.querySelector('.extUtil__tableView',);
+// const buttonEle = document.querySelector('button.btn--toggle',),
+//  contentEle = document.querySelector('.extUtil__tabItemContent',),
+const viewEle = document.querySelector('.extUtil__tableView',);
 
-buttonEle.addEventListener('click', function () {
-    if (window.getComputedStyle(contentEle,).display === 'none') {
-        contentEle.style.display = 'block';
-    } else {
-        contentEle.style.display = 'none';
-    }
-},);
+// buttonEle.addEventListener('click', function () {
+//     if (window.getComputedStyle(contentEle,).display === 'none') {
+//         contentEle.style.display = 'block';
+//     } else {
+//         contentEle.style.display = 'none';
+//     }
+// },);
 
 const testJson = `{
 "example1": [

@@ -16,8 +16,17 @@ body {
     width: 35rem;
 }
 
-.extUtil {
+.hidden {
+    display: none !important;
 }
+
+.note {
+    font-style: italic;
+    font-size: 0.8rem;
+    margin: 0.325rem 0;
+}
+
+/* .extUtil {} */
 
 .extUtil__title,
 .extUtil__author {
@@ -26,8 +35,9 @@ body {
 
 .extUtil__notificationBar {
     display: flex;
-    border: 2px solid var(--text-color);
+    /* border: 1px solid var(--text-color); */
     border-radius: 0.5rem;
+    margin-top: 2rem;
     margin-bottom: 2rem;
 }
 
@@ -43,8 +53,8 @@ body {
     display: flex;
     border-right: 3px solid var(--orange);
     align-items: center;
-    margin-right: 1rem;
-    padding: 0 0.825rem;
+    margin-right: 0.5rem;
+    /* padding: 0 0.25rem; */
     justify-content: center;
 }
 
@@ -63,12 +73,12 @@ body {
     font-weight: 500;
 }
 
-.extUtil__content {
-}
+/* .extUtil__content {} */
 
 .extUtil__contentInfo {
     font-size: 0.875rem;
     margin-bottom: 0.5rem;
+    margin-left: 0.325rem;
 }
 
 .extUtil__tabItem {
@@ -81,7 +91,7 @@ body {
 }
 
 .extUtil__tabItemContent {
-    display: none;
+    /* display: none; */
     margin: 0.25rem;
     border: 1px solid var(--text-color);
     padding: 0.325rem;
@@ -116,9 +126,32 @@ body {
     font-size: 0.825rem;
 }
 
-.note {
-    font-style: italic;
-    margin: 1rem 0;
+.jsonObj {
+    display: flex;
+    cursor: pointer;
+}
+
+.jsonObj > * {
+    margin-left: 1rem;
+}
+
+.jsonObj:has(> .jsonKey > .jsonVal) {
+    flex-direction: row;
+}
+
+.jsonObj:has(> .jsonKey > .jsonObj) {
+    flex-direction: column;
+}
+.jsonObj {
+    display: flex;
+}
+
+.jsonKey:has(+ .jsonVal)::after {
+    content: ":"
+}
+
+.jsonKey:has(> .jsonObj.hidden)::after {
+    content: "\00a0 ..."
 }
 
 .btn {
@@ -134,7 +167,7 @@ body {
     text-align: center;
 }
 
-.btn--toggle {
+/* .btn--toggle {
     background-color: var(--orange);
     color: var(--bg-color);
     border-color: var(--orange);
@@ -143,7 +176,7 @@ body {
 .btn--toggle:hover {
     background-color: transparent;
     color: var(--orange);
-}
+} */
 
 .btn--copy:hover {
     border-color: var(--green);
