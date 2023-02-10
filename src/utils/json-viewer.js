@@ -1,12 +1,3 @@
-// create script for viewing a json object in html
-
-// string
-// int
-// boolean
-
-// key
-// value
-
 export default function JSONViewer(config,) {
     this.config = Object.assign({ data: {}, parentEle: null, }, config,);
 
