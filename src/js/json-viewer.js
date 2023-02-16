@@ -15,7 +15,9 @@ JSONViewer.prototype.render = function () {
 };
 
 JSONViewer.prototype.recursiveParse = function (obj, element,) {
-    for (var key in obj) {
+    var parsed = parseObject(obj);
+
+    if (Array.isArray(parsed)) {
         const objEle = this.createObjEle();
         element.appendChild(objEle);
 
@@ -23,14 +25,42 @@ JSONViewer.prototype.recursiveParse = function (obj, element,) {
             objEle.classList.remove('hidden');
         }
 
-        const keyEle = this.createKeyEle(key,);
-        objEle.appendChild(keyEle,);
-
-        if (typeof obj[key] === 'object' && obj[key] !== null) {
-            this.recursiveParse(obj[key], keyEle,);
+        if (typeof obj[0] === 'object') {
+            obj.forEach((childObj) => {
+                this.recursiveParse(childObj, keyEle);
+            });
         } else {
-            objEle.appendChild(this.createValueEle(obj[key] || "null",),);
+            obj.forEach((item) => {
+                objEle.appendChild(this.createValueEle(item || "null",),);
+            });
         }
+    } else if (typeof parsed === 'object') {
+        for (var key in parsed) {
+            const objEle = this.createObjEle();
+            element.appendChild(objEle);
+    
+            if (element === this.config.parentEle) {
+                objEle.classList.remove('hidden');
+            }
+    
+            const keyEle = this.createKeyEle(key,);
+            objEle.appendChild(keyEle,);
+    
+            if (typeof parsed[key] === 'object' && parsed[key] !== null) {
+                this.recursiveParse(parsed[key], keyEle,);
+            } else {
+                objEle.appendChild(this.createValueEle(parsed[key] || "null",),);
+            }
+        }
+    } else { // primitive
+        const objEle = this.createObjEle();
+        element.appendChild(objEle);
+
+        if (element === this.config.parentEle) {
+            objEle.classList.remove('hidden');
+        }
+
+        objEle.appendChild(this.createValueEle(obj || "null",),);
     }
 };
 
@@ -76,9 +106,23 @@ JSONViewer.prototype.addToggleListener = function (element,) {
             });
             this.classList.remove('active');
         } else {
-            const immediateChildElems = this.querySelector('.jsonKey').children;
+            const keyEle = this.querySelector('.jsonKey');
+
+            if (!keyEle) {
+                return;
+            }
+
+            const immediateChildElems = keyEle.children;
             Array.from(immediateChildElems).forEach(child => child.classList.remove('hidden'));
             this.classList.add('active');
         }
     });
 };
+
+function parseObject(obj) {
+    try {
+        return JSON.parse(obj);
+    } catch {
+        return obj;
+    }
+}

@@ -1,141 +1,112 @@
-import JSONViewer from '../utils/json-viewer.js';
+import JSONViewer from '../js/json-viewer.js';
 
+const notificationBarEle = document.querySelector('.extUtil__notificationBar');
 const listEle = document.querySelector('.extUtil__tableList',);
 const viewEle = document.querySelector('.extUtil__tableView',);
+const copyButtonEle = document.querySelector('.btn--copy');
+const pasteButtonEle = document.querySelector('.btn--paste');
 
-async function getCurrentTab() {
-    let queryOptions = { active: true, lastFocusedWindow: true };
-    // `tab` will either be a `tabs.Tab` instance or `undefined`.
-    let [tab] = await chrome.tabs.query(queryOptions);
-    return tab;
+var currentSessionStorageData = {};
+var currentSessionStorageElements = [];
+
+(function () {
+    chrome.storage.onChanged.addListener(function (changes, areaName) {
+        if (areaName === 'local' && !changes.clipboard) {
+            Object.keys(changes).forEach((key) => {
+                const jsonObj = JSON.parse(changes[key].newValue);
+                Object.assign(currentSessionStorageData, jsonObj);
+            });
+
+            buildSessionStorageElements(currentSessionStorageData);
+            updateViewWithCurrentData(currentSessionStorageData);
+        }
+    });
+
+    window.addEventListener('DOMContentLoaded', async function() {
+        const currentTab = await chrome.tabs.query({active: true, lastFocusedWindow: true });
+        const currentTabId = currentTab[0].id.toString();
+        
+        chrome.storage.local.get(currentTabId)
+            .then(async (response) => {
+                const obj = await response;
+                return obj[currentTabId]
+            }).then((dataString) => {
+                if (!dataString) {
+                    return;
+                }
+
+                Object.assign(currentSessionStorageData, JSON.parse(dataString));
+
+                buildSessionStorageElements(currentSessionStorageData);
+                updateViewWithCurrentData(currentSessionStorageData);
+        });
+    });
+
+    copyButtonEle.addEventListener('click', function (e) {
+        copySelectedToStorageClipboard();
+        createAndShowNotification('Checked Session Storage items have been copied');
+    });
+
+    pasteButtonEle.addEventListener('click', function (e) {
+        getClipboardObject().then((obj) => {
+            if (!Object.keys(obj.clipboard).length) {
+                createAndShowNotification('Clipboard is empty');
+            } else {
+                dispatchPasteEvent(obj.clipboard);
+            }
+        });
+    });
+})();
+
+async function buildSessionStorageElements (data) {
+    while (listEle.firstChild) {
+        listEle.removeChild(listEle.firstChild);
+    }
+
+    Object.entries(data).forEach((item, i) => {
+        const itemEle = document.createElement('div');
+        const id = item[0];
+    
+        itemEle.classList.add('extUtil__ssItem');
+    
+        if (i == 0) {
+            itemEle.classList.add('selected');
+        }
+    
+        const inputEle = document.createElement('input');
+        inputEle.type = 'checkbox';
+        inputEle.id = id;
+        inputEle.value = true;
+        inputEle.checked = true;
+    
+        const labelEle = document.createElement('p');
+        labelEle.innerHTML = id.replace(/(.{23})..+/, "$1&hellip;");
+        labelEle.addEventListener('click', function (e) {
+            e.preventDefault();
+    
+            const current = document.querySelector('.extUtil__ssItem.selected');
+            const p = current.querySelector('p');
+    
+            if (e.target === p) {
+                return;
+            }
+    
+            current.classList.remove('selected');
+    
+            e.target.parentElement.classList.add('selected');
+
+            updateViewWithCurrentData(currentSessionStorageData);
+        });
+    
+        itemEle.appendChild(inputEle);
+        itemEle.appendChild(labelEle);
+
+        listEle.appendChild(itemEle);
+        currentSessionStorageElements.push(itemEle);
+    });
 }
 
-const tabby = await getCurrentTab();
-console.log(tabby);
-
-chrome.storage.session.setAccessLevel({ accessLevel: 'TRUSTED_AND_UNTRUSTED_CONTEXTS' });
-const a = await chrome.storage.session.get(["blah"]);
-console.log(Object.keys(a));
-
-const b = await chrome.storage.local.get(["blah"]);
-
-const c = await chrome.storage.sync.get(["blah"]);
-
-console.log(Object.keys(b));
-console.log(Object.keys(c));
-
-
-// chrome.storage.sync.get(null, function(items) {
-//     var allKeys = Object.keys(items);
-//     console.log(allKeys);
-// });
-
-// chrome.storage.session.get(null, function(items) {
-//     var allKeys = Object.keys(items);
-//     console.log(allKeys);
-// });
-
-// get session storage items from tab
-const testData = [
-    {
-        "one": {
-            "id": 1,
-            "first_name": "Robert",
-            "last_name": "Schwartz",
-            "email": "rob23@gmail.com"
-        }
-    },
-    {
-        "two": {
-            "id": 2,
-            "first_name": "Lucy",
-            "last_name": "Ballmer",
-            "more": {
-                "id": 1,
-                "first_name": "Robert",
-                "last_name": "Schwartz",
-                "email": "rob23@gmail.com"
-            },
-            "email": "lucyb56@gmail.com"
-        }
-    },
-    {
-        "three": {
-            "id": 3,
-            "first_name": "Anna",
-            "last_name": "Smith",
-            "email": "annasmith23@gmail.com"
-        }
-    },
-    {
-        "four": {
-            "id": 4,
-            "first_name": "Robert",
-            "last_name": "Brown",
-            "email": "bobbrown432@yahoo.com"
-        }
-    },
-    {
-        "five": {
-            "id": 5,
-            "first_name": "Roger",
-            "last_name": "Bacon",
-            "email": "rogerbacon12@yahoo.com"
-        }
-    }
-];
-
-// for each item populate the list in the content
-const ssItemElems = [];
-testData.forEach((item, i) => {
-    const itemEle = document.createElement('div');
-    const id = Object.keys(item)[0];
-
-    itemEle.classList.add('extUtil__ssItem');
-
-    if (i == 0) {
-        itemEle.classList.add('selected');
-    }
-
-    const inputEle = document.createElement('input');
-    inputEle.type = 'checkbox';
-    inputEle.id = id;
-    inputEle.value = true;
-    inputEle.checked = true;
-
-    const labelEle = document.createElement('p');
-    labelEle.innerHTML = id;
-
-    itemEle.appendChild(inputEle);
-    itemEle.appendChild(labelEle);
-    listEle.appendChild(itemEle);
-
-    ssItemElems.push(itemEle);
-});
-
-// iterate through ssItemElems to add click listener to update the 'selected' class
-ssItemElems.forEach(ssItem => {
-    const p = ssItem.querySelector('p');
-    p.addEventListener('click', function (e) {
-        e.preventDefault();
-
-        const current = document.querySelector('.extUtil__ssItem.selected');
-        const p = current.querySelector('p');
-
-        if (e.target === p) {
-            return;
-        }
-
-        current.classList.remove('selected');
-
-        e.target.parentElement.classList.add('selected');
-        updateJsonViewArea();
-    });
-});
-
-updateJsonViewArea();
-
-function updateJsonViewArea() {
+async function updateViewWithCurrentData(data) {
     const currentSelection = document.querySelector('.extUtil__ssItem.selected');
 
     if (!currentSelection) {
@@ -152,11 +123,71 @@ function updateJsonViewArea() {
     
     viewEle.innerHTML = "";
 
-    testData.forEach(obj => {
-        const key = Object.keys(obj)[0];
+    Object.entries(data).forEach(item => {
+        const key = item[0];
         
         if (dataKey === key) {
-            new JSONViewer({data: obj[key], parentEle: viewEle})
+            new JSONViewer({data: item[1], parentEle: viewEle})
+        }
+    });
+}
+
+
+function createAndShowNotification(message) {
+    if (!notificationBarEle) {
+        return;
+    }
+
+    const existingNotificationEle = notificationBarEle.querySelector('.extUtil__notification');
+
+    if (existingNotificationEle) {
+        notificationBarEle.removeChild(existingNotificationEle);
+    }
+
+    const notificationEle = document.createElement('div');
+    notificationEle.classList.add('extUtil__notification');
+
+    const iconEle = document.createElement('div');
+    iconEle.classList.add('extUtil__notificationIcon');
+    iconEle.appendChild(document.createElement('i'));
+
+    const textEle = document.createElement('div');
+    textEle.classList.add('extUtil__notificationText');
+    textEle.innerHTML = message;
+
+    notificationEle.appendChild(iconEle);
+    notificationEle.appendChild(textEle);
+
+    notificationBarEle.appendChild(notificationEle);
+
+    notificationBarEle.style.display = 'flex';
+}
+
+function copySelectedToStorageClipboard() {
+    const allCheckedElems = document.querySelectorAll('.extUtil__ssItem input:not(:checked)');
+
+    const clipboardObject = Object.assign({}, currentSessionStorageData);
+    allCheckedElems.forEach((inputEle) => {
+        const id = inputEle.id;
+
+        delete clipboardObject[id];
+    });
+
+    chrome.storage.local.set({ clipboard: clipboardObject });
+}
+
+async function getClipboardObject() {
+    return await chrome.storage.local.get(['clipboard']);
+}
+
+async function dispatchPasteEvent(obj) {
+    const currentTab = await chrome.tabs.query({active: true, lastFocusedWindow: true });
+    const currentTabId = currentTab[0].id.toString();
+    chrome.tabs.sendMessage(parseInt(currentTabId), obj, function (res) {
+        if (chrome.runtime.lastError && chrome.runtime.lastError.message) {
+            createAndShowNotification('Error Pasting: ' + chrome.runtime.lastError.message);
+        } else {
+            createAndShowNotification(res);
         }
     });
 }

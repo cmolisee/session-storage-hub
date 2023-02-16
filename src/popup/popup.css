@@ -3,17 +3,18 @@
     --text-color: #ccc5b9;
     --border-color: #252422;
     --orange: #f46036;
-    --green: #1b998b;
-    --blue: #5aa9e6;
+    --green: #008000;
+    --red: #d90429;
 }
 
 * {
     color: var(--text-color);
+    box-sizing: border-box;
 }
 
 body {
     background-color: var(--bg-color);
-    width: 35rem;
+    width: 50rem;
 }
 
 .hidden {
@@ -30,17 +31,18 @@ input[type="checkbox"] {
     appearance: none;
     background-color: var(--bg-color);
     margin: 0;
-    color: var(--orange);
+    color: var(--green);
     width: 1.15em;
     height: 1.15em;
     border-radius: 0.15em;
     transform: translateY(-0.065em);
     display: grid;
     place-content: center;
+    cursor: pointer;
 }
 
 input[type="checkbox"]:not(:checked) {
-    box-shadow: inset 1em 1em var(--orange);
+    box-shadow: inset 1em 1em var(--red);
     clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);
 }
 
@@ -51,7 +53,7 @@ input[type="checkbox"]::before {
     height: 1.15em;
     transform: scale(0);
     transition: 120ms transform ease-in-out;
-    box-shadow: inset 1em 1em var(--orange);
+    box-shadow: inset 1em 1em var(--green);
     clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }
 
@@ -67,12 +69,13 @@ input[type="checkbox"]:checked::before {
 }
 
 .extUtil__notificationBar {
-    display: flex;
-    /* border: 1px solid var(--text-color); */
+    display: none;
     border-radius: 0.5rem;
     margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
+
+/* create transition for notification bar when display changed to flex */
 
 .extUtil__notification {
     display: flex;
@@ -87,7 +90,6 @@ input[type="checkbox"]:checked::before {
     border-right: 3px solid var(--orange);
     align-items: center;
     margin-right: 0.5rem;
-    /* padding: 0 0.25rem; */
     justify-content: center;
 }
 
@@ -106,7 +108,9 @@ input[type="checkbox"]:checked::before {
     font-weight: 500;
 }
 
-/* .extUtil__content {} */
+.extUtil__content {
+    margin-top: 1rem;
+}
 
 .extUtil__contentInfo {
     font-size: 0.875rem;
@@ -124,10 +128,10 @@ input[type="checkbox"]:checked::before {
 }
 
 .extUtil__tabItemContent {
-    /* display: none; */
     margin: 0.25rem;
     border: 1px solid var(--text-color);
     padding: 0.325rem;
+    max-width: 100%;
 }
 
 .extUtil__tabItemContent em {
@@ -137,7 +141,7 @@ input[type="checkbox"]:checked::before {
 .extUtil__table {
     display: grid;
     grid-template-areas: 'list view';
-    grid-template-columns: 2fr 6fr;
+    grid-template-columns: 1fr 6fr;
 }
 
 .extUtil__tableList {
@@ -184,7 +188,8 @@ input[type="checkbox"]:checked::before {
     flex-direction: row;
 }
 
-.jsonObj:has(> .jsonKey > .jsonObj) {
+.jsonObj:has(> .jsonKey > .jsonObj),
+.jsonObj:has(> .jsonVal) {
     flex-direction: column;
 }
 .jsonObj {
@@ -197,6 +202,10 @@ input[type="checkbox"]:checked::before {
 
 .jsonKey:has(> .jsonObj.hidden)::after {
     content: "\00a0 ..."
+}
+
+.jsonVal {
+    word-break: break-all;
 }
 
 .btn {
@@ -212,23 +221,7 @@ input[type="checkbox"]:checked::before {
     text-align: center;
 }
 
-/* .btn--toggle {
-    background-color: var(--orange);
-    color: var(--bg-color);
+.btn:hover {
     border-color: var(--orange);
-}
-
-.btn--toggle:hover {
-    background-color: transparent;
     color: var(--orange);
-} */
-
-.btn--copy:hover {
-    border-color: var(--green);
-    color: var(--green);
-}
-
-.btn--paste:hover {
-    border-color: var(--blue);
-    color: var(--blue);
 }
