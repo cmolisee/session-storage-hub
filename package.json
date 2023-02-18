@@ -10,8 +10,7 @@
     "type": "module",
     "scripts": {
         "lint": "eslint --fix --ext .js .",
-        "format": "prettier --write .",
-        "zip": "cd tooling/ && ./zip.sh $npm_package_name $npm_package_version"
+        "format": "prettier --write ."
     },
     "devDependencies": {
         "eslint": "^8.33.0",
