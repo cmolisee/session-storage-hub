@@ -4,3 +4,4 @@ yarn.lock
 .DS_Store
 src.pem
 src.crx
+.github
