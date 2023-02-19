@@ -14,7 +14,6 @@
         sender,
         response,
     ) {
-        // console.log(message);
         const data = message;
         Object.entries(data,).forEach((entry,) => {
             sessionStorage.setItem(entry[0], JSON.stringify(entry[1],),);

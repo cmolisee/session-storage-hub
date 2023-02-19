@@ -1,73 +1,67 @@
 import JSONViewer from '../js/json-viewer.js';
 
+var currentSessionStorageData = {},
+    currentSessionStorageElements = [
+];
+
+chrome.storage.onChanged.addListener(function (changes, areaName,) {
+    if (areaName === 'local' && !changes.clipboard) {
+        Object.keys(changes,).forEach((key,) => {
+            const updateObject = changes[key].newValue;
+            Object.assign(currentSessionStorageData, updateObject,);
+        },);
+
+        buildSessionStorageElements(currentSessionStorageData,);
+        updateViewWithCurrentData(currentSessionStorageData,);
+    }
+},);
+
+window.addEventListener('DOMContentLoaded', async function () {
+    const currentTab = await chrome.tabs.query({
+            active: true,
+            lastFocusedWindow: true,
+        },),
+        currentTabId = currentTab[0].id.toString();
+
+    chrome.storage.local
+        .get(currentTabId,)
+        .then(async (response,) => {
+            const obj = await response;
+            return obj[currentTabId];
+        },)
+        .then((data,) => {
+            Object.assign(
+                currentSessionStorageData,
+                data,
+            );
+
+            buildSessionStorageElements(currentSessionStorageData,);
+            updateViewWithCurrentData(currentSessionStorageData,);
+        },);
+},);
+
 const notificationBarEle = document.querySelector('.extUtil__notificationBar',),
     listEle = document.querySelector('.extUtil__tableList',),
     viewEle = document.querySelector('.extUtil__tableView',),
     copyButtonEle = document.querySelector('.btn--copy',),
     pasteButtonEle = document.querySelector('.btn--paste',);
 
-var currentSessionStorageData = {},
-    currentSessionStorageElements = [
-];
+copyButtonEle.addEventListener('click', function (e,) {
+    copySelectedToStorageClipboard();
+    createAndShowNotification(
+        'Checked Session Storage items have been copied',
+    );
+},);
 
-(function () {
-    chrome.storage.onChanged.addListener(function (changes, areaName,) {
-        if (areaName === 'local' && !changes.clipboard) {
-            Object.keys(changes,).forEach((key,) => {
-                const jsonObj = JSON.parse(changes[key].newValue,);
-                Object.assign(currentSessionStorageData, jsonObj,);
-            },);
-
-            buildSessionStorageElements(currentSessionStorageData,);
-            updateViewWithCurrentData(currentSessionStorageData,);
+pasteButtonEle.addEventListener('click', function (e,) {
+    getClipboardObject().then((obj,) => {
+        if (!Object.keys(obj.clipboard,).length) {
+            createAndShowNotification('Clipboard is empty',);
+        } else {
+            dispatchPasteEvent(obj.clipboard,);
         }
     },);
-
-    window.addEventListener('DOMContentLoaded', async function () {
-        const currentTab = await chrome.tabs.query({
-                active: true,
-                lastFocusedWindow: true,
-            },),
-            currentTabId = currentTab[0].id.toString();
-
-        chrome.storage.local
-            .get(currentTabId,)
-            .then(async (response,) => {
-                const obj = await response;
-                return obj[currentTabId];
-            },)
-            .then((dataString,) => {
-                if (!dataString) {
-                    return;
-                }
-
-                Object.assign(
-                    currentSessionStorageData,
-                    JSON.parse(dataString,),
-                );
-
-                buildSessionStorageElements(currentSessionStorageData,);
-                updateViewWithCurrentData(currentSessionStorageData,);
-            },);
-    },);
-
-    copyButtonEle.addEventListener('click', function (e,) {
-        copySelectedToStorageClipboard();
-        createAndShowNotification(
-            'Checked Session Storage items have been copied',
-        );
-    },);
-
-    pasteButtonEle.addEventListener('click', function (e,) {
-        getClipboardObject().then((obj,) => {
-            if (!Object.keys(obj.clipboard,).length) {
-                createAndShowNotification('Clipboard is empty',);
-            } else {
-                dispatchPasteEvent(obj.clipboard,);
-            }
-        },);
-    },);
-})();
+},);
 
 async function buildSessionStorageElements(data,) {
     while (listEle.firstChild) {
