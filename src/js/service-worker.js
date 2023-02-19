@@ -7,7 +7,7 @@ chrome.runtime.onMessage.addListener(async function (
         case 'WEBPAGE':
             const key = sender.tab.id;
             const dataObject = {};
-            dataObject[key] = message.data;
+            dataObject[key] = JSON.parse(message.data);
             chrome.storage.local.set(dataObject,);
             break;
         case 'EXTENSION':
@@ -15,7 +15,7 @@ chrome.runtime.onMessage.addListener(async function (
             break;
         default:
             // do something default
-            console.log(
+            console.warn(
                 'something sent a message that is not webpage or extension...',
             );
     }
