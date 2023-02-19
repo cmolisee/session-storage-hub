@@ -11,57 +11,32 @@ JSONViewer.prototype.render = function () {
     const obj = this.config.data,
         parentEle = this.config.parentEle;
 
-    this.recursiveParse(obj, parentEle,);
+    this.parseToHtml(obj, parentEle,);
 };
 
-JSONViewer.prototype.recursiveParse = function (obj, element,) {
-    var parsed = parseObject(obj,);
+JSONViewer.prototype.parseToHtml = function (obj, element,) {
+    const formatted = formatObj(obj,);
 
-    if (Array.isArray(parsed,)) {
-        const objEle = this.createObjEle();
-        element.appendChild(objEle,);
-
-        if (element === this.config.parentEle) {
-            objEle.classList.remove('hidden',);
+    if (Array.isArray(formatted)) {
+        for (const item in formatted) {
+            this.parseToHtml(childObj, keyEle,);
         }
-
-        if (typeof obj[0] === 'object') {
-            obj.forEach((childObj,) => {
-                this.recursiveParse(childObj, keyEle,);
-            },);
-        } else {
-            obj.forEach((item,) => {
-                objEle.appendChild(this.createValueEle(item || 'null',),);
-            },);
-        }
-    } else if (typeof parsed === 'object') {
-        for (var key in parsed) {
+    } else if (typeof formatted === 'object') {
+        for (const [key, value] of Object.entries(formatted)) {
             const objEle = this.createObjEle();
             element.appendChild(objEle,);
 
             if (element === this.config.parentEle) {
                 objEle.classList.remove('hidden',);
             }
-
+            
             const keyEle = this.createKeyEle(key,);
             objEle.appendChild(keyEle,);
 
-            if (typeof parsed[key] === 'object' && parsed[key] !== null) {
-                this.recursiveParse(parsed[key], keyEle,);
-            } else {
-                objEle.appendChild(this.createValueEle(parsed[key] || 'null',),);
-            }
+            this.parseToHtml(value, objEle,);
         }
     } else {
-        // primitive
-        const objEle = this.createObjEle();
-        element.appendChild(objEle,);
-
-        if (element === this.config.parentEle) {
-            objEle.classList.remove('hidden',);
-        }
-
-        objEle.appendChild(this.createValueEle(obj || 'null',),);
+        element.appendChild(this.createValueEle(formatted || 'null',),);
     }
 };
 
@@ -121,9 +96,9 @@ JSONViewer.prototype.addToggleListener = function (element,) {
     },);
 };
 
-function parseObject(obj,) {
+function formatObj(obj,) {
     try {
-        return JSON.parse(obj,);
+        return JSON.parse(obj);
     } catch {
         return obj;
     }

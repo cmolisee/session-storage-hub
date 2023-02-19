@@ -6,7 +6,7 @@
     sendSessionStorageData();
 
     function sendSessionStorageData() {
-        const data = JSON.stringify(sessionStorage,);
+        const data = Object.assign({}, sessionStorage);
 
         window.postMessage({
             initiator: 'WEBPAGE',
