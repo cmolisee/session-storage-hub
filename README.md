@@ -10,3 +10,7 @@ How to install:
 3. Turn on Developer Mode in the top right corner.
 4. Select 'Load Unpacked'.
 5. Select the 'src' folder of the extension.
+
+---
+
+- [Patch Notes](./logs/version-1.0.1.md)
