@@ -7,6 +7,7 @@
     --red: #d90429;
 }
 
+/* defaults and resets */
 * {
     color: var(--text-color);
     box-sizing: border-box;
@@ -17,6 +18,7 @@ body {
     width: 50rem;
 }
 
+/* utilities */
 .hidden {
     display: none !important;
 }
@@ -27,6 +29,7 @@ body {
     margin: 0.325rem 0;
 }
 
+/* popup styles */
 input[type='checkbox'] {
     appearance: none;
     background-color: var(--bg-color);
@@ -187,33 +190,28 @@ input[type='checkbox']:checked::before {
     font-size: 0.825rem;
 }
 
-.jsonObj {
+.jsonObj,
+.jsonArray {
     display: flex;
+    flex-direction: column;
     cursor: pointer;
 }
 
-.jsonObj > * {
+.jsonObj > *,
+.jsonArray > * {
     margin-left: 1rem;
 }
 
-.jsonObj:has(> .jsonKey > .jsonVal) {
+.jsonObj:has(> .jsonVal) {
     flex-direction: row;
 }
 
-.jsonObj:has(> .jsonKey > .jsonObj),
-.jsonObj:has(> .jsonVal) {
-    flex-direction: column;
-}
-.jsonObj {
-    display: flex;
-}
-
-.jsonKey:has(+ .jsonVal)::after {
+.jsonKey::after {
     content: ':';
 }
 
 .jsonKey:has(> .jsonObj.hidden)::after {
-    content: '\00a0 ...';
+    content: ':\00a0 ...';
 }
 
 .jsonVal {
