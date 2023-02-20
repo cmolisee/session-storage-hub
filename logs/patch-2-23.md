@@ -17,4 +17,7 @@
 -   updated eslint and prettier configs.
 -   cleaned up some comments from html files.
 
+#### 7-ext-enhancement
 
+-   removed scroll from popup.
+-   added scroll to the tableList element so users can still see all the session storage items in the list.

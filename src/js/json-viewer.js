@@ -55,7 +55,6 @@ JSONViewer.prototype.createArrayWrapper = function () {
     const jsonObjEle = document.createElement('div');
 
     jsonObjEle.classList.add('jsonArray');
-    this.addToggleListener(jsonObjEle);
 
     return jsonObjEle;
 };
@@ -92,16 +91,14 @@ JSONViewer.prototype.addToggleListener = function (element) {
             });
             this.classList.remove('active');
         } else {
-            const keyEle = this.querySelector('.jsonKey');
-
-            if (!keyEle) {
-                return;
-            }
-
-            const immediateChildElems = keyEle.children;
-            Array.from(immediateChildElems).forEach((child) => {
-                return child.classList.remove('hidden');
+            const childElems = this.children;
+            
+            Array.from(childElems).forEach((child) => {
+                if (child.classList.contains('jsonObj')) {
+                    child.classList.remove('hidden');
+                }
             });
+
             this.classList.add('active');
         }
     });

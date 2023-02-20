@@ -79,7 +79,7 @@ async function buildSessionStorageElements(data) {
         inputEle.checked = true;
 
         const labelEle = document.createElement('p');
-        labelEle.innerHTML = id.replace(/(.{23})..+/, '$1&hellip;');
+        labelEle.innerHTML = id.replace(/(.{17})..+/, '$1&hellip;');
         labelEle.addEventListener('click', function (e) {
             e.preventDefault();
 
