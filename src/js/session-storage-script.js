@@ -1,7 +1,7 @@
 (function () {
     window.addEventListener('storage', function () {
-        sendSessionStorageData('UPDATE',);
-    },);
+        sendSessionStorageData('UPDATE');
+    });
 
     sendSessionStorageData();
 
@@ -11,6 +11,6 @@
         window.postMessage({
             initiator: 'WEBPAGE',
             data: data,
-        },);
+        });
     }
 })();
