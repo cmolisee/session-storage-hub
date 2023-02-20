@@ -11,65 +11,50 @@ JSONViewer.prototype.render = function () {
     const obj = this.config.data,
         parentEle = this.config.parentEle;
 
-    this.recursiveParse(obj, parentEle,);
+    this.parseToHtml(obj, parentEle,);
 };
 
-JSONViewer.prototype.recursiveParse = function (obj, element,) {
-    var parsed = parseObject(obj,);
+JSONViewer.prototype.parseToHtml = function (obj, element,) {
+    const formatted = this.formatObj(obj,);
 
-    if (Array.isArray(parsed,)) {
-        const objEle = this.createObjEle();
-        element.appendChild(objEle,);
+    if (Array.isArray(formatted)) {
+        for (const item of formatted) {
+            const arrayWrapper = this.createArrayWrapper();
+            element.appendChild(arrayWrapper,);
 
-        if (element === this.config.parentEle) {
-            objEle.classList.remove('hidden',);
+            this.parseToHtml(item, arrayWrapper,);
         }
-
-        if (typeof obj[0] === 'object') {
-            obj.forEach((childObj,) => {
-                this.recursiveParse(childObj, keyEle,);
-            },);
-        } else {
-            obj.forEach((item,) => {
-                objEle.appendChild(this.createValueEle(item || 'null',),);
-            },);
-        }
-    } else if (typeof parsed === 'object') {
-        for (var key in parsed) {
-            const objEle = this.createObjEle();
-            element.appendChild(objEle,);
+    } else if (formatted !== null && typeof formatted === 'object') {
+        for (const [key, value] of Object.entries(formatted)) {
+            const objWrapper = this.createObjWrapper();
+            element.appendChild(objWrapper,);
 
             if (element === this.config.parentEle) {
-                objEle.classList.remove('hidden',);
+                objWrapper.classList.remove('hidden',);
             }
-
-            const keyEle = this.createKeyEle(key,);
-            objEle.appendChild(keyEle,);
-
-            if (typeof parsed[key] === 'object' && parsed[key] !== null) {
-                this.recursiveParse(parsed[key], keyEle,);
-            } else {
-                objEle.appendChild(this.createValueEle(parsed[key] || 'null',),);
-            }
+            
+            objWrapper.appendChild(this.createKeyEle(key,));
+            this.parseToHtml(value, objWrapper,);
         }
     } else {
-        // primitive
-        const objEle = this.createObjEle();
-        element.appendChild(objEle,);
-
-        if (element === this.config.parentEle) {
-            objEle.classList.remove('hidden',);
-        }
-
-        objEle.appendChild(this.createValueEle(obj || 'null',),);
+        element.appendChild(this.createValueEle(formatted || 'null',),);
     }
 };
 
-JSONViewer.prototype.createObjEle = function () {
+JSONViewer.prototype.createObjWrapper = function () {
     const jsonObjEle = document.createElement('div',);
 
     jsonObjEle.classList.add('jsonObj',);
     jsonObjEle.classList.add('hidden',);
+    this.addToggleListener(jsonObjEle,);
+
+    return jsonObjEle;
+};
+
+JSONViewer.prototype.createArrayWrapper = function () {
+    const jsonObjEle = document.createElement('div',);
+
+    jsonObjEle.classList.add('jsonArray',);
     this.addToggleListener(jsonObjEle,);
 
     return jsonObjEle;
@@ -88,7 +73,8 @@ JSONViewer.prototype.createValueEle = function (val,) {
     const valEle = document.createElement('div',);
 
     valEle.innerHTML = val;
-    valEle.classList.add('jsonVal',);
+    valEle.classList.add('jsonVal');
+    valEle.classList.add(this.getPrimitiveClass(val));
 
     return valEle;
 };
@@ -121,10 +107,26 @@ JSONViewer.prototype.addToggleListener = function (element,) {
     },);
 };
 
-function parseObject(obj,) {
+JSONViewer.prototype.formatObj = function (obj,) {
     try {
-        return JSON.parse(obj,);
+        return JSON.parse(obj);
     } catch {
         return obj;
     }
+}
+
+JSONViewer.prototype.getPrimitiveClass = function (val) {
+    if (val === null || val === 'null') {
+        return 'jsonNullVal';
+    }
+
+    if (val === 'true' || val === 'false' || typeof val === 'boolean') {
+        return 'jsonBooleanVal';
+    }
+
+    if (!isNaN(val)) {
+        return 'jsonNumberVal';
+    }
+
+    return 'jsonStringVal';
 }

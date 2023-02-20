@@ -13,4 +13,4 @@ How to install:
 
 ---
 
-- [Patch Notes](./logs/version-1.0.1.md)
+- [Patch Notes Feb. 2023](./logs/patch-2-23.md)

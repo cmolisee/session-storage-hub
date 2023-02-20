@@ -7,7 +7,7 @@ chrome.runtime.onMessage.addListener(async function (
         case 'WEBPAGE':
             const key = sender.tab.id;
             const dataObject = {};
-            dataObject[key] = JSON.parse(message.data);
+            dataObject[key] = message.data;
             chrome.storage.local.set(dataObject,);
             break;
         case 'EXTENSION':
