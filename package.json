@@ -1,6 +1,6 @@
 {
     "name": "session-storage-browser-extension",
-    "version": "1.3.1",
+    "version": "2.0.0",
     "description": "Browser extension for session storage utilities.",
     "main": "index.js",
     "repository": "https://github.com/cmolisee/session-storage-browser-extension.git",
