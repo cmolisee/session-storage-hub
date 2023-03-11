@@ -7,6 +7,7 @@
     --red: #d90429;
 }
 
+/* defaults and resets */
 * {
     color: var(--text-color);
     box-sizing: border-box;
@@ -14,9 +15,12 @@
 
 body {
     background-color: var(--bg-color);
-    width: 50rem;
+    width: 47rem;
+    height: 100%; 
+    overflow: hidden;
 }
 
+/* utilities */
 .hidden {
     display: none !important;
 }
@@ -27,6 +31,7 @@ body {
     margin: 0.325rem 0;
 }
 
+/* popup styles */
 input[type='checkbox'] {
     appearance: none;
     background-color: var(--bg-color);
@@ -153,13 +158,15 @@ input[type='checkbox']:checked::before {
 .extUtil__table {
     display: grid;
     grid-template-areas: 'list view';
-    grid-template-columns: 1fr 6fr;
+    grid-template-columns: 1fr 3fr;
+    height: 65vh;
 }
 
 .extUtil__tableList {
     grid-area: list;
     border-right: 1px solid var(--text-color);
     padding: 0.325rem;
+    overflow-y: auto;
 }
 
 .extUtil__ssItem {
@@ -185,35 +192,31 @@ input[type='checkbox']:checked::before {
     grid-area: view;
     margin-left: 1rem;
     font-size: 0.825rem;
+    overflow-y: auto;
 }
 
-.jsonObj {
+.jsonObj,
+.jsonArray {
     display: flex;
+    flex-direction: column;
     cursor: pointer;
 }
 
-.jsonObj > * {
+.jsonObj > *,
+.jsonArray > * {
     margin-left: 1rem;
 }
 
-.jsonObj:has(> .jsonKey > .jsonVal) {
+.jsonObj:has(> .jsonVal) {
     flex-direction: row;
 }
 
-.jsonObj:has(> .jsonKey > .jsonObj),
-.jsonObj:has(> .jsonVal) {
-    flex-direction: column;
-}
-.jsonObj {
-    display: flex;
-}
-
-.jsonKey:has(+ .jsonVal)::after {
+.jsonKey::after {
     content: ':';
 }
 
 .jsonKey:has(> .jsonObj.hidden)::after {
-    content: '\00a0 ...';
+    content: ':\00a0';
 }
 
 .jsonVal {
