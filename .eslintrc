@@ -21,7 +21,10 @@
                 "ignoreReadBeforeAssign": false
             }
         ],
-        "array-bracket-newline": ["error", { "multiline": true, "minItems": 4 }],
+        "array-bracket-newline": [
+            "error",
+            { "multiline": true, "minItems": 4 }
+        ],
         "array-bracket-spacing": ["error", "always"],
         "arrow-parens": ["error", "always"],
         "block-spacing": ["error", "always"],
