@@ -3,7 +3,9 @@
         'message',
         function (e) {
             if (e.data.initiator && e.data.initiator === 'WEBPAGE') {
-                chrome.runtime.sendMessage(e.data);
+                if (chrome.runtime?.id) {
+                    chrome.runtime.sendMessage(e.data);
+                }
             }
         },
         false

@@ -1,26 +1,33 @@
 :root {
-    --bg-color: #403d39;
-    --text-color: #ccc5b9;
-    --border-color: #252422;
-    --orange: #f46036;
-    --green: #008000;
-    --red: #d90429;
+    --alertColor: black;
+    --backgroundColor: white;
+    --backgroundHoverColor: black;
+    --borderColor: black;
+    --buttonBackgroundColor: white;
+    --buttonBorderColor: black;
+    --buttonHoverBackgroundColor: transparent;
+    --buttonHoverBorderColor: black;
+    --buttonHoverTextColor: black;
+    --buttonTextColor: black;
+    --checkedColor: green;
+    --textColor: black;
+    --uncheckedColor: red;
 }
 
-/* defaults and resets */
+/****** Defaults and Utilities ******/
 * {
-    color: var(--text-color);
+    background-color: var(--backgroundColor);
+    border-color: var(--borderColor);
     box-sizing: border-box;
+    color: var(--textColor);
 }
 
 body {
-    background-color: var(--bg-color);
     width: 47rem;
     height: 100%; 
     overflow: hidden;
 }
 
-/* utilities */
 .hidden {
     display: none !important;
 }
@@ -31,12 +38,45 @@ body {
     margin: 0.325rem 0;
 }
 
-/* popup styles */
+.alert {
+    border-color: var(--alertColor) !important;
+    color: var(--alertColor) !important;
+}
+
+.selected {
+    background-color: var(--backgroundHoverColor) !important;
+    color: var(--backgroundColor) !important;
+}
+
+.btn-theme {
+    border-color: var(--buttonBorderColor) !important;
+    background-color: var(--buttonBackgroundColor) !important;
+    color: var(--buttonTextColor) !important;
+}
+
+.btn-theme:hover {
+    background-color: var(--buttonBackgroundHoverColor) !important;
+    border-color: var(--buttonHoverBorderColor) !important;
+    color: var(--buttonHoverTextColor) !important;
+}
+/****** End Defaults and Utilities ******/
+
+.btn {
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 0.325rem;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 800;
+    padding: 0.25rem 1rem;
+    margin: 0 0.325rem;
+    text-align: center;
+}
+
 input[type='checkbox'] {
     appearance: none;
-    background-color: var(--bg-color);
     margin: 0;
-    color: var(--green);
+    color: var(--checkedColor);
     width: 1.15em;
     height: 1.15em;
     border-radius: 0.15em;
@@ -46,8 +86,12 @@ input[type='checkbox'] {
     cursor: pointer;
 }
 
+input[type='checkbox']:checked::before {
+    transform: scale(1);
+}
+
 input[type='checkbox']:not(:checked) {
-    box-shadow: inset 1em 1em var(--red);
+    box-shadow: inset 1em 1em var(--uncheckedColor);
     clip-path: polygon(
         20% 0%,
         0% 20%,
@@ -70,15 +114,9 @@ input[type='checkbox']::before {
     height: 1.15em;
     transform: scale(0);
     transition: 120ms transform ease-in-out;
-    box-shadow: inset 1em 1em var(--green);
+    box-shadow: inset 1em 1em var(--checkedColor);
     clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }
-
-input[type='checkbox']:checked::before {
-    transform: scale(1);
-}
-
-/* .extUtil {} */
 
 .extUtil__title,
 .extUtil__author {
@@ -104,7 +142,8 @@ input[type='checkbox']:checked::before {
     height: 100%;
     width: 3rem;
     display: flex;
-    border-right: 3px solid var(--orange);
+    border-right-width: 3px;
+    border-right-style: solid;
     align-items: center;
     margin-right: 0.5rem;
     justify-content: center;
@@ -120,7 +159,6 @@ input[type='checkbox']:checked::before {
 }
 
 .extUtil__notificationText {
-    color: var(--orange);
     font-size: 1rem;
     font-weight: 500;
 }
@@ -146,7 +184,8 @@ input[type='checkbox']:checked::before {
 
 .extUtil__tabItemContent {
     margin: 0.25rem;
-    border: 1px solid var(--text-color);
+    border-width: 1px;
+    border-style: solid;
     padding: 0.325rem;
     max-width: 100%;
 }
@@ -164,7 +203,8 @@ input[type='checkbox']:checked::before {
 
 .extUtil__tableList {
     grid-area: list;
-    border-right: 1px solid var(--text-color);
+    border-right-width: 1px;
+    border-right-style: solid;
     padding: 0.325rem;
     overflow-y: auto;
 }
@@ -182,9 +222,7 @@ input[type='checkbox']:checked::before {
     cursor: pointer;
 }
 
-.extUtil__ssItem.selected p {
-    background-color: var(--text-color);
-    color: var(--bg-color);
+.extUtil__ssItem p.selected {
     border-radius: 0.25rem;
 }
 
@@ -221,22 +259,4 @@ input[type='checkbox']:checked::before {
 
 .jsonVal {
     word-break: break-all;
-}
-
-.btn {
-    background-color: transparent;
-    border: 2px solid var(--text-color);
-    border-radius: 0.325rem;
-    color: var(--text-color);
-    cursor: pointer;
-    display: inline-block;
-    font-weight: 800;
-    padding: 0.25rem 1rem;
-    margin: 0 0.325rem;
-    text-align: center;
-}
-
-.btn:hover {
-    border-color: var(--orange);
-    color: var(--orange);
 }
