@@ -1,10 +1,12 @@
+import ExtSettings from '../js/ext-settings.js';
 import JSONViewer from '../js/json-viewer.js';
 
 var currentSessionStorageData = {};
 var currentSessionStorageElements = [];
+var extensionSettings = null;
 
 chrome.storage.onChanged.addListener(function (changes, areaName) {
-    if (areaName === 'local' && !changes.clipboard) {
+    if (areaName === 'local' && !changes.clipboard && !changes.settings) {
         Object.keys(changes).forEach((key) => {
             const updateObject = changes[key].newValue;
             Object.assign(currentSessionStorageData, updateObject);
@@ -21,7 +23,7 @@ window.addEventListener('DOMContentLoaded', async function () {
         lastFocusedWindow: true,
     });
     const currentTabId = currentTab[0].id.toString();
-
+    
     chrome.storage.local
         .get(currentTabId)
         .then(async (response) => {
@@ -34,13 +36,16 @@ window.addEventListener('DOMContentLoaded', async function () {
             buildSessionStorageElements(currentSessionStorageData);
             updateViewWithCurrentData(currentSessionStorageData);
         });
+    
+    extensionSettings = new ExtSettings();
+    extensionSettings.updateStyles();
 });
 
 const notificationBarEle = document.querySelector('.extUtil__notificationBar');
 const listEle = document.querySelector('.extUtil__tableList');
 const viewEle = document.querySelector('.extUtil__tableView');
-const copyButtonEle = document.querySelector('.btn--copy');
-const pasteButtonEle = document.querySelector('.btn--paste');
+const copyButtonEle = document.querySelector('.copyButton');
+const pasteButtonEle = document.querySelector('.pasteButton');
 
 copyButtonEle.addEventListener('click', function (e) {
     copySelectedToStorageClipboard();
@@ -68,10 +73,6 @@ async function buildSessionStorageElements(data) {
 
         itemEle.classList.add('extUtil__ssItem');
 
-        if (i === 0) {
-            itemEle.classList.add('selected');
-        }
-
         const inputEle = document.createElement('input');
         inputEle.type = 'checkbox';
         inputEle.id = id;
@@ -79,27 +80,26 @@ async function buildSessionStorageElements(data) {
         inputEle.checked = true;
 
         const labelEle = document.createElement('p');
+        if (i === 0) {
+            labelEle.classList.add('selected');
+        }
         labelEle.innerHTML = id.replace(/(.{17})..+/, '$1&hellip;');
         labelEle.addEventListener('click', function (e) {
             e.preventDefault();
 
-            const current = document.querySelector('.extUtil__ssItem.selected');
-            const p = current.querySelector('p');
-
-            if (e.target === p) {
+            const current = document.querySelector('.extUtil__ssItem p.selected');
+            if (e.target === current) {
                 return;
             }
 
             current.classList.remove('selected');
-
-            e.target.parentElement.classList.add('selected');
+            e.target.classList.add('selected');
 
             updateViewWithCurrentData(currentSessionStorageData);
         });
 
         itemEle.appendChild(inputEle);
         itemEle.appendChild(labelEle);
-
         listEle.appendChild(itemEle);
         currentSessionStorageElements.push(itemEle);
     });
@@ -107,7 +107,7 @@ async function buildSessionStorageElements(data) {
 
 async function updateViewWithCurrentData(data) {
     const currentSelection = document.querySelector(
-        '.extUtil__ssItem.selected'
+        '.extUtil__ssItem:has(p.selected)'
     );
 
     if (!currentSelection) {
@@ -147,14 +147,14 @@ function createAndShowNotification(message) {
     }
 
     const notificationEle = document.createElement('div');
-    notificationEle.classList.add('extUtil__notification');
+    notificationEle.classList.add('extUtil__notification', 'alert');
 
     const iconEle = document.createElement('div');
-    iconEle.classList.add('extUtil__notificationIcon');
+    iconEle.classList.add('extUtil__notificationIcon', 'alert');
     iconEle.appendChild(document.createElement('i'));
 
     const textEle = document.createElement('div');
-    textEle.classList.add('extUtil__notificationText');
+    textEle.classList.add('extUtil__notificationText', 'alert');
     textEle.innerHTML = message;
 
     notificationEle.appendChild(iconEle);
