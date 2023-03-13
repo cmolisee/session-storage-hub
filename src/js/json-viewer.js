@@ -92,7 +92,7 @@ JSONViewer.prototype.addToggleListener = function (element) {
             this.classList.remove('active');
         } else {
             const childElems = this.children;
-            
+
             Array.from(childElems).forEach((child) => {
                 if (child.classList.contains('jsonObj')) {
                     child.classList.remove('hidden');
