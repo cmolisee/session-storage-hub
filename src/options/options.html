@@ -21,103 +21,119 @@
             rel="stylesheet"
             type="text/css"
             href="options.css" />
-
-        <script
-            type="text/javascript"
-            src="options.js"></script>
     </head>
 
     <body>
-        <div class="optionsContainer">
+        <div class="options">
             <!-- TODO: insert link to github issues -->
             <h1>Options</h1>
-            <label for="extensionTheme">Extension Theme:</label>
-            <select name="extensionTheme" id="extensionTheme">
-                <!-- TODO: populate from javascript -->
-            </select>
-
-            <label for="codeTheme">Code Theme:</label>
-            <select name="codeTheme" id="codeTheme">
-                <!-- TODO: populate from javascript -->
-            </select>
+            <div id="themeOptions">
+                <div class="selectContainer">
+                    <label for="extensionTheme">Extension Theme:</label>
+                    <div class="select">
+                        <select name="extensionTheme" id="extensionTheme">
+                            <!-- TODO: populate from javascript -->
+                        </select>
+                        <span class="focus"></span>
+                    </div>
+                </div>
+                <div class="selectContainer">
+                    <label for="codeTheme">Code Theme:</label>
+                    <div class="select">
+                        <select name="codeTheme" id="codeTheme">
+                            <!-- TODO: populate from javascript -->
+                        </select>
+                        <span class="focus"></span>
+                    </div>
+                </div>
+            </div>
             <h3>Extension Customizations</h3>
             <p>These values will override values specified in the Extension Theme above</p>
-            <div>
-                <input type="color" id="alertColor" name="alertColor" value="">
+            <div id="customThemeOptions">
+                <!-- populate from script -->
+            </div>
+            <!-- <div class="optionContainer">
                 <label for="alertColor">Alert Color</label>
+                <input type="color" id="alertColor" name="alertColor" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="backgroundColor" name="backgroundColor" value="">
+            <div class="optionContainer">
                 <label for="backgroundColor">Background Color</label>
+                <input type="color" id="backgroundColor" name="backgroundColor" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="backgroundHoverColor" name="backgroundHoverColor" value="">
+            <div class="optionContainer">
                 <label for="backgroundHoverColor">Background Hover Color</label>
+                <input type="color" id="backgroundHoverColor" name="backgroundHoverColor" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="borderColor" name="borderColor" value="">
+            <div class="optionContainer">
                 <label for="borderColor">Border Color</label>
+                <input type="color" id="borderColor" name="borderColor" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="buttonBackgroundColor" name="buttonBackgroundColor" value="">
+            <div class="optionContainer">
                 <label for="buttonBackgroundColor">Button Background Color</label>
+                <input type="color" id="buttonBackgroundColor" name="buttonBackgroundColor" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="buttonBorderColor" name="buttonBorderColor" value="">
+            <div class="optionContainer">
                 <label for="buttonBorderColor">Button Border Color</label>
+                <input type="color" id="buttonBorderColor" name="buttonBorderColor" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="buttonHoverBackgroundColor" name="buttonHoverBackgroundColor" value="">
+            <div class="optionContainer">
                 <label for="buttonHoverBackgroundColor">Button Background Hover Color</label>
+                <input type="color" id="buttonHoverBackgroundColor" name="buttonHoverBackgroundColor" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="buttonHoverBorderColor" name="buttonHoverBorderColor" value="">
+            <div class="optionContainer">
                 <label for="buttonHoverBorderColor">Button Border Hover Color</label>
+                <input type="color" id="buttonHoverBorderColor" name="buttonHoverBorderColor" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="buttonHoverTextColor" name="buttonHoverTextColor" value="">
+            <div class="optionContainer">
                 <label for="buttonHoverTextColor">Button Text Hover Color</label>
+                <input type="color" id="buttonHoverTextColor" name="buttonHoverTextColor" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="buttonTextColor" name="buttonTextColor" value="">
+            <div class="optionContainer">
                 <label for="buttonTextColor">Button Text Color</label>
+                <input type="color" id="buttonTextColor" name="buttonTextColor" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="checkedColor" name="checkedColor" value="">
+            <div class="optionContainer">
                 <label for="checkedColor">Checked Color</label>
+                <input type="color" id="checkedColor" name="checkedColor" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="textColor" name="textColor" value="">
+            <div class="optionContainer">
                 <label for="textColor">Text Color</label>
+                <input type="color" id="textColor" name="textColor" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="uncheckedColor" name="uncheckedColor" value="">
+            <div class="optionContainer">
                 <label for="uncheckedColor">Unchecked Color</label>
-            </div>
+                <input type="color" id="uncheckedColor" name="uncheckedColor" value="#ffffff">
+            </div> -->
 
             <h2>Code Customizations</h2>
             <p>These values will override values specified in the Code Theme above</p>
-            <div>
-                <input type="color" id="jsonKey" name="jsonKey" value="">
+            <div id="customCodeThemeOptions">
+                <!-- populate from script -->
+            </div>
+            <!-- <div class="optionContainer">
                 <label for="jsonKey">Key Color</label>
+                <input type="color" id="jsonKey" name="jsonKey" value="#ffffff">
             </div>
 
-            <div>
-                <input type="color" id="jsonNull" name="jsonNull" value="">
+            <div class="optionContainer">
                 <label for="jsonNull">Null Color</label>
+                <input type="color" id="jsonNull" name="jsonNull" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="jsonBoolean" name="jsonBoolean" value="">
+            <div class="optionContainer">
                 <label for="jsonBoolean">Boolean Color</label>
+                <input type="color" id="jsonBoolean" name="jsonBoolean" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="jsonNumber" name="jsonNumber" value="">
+            <div class="optionContainer">
                 <label for="jsonNumber">Number Color</label>
+                <input type="color" id="jsonNumber" name="jsonNumber" value="#ffffff">
             </div>
-            <div>
-                <input type="color" id="jsonString" name="jsonString" value="">
+            <div class="optionContainer">
                 <label for="jsonString">String Color</label>
-            </div>
+                <input type="color" id="jsonString" name="jsonString" value="#ffffff">
+            </div> -->
         </div>
     </body>
+    <script
+        type="module"
+        src="options.js"></script>
 </html>

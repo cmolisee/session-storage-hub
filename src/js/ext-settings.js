@@ -1,4 +1,4 @@
-export default function ExtSettings() {
+export function ExtSettings() {
     const savedSettings = this.getSavedSettings().then(data => data);
 
     this.settings = Object.assign({
@@ -57,7 +57,7 @@ ExtSettings.prototype.updateStyles = function() {
     });
 }
 
-const themes = {
+export const themes = {
     dark: {
         alertColor: '#f46036',
         backgroundColor: '#403d39',
@@ -90,7 +90,7 @@ const themes = {
     },
 };
 
-const codeThemes = {
+export const codeThemes = {
     dark: {
         jsonKey: '',
         jsonNull: '',
@@ -105,4 +105,28 @@ const codeThemes = {
         jsonString: '',
         jsonNumber: ''
     }
-}
+};
+
+export const themeFields = [
+    'alertColor',
+    'backgroundColor',
+    'backgroundHoverColor',
+    'borderColor',
+    'buttonBackgroundColor',
+    'buttonBorderColor',
+    'buttonHoverBackgroundColor',
+    'buttonHoverBorderColor',
+    'buttonHoverTextColor',
+    'buttonTextColor',
+    'checkedColor',
+    'textColor',
+    'uncheckedColor',
+];
+
+export const codeThemeFields = [
+    'jsonKey',
+    'jsonNull',
+    'jsonBoolean',
+    'jsonString',
+    'jsonNumber'
+];

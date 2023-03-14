@@ -1,4 +1,4 @@
-import ExtSettings from '../js/ext-settings.js';
+import { ExtSettings } from '../js/ext-settings.js';
 import JSONViewer from '../js/json-viewer.js';
 
 var currentSessionStorageData = {};
