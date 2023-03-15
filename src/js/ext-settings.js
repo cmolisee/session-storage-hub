@@ -1,35 +1,9 @@
 export function ExtSettings() {
-    const savedSettings = this.getSavedSettings().then(data => data); null
-800
-    this.settings = Object.assign({
-        extensionTheme: 'dark',
-        codeTheme: 'dark',
-        customTheme: {
-            alertColor: '',
-            backgroundColor: '',
-            backgroundHoverColor: '',
-            borderColor: '',
-            buttonBackgroundColor: '',
-            buttonBorderColor: '',
-            buttonHoverBackgroundColor: '',
-            buttonHoverBorderColor: '',
-            buttonHoverTextColor: '',
-            buttonTextColor: '',
-            checkedColor: '',
-            textColor: '',
-            uncheckedColor: ''
-        },
-        customCodeTheme: {
-            jsonKey: '',
-            jsonNull: '',
-            jsonBoolean: '',
-            jsonString: '',
-            jsonNumber: ''
-        }
-    }, savedSettings);
+    const savedSettings = this.getSavedSettings().then(data => data);
+    this.settings = Object.assign(defaultSettings, savedSettings);
 }
 
-ExtSettings.prototype.update = function(key, value) {
+ExtSettings.prototype.updateSetting = function(key, value) {
     if (this.settings.hasOwnProperty(key)) {
         this.settings[key] = value;
     }
@@ -43,10 +17,16 @@ ExtSettings.prototype.saveCurrentSettings = function() {
     chrome.storage.sync.set(this.settings);
 }
 
-ExtSettings.prototype.updateStyles = function() {
+ExtSettings.prototype.render() = function() {
     const root = document.querySelector(':root');
-    const themeObject = themes[this.settings.extensionTheme];
-    const codeThemeObject = codeThemes[this.settings.codeTheme];
+    const themeObject = Object.assign(
+        themes[this.settings.extensionTheme],
+        this.settings.customTheme
+    );
+    const codeThemeObject = Object.assign(
+        codeThemes[this.settings.codeTheme],
+        this.settings.customCodeTheme
+    );
 
     Object.entries(themeObject).forEach(([key, value]) => {
         root.style.setProperty(`--${key}`, value);
@@ -56,6 +36,65 @@ ExtSettings.prototype.updateStyles = function() {
         root.style.setProperty(`--${key}`, value);
     });
 }
+
+ExtSettings.prototype.reset = function(...excluding) {
+    const customThemeObject = Object.assign({}, this.settings.customTheme);
+    const customCodeThemeObject = Object.assign({}, this.settings.customCodeTheme);
+
+    Object.key(customThemeObject).forEach((prop) => {
+        if (!excluding.includes(prop)) {
+            delete customThemeObject[prop];
+        }
+    });
+
+    Object.key(customCodeThemeObject).forEach((prop) => {
+        if (!excluding.includes(prop)) {
+            delete customCodeThemeObject[prop];
+        }
+    });
+
+    this.settings.customTheme = Object.assign(
+        this.settings.customTheme,
+        customThemeObject
+    );
+
+    this.settings.customCodeTheme = Object.assign(
+        this.settings.customCodeTheme,
+        customCodeThemeObject
+    );
+}
+
+
+export const defaultSettings = {
+    extensionTheme: 'dark',
+    codeTheme: 'dark',
+    customTheme: themes.dark,
+    customCodeTheme: codeThemes.dark,
+}
+
+export const themeFields = [
+    'alertColor',
+    'backgroundColor',
+    'backgroundHoverColor',
+    'borderColor',
+    'buttonBackgroundColor',
+    'buttonBorderColor',
+    'buttonHoverBackgroundColor',
+    'buttonHoverBorderColor',
+    'buttonHoverTextColor',
+    'buttonTextColor',
+    'checkedColor',
+    'textColor',
+    'uncheckedColor',
+];
+
+export const codeThemeFields = [
+    'jsonKey',
+    'jsonNull',
+    'jsonBoolean',
+    'jsonString',
+    'jsonNumber'
+];
 
 export const themes = {
     dark: {
@@ -106,27 +145,3 @@ export const codeThemes = {
         jsonNumber: '#986D25'
     }
 };
-
-export const themeFields = [
-    'alertColor',
-    'backgroundColor',
-    'backgroundHoverColor',
-    'borderColor',
-    'buttonBackgroundColor',
-    'buttonBorderColor',
-    'buttonHoverBackgroundColor',
-    'buttonHoverBorderColor',
-    'buttonHoverTextColor',
-    'buttonTextColor',
-    'checkedColor',
-    'textColor',
-    'uncheckedColor',
-];
-
-export const codeThemeFields = [
-    'jsonKey',
-    'jsonNull',
-    'jsonBoolean',
-    'jsonString',
-    'jsonNumber'
-];
