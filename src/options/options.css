@@ -18,10 +18,14 @@ body {
     font-size: 1.25rem;
 }
 
+h3, p {
+    margin: 0.5rem auto;
+}
+
 #themeOptions,
 #customCodeThemeOptions,
 #customThemeOptions {
-    margin: 1rem 3rem;
+    margin: 2rem 3rem;
 }
 
 .selectContainer {
@@ -64,7 +68,7 @@ select::-ms-expand {
     font-size: 1.25rem;
     cursor: pointer;
     line-height: 1.1;
-    background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
+    /* background-image: linear-gradient(to top, var(--backgroundColor), var(--textColor) 33%); */
     margin-bottom: 0.5rem;
 }
 
@@ -96,7 +100,7 @@ select:focus + .focus {
     display: flex;
     gap: 1rem;
     justify-content: space-between;
-    margin: 0 1rem;
+    margin: 0.5rem 1rem;
     align-items: center;
 }
 
@@ -164,4 +168,12 @@ input[type="checkbox"]:focus {
 input:disabled,
 .hexVal:disabled {
     opacity: 0.3;
+}
+
+#codeExample {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 1rem;
+    margin: 1rem 2rem;
+    padding: 1rem 2rem;
 }

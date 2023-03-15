@@ -232,31 +232,3 @@ input[type='checkbox']::before {
     font-size: 0.825rem;
     overflow-y: auto;
 }
-
-.jsonObj,
-.jsonArray {
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-}
-
-.jsonObj > *,
-.jsonArray > * {
-    margin-left: 1rem;
-}
-
-.jsonObj:has(> .jsonVal) {
-    flex-direction: row;
-}
-
-.jsonKey::after {
-    content: ':';
-}
-
-.jsonKey:has(> .jsonObj.hidden)::after {
-    content: ':\00a0';
-}
-
-.jsonVal {
-    word-break: break-all;
-}

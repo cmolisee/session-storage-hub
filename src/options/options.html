@@ -10,6 +10,10 @@
             rel="stylesheet"
             type="text/css"
             href="options.css" />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="../popup/jsonViewer.css" />
     </head>
 
     <body>
@@ -37,9 +41,28 @@
             <p>These values will override values specified in the Extension Theme above</p>
             <div id="customThemeOptions"></div>
 
-            <h2>Code Customizations</h2>
+            <h3>Code Customizations</h2>
             <p>These values will override values specified in the Code Theme above</p>
             <div id="customCodeThemeOptions"></div>
+
+            <div id="codeExample">
+                <div class="jsonObj">
+                    <div class="jsonKey">exampleNullKey</div>
+                    <div class="jsonVal jsonNullVal">null</div>
+                </div>
+                <div class="jsonObj">
+                    <div class="jsonKey">exampleStringKey</div>
+                    <div class="jsonVal jsonStringVal">this is a string</div>
+                </div>
+                <div class="jsonObj">
+                    <div class="jsonKey">exampleNumberKey</div>
+                    <div class="jsonVal jsonNumberVal">123456</div>
+                </div>
+                <div class="jsonObj">
+                    <div class="jsonKey">exampleBooleanKey</div>
+                    <div class="jsonVal jsonBooleanVal">false</div>
+                </div>
+            </div>
             
         </div>
     </body>

@@ -1,8 +1,9 @@
-import { codeThemeFields, codeThemes, themeFields, themes } from '../js/ext-settings.js';
+import { codeThemeFields, codeThemes, ExtSettings, themeFields, themes } from '../js/ext-settings.js';
 
 document.addEventListener('DOMContentLoaded', init());
 
 function init() {
+    const extSettings = new ExtSettings();
     const extensionThemeSelector = document.querySelector('#extensionTheme');
     const codeThemeSelector = document.querySelector('#codeTheme');
 
@@ -22,22 +23,33 @@ function init() {
         codeThemeSelector.appendChild(option);
     });
 
+    // todo: when select changes update presets
+        // do not update anything that checkboxes are overriding
+
+    console.log(extSettings.settings.extensionTheme);
+    extensionThemeSelector.value = extSettings.settings.extensionTheme;
+    codeThemeSelector.value = extSettings.settings.codeTheme;
+
     const customThemeOptions = document.querySelector('#customThemeOptions');
     const customCodeThemeOptions = document.querySelector('#customCodeThemeOptions');
+    const extensionThemeObject = themes[extSettings.settings.extensionTheme];
+    const codeThemeObject = codeThemes[extSettings.settings.codeTheme];
 
     themeFields.forEach((field) => {
         customThemeOptions.appendChild(buildColorOptionFields(
             field,
-            '#000000'
+            extensionThemeObject[field] || '#000000'
         ));
     });
 
     codeThemeFields.forEach((field) => {
         customCodeThemeOptions.appendChild(buildColorOptionFields(
             field,
-            '#000000'
+            codeThemeObject[field] || '#000000'
         ));
     });
+
+    extSettings.updateStyles();
 }
 
 function buildColorOptionFields(fieldName, defaultValue) {
@@ -51,7 +63,6 @@ function buildColorOptionFields(fieldName, defaultValue) {
     const toggleInput = document.createElement('input');
     toggleInput.setAttribute('type', 'checkbox');
     toggleInput.setAttribute('id', `enable-${fieldName}`);
-    // toggleInput.setAttribute('value', false);
 
     const colorInput = document.createElement('input');
     colorInput.setAttribute('type', 'color');
@@ -66,6 +77,7 @@ function buildColorOptionFields(fieldName, defaultValue) {
     textInput.setAttribute('pattern', '#[0-9A-Fa-f]{6}')
     textInput.setAttribute('disabled', true);
 
+    // when unchecked reset to theme presets
     toggleInput.addEventListener('change', function (e) {
         if (e.target.checked) {
             colorInput.removeAttribute('disabled');
@@ -79,11 +91,15 @@ function buildColorOptionFields(fieldName, defaultValue) {
     textInput.addEventListener('input', function (e) {
         if (e.target.validity.valid) {
             colorInput.setAttribute('value', e.target.value);
+            extSettings.update(colorInput.id, e.target.value);
+            extSettings.updateStyles();
         }
     });
 
     colorInput.addEventListener('change', function (e) {
         textInput.setAttribute('value', e.target.value);
+        extSettings.update(colorInput.id, e.target.value);
+        extSettings.updateStyles();
     });
 
     optionContainer.appendChild(label);
