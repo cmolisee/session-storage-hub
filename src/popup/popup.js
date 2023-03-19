@@ -38,7 +38,7 @@ window.addEventListener('DOMContentLoaded', async function () {
         });
     
     extensionSettings = new ExtSettings();
-    extensionSettings.updateStyles();
+    extensionSettings.render();
 });
 
 const notificationBarEle = document.querySelector('.extUtil__notificationBar');

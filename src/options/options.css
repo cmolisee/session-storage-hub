@@ -170,10 +170,56 @@ input:disabled,
     opacity: 0.3;
 }
 
-#codeExample {
-    border-width: 1px;
+#preview {
+    margin: 0.5rem auto;
+    padding: 0.5rem 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+button {
+    all: unset;
+    border-color: var(--buttonBorderColor);
+    background-color: var(--buttonBackgroundColor);
+    color: var(--buttonTextColor);
+    border-width: 2px;
     border-style: solid;
-    border-radius: 1rem;
-    margin: 1rem 2rem;
-    padding: 1rem 2rem;
+    border-radius: 0.325rem;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 800;
+    padding: 0.25rem 1rem;
+    margin: 0 0.325rem;
+    text-align: center;
+}
+
+button:hover {
+    background-color: var(--buttonBackgroundHoverColor);
+    border-color: var(--buttonHoverBorderColor);
+    color: var(--buttonHoverTextColor);
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    background-color: var(--backgroundColor);
+    border-top-width: 1px;
+    border-top-style: solid;
+    padding-top: 0.5rem;
+    z-index: 9;
+}
+
+.sticky {
+    position: fixed;
+    bottom: 0;
+    width: 100%
 }

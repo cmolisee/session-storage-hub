@@ -1,100 +1,115 @@
-export function ExtSettings() {
-    const savedSettings = this.getSavedSettings().then(data => data);
-    this.settings = Object.assign(defaultSettings, savedSettings);
+export async function ExtSettings() {
+    const data = await this.load();
+    this.settings = deepClone(data);
 }
 
-ExtSettings.prototype.updateSetting = function(key, value) {
-    if (this.settings.hasOwnProperty(key)) {
-        this.settings[key] = value;
-    }
+ExtSettings.prototype.load = async function () {
+    const data = await chrome.storage.sync.get('settings');
+    return await data;
 }
 
-ExtSettings.prototype.getSavedSettings = async function() {
-    return await chrome.storage.sync.get('settings');
-}
-
-ExtSettings.prototype.saveCurrentSettings = function() {
+ExtSettings.prototype.save = function() {
     chrome.storage.sync.set(this.settings);
 }
 
-ExtSettings.prototype.render() = function() {
+ExtSettings.prototype.render = function (settingOverrides) {
     const root = document.querySelector(':root');
-    const themeObject = Object.assign(
-        themes[this.settings.extensionTheme],
-        this.settings.customTheme
-    );
-    const codeThemeObject = Object.assign(
-        codeThemes[this.settings.codeTheme],
-        this.settings.customCodeTheme
-    );
 
+    const customthemeSettings = settingOverrides && settingOverrides.customTheme ? 
+        settingOverrides.customTheme : 
+        themes[this.settings.extensionTheme];
+    const customCodeThemeSettings = settingOverrides && settingOverrides.customCodeTheme ? 
+        settingOverrides.customCodeTheme : 
+        codeThemes[this.settings.codeTheme];
+
+    const themeObject = deepClone(themes[this.settings.extensionTheme]);
+    Object.assign(themeObject, customthemeSettings);
     Object.entries(themeObject).forEach(([key, value]) => {
         root.style.setProperty(`--${key}`, value);
     });
 
+    const codeThemeObject = deepClone(codeThemes[this.settings.codeTheme]);
+    Object.assign(codeThemeObject, customCodeThemeSettings);
     Object.entries(codeThemeObject).forEach(([key, value]) => {
         root.style.setProperty(`--${key}`, value);
     });
 }
 
-ExtSettings.prototype.reset = function(...excluding) {
-    const customThemeObject = Object.assign({}, this.settings.customTheme);
-    const customCodeThemeObject = Object.assign({}, this.settings.customCodeTheme);
+ExtSettings.prototype.update = function (key, value, isCustom = false) {
+    if (!isCustom && this.settings.hasOwnProperty(key)) {
+        this.settings[key] = value;
+    }
 
-    Object.key(customThemeObject).forEach((prop) => {
-        if (!excluding.includes(prop)) {
+    if (this.settings.customTheme.hasOwnProperty(key)) {
+        this.settings.customTheme[key] = value;
+    }
+
+    if (this.settings.customCodeTheme.hasOwnProperty(key)) {
+        this.settings.customCodeTheme[key] = value;
+    }
+}
+
+ExtSettings.prototype.reset = function (...excluding) {
+    const customThemeObject = deepClone(this.settings.customTheme);
+    const customCodeThemeObject = deepClone(this.settings.customCodeTheme);
+    const themePreset = deepClone(themes[this.settings.extensionTheme]);
+    const codePreset = deepClone(codeThemes[this.settings.codeTheme]);
+
+    Object.keys(customThemeObject).forEach((prop) => {
+        if (excluding.includes(prop)) {
             delete customThemeObject[prop];
         }
     });
 
-    Object.key(customCodeThemeObject).forEach((prop) => {
-        if (!excluding.includes(prop)) {
+    Object.keys(customCodeThemeObject).forEach((prop) => {
+        if (excluding.includes(prop)) {
             delete customCodeThemeObject[prop];
         }
     });
 
     this.settings.customTheme = Object.assign(
-        this.settings.customTheme,
+        themePreset,
         customThemeObject
     );
 
     this.settings.customCodeTheme = Object.assign(
-        this.settings.customCodeTheme,
+        codePreset,
         customCodeThemeObject
     );
 }
 
+ExtSettings.prototype.getPresetValue = function (property) {
+    const themePreset = themes[this.settings.extensionTheme];
+    const codeThemePreset = codeThemes[this.settings.codeTheme];
 
-export const defaultSettings = {
-    extensionTheme: 'dark',
-    codeTheme: 'dark',
-    customTheme: themes.dark,
-    customCodeTheme: codeThemes.dark,
+    if (themePreset.hasOwnProperty(property)) {
+        return themePreset[property];
+    }
+    
+    if (codeThemePreset.hasOwnProperty(property)) {
+        return codeThemePreset[property];
+    }
+
+    return null;
 }
 
-export const themeFields = [
-    'alertColor',
-    'backgroundColor',
-    'backgroundHoverColor',
-    'borderColor',
-    'buttonBackgroundColor',
-    'buttonBorderColor',
-    'buttonHoverBackgroundColor',
-    'buttonHoverBorderColor',
-    'buttonHoverTextColor',
-    'buttonTextColor',
-    'checkedColor',
-    'textColor',
-    'uncheckedColor',
-];
+export function deepClone (obj) {
+    if (obj === null) {
+        return null;
+    }
+    
+    const clone = Object.assign({}, obj);
+    Object.keys(clone).forEach((key) => {
+        clone[key] = typeof obj[key] === 'object' ? deepClone(obj[key]) : obj[key]
+    });
 
-export const codeThemeFields = [
-    'jsonKey',
-    'jsonNull',
-    'jsonBoolean',
-    'jsonString',
-    'jsonNumber'
-];
+    if (Array.isArray(obj)) {
+      clone.length = obj.length;
+      return Array.from(clone);
+    }
+
+    return clone;
+};
 
 export const themes = {
     dark: {
@@ -145,3 +160,10 @@ export const codeThemes = {
         jsonNumber: '#986D25'
     }
 };
+
+export const defaultSettings = {
+    extensionTheme: 'dark',
+    codeTheme: 'dark',
+    customTheme: themes.dark,
+    customCodeTheme: codeThemes.dark,
+}
