@@ -22,6 +22,10 @@ h3, p {
     margin: 0.5rem auto;
 }
 
+.options {
+    position: relative;
+}
+
 #themeOptions,
 #customCodeThemeOptions,
 #customThemeOptions {
@@ -95,7 +99,7 @@ select:focus + .focus {
     border: 2px solid var(--alertColor);
     border-radius: inherit;
 }
-
+/* 
 .optionContainer {
     display: flex;
     gap: 1rem;
@@ -177,7 +181,7 @@ input:disabled,
     flex-direction: row;
     justify-content: space-evenly;
     width: 100%;
-}
+} */
 
 .buttons {
     width: 100%;
@@ -209,6 +213,7 @@ button:hover {
 
 .controls {
     display: flex;
+    width: 100%;
     justify-content: center;
     flex-wrap: wrap;
     background-color: var(--backgroundColor);
@@ -220,6 +225,6 @@ button:hover {
 
 .sticky {
     position: fixed;
-    bottom: 0;
+    bottom: 0.5rem;
     width: 100%
 }

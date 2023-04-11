@@ -1,202 +1,161 @@
-import { codeThemes, ExtSettings, themes, deepClone } from '../js/ext-settings.js';
+document.addEventListener('DOMContentLoaded', init);
+const extensionThemeSelector = document.getElementById('extensionThemeOption');
+const codeThemeSelector = document.getElementById('codeThemeOption');
 
-const extSettings = new ExtSettings();
-document.addEventListener('DOMContentLoaded', init());
-
+/**
+ * The function initializes event listeners and populates select fields for saving and resetting
+ * options.
+ */
 function init() {
-    initSelectorOptions();
-    buildOptionFields();
-    configureStickyControls();
-    
-    extSettings.render();  
-}
+    const saveButtonEle = document.getElementById('saveButton');
+    const resetButtonEle = document.getElementById('resetButton');
 
-function initSelectorOptions() {
-    const extensionThemeSelector = document.querySelector('#extensionTheme');
-    const codeThemeSelector = document.querySelector('#codeTheme');
-
-    buildOptions(themes, extensionThemeSelector);
-    buildOptions(codeThemes, codeThemeSelector);
-
-    extensionThemeSelector.value = extSettings.settings.extensionTheme;
-    codeThemeSelector.value = extSettings.settings.codeTheme;
-
-    extensionThemeSelector.addEventListener('change', function (e) {
-        extSettings.update('extensionTheme', e.target.value);
-        updateColorOptionFields();
-        extSettings.render(getActiveCustomThemes()); // pass the active theme keys
-    });
-
-    codeThemeSelector.addEventListener('change', function (e) {
-        extSettings.update('codeTheme', e.target.value);
-        updateColorOptionFields();
-        extSettings.render(); // pass the active code theme keys
-    });
-}
-
-function buildOptions(themes, elem) {
-    Object.keys(themes).forEach((theme) => {
-        const option = document.createElement('option');
-        option.value = theme;
-        option.innerText = theme;
-
-        elem.appendChild(option);
-    });
-}
-
-function buildOptionFields() {
-    const customThemeOptions = document.querySelector('#customThemeOptions');
-    const customCodeThemeOptions = document.querySelector('#customCodeThemeOptions');
-    const extensionThemeObject = themes[extSettings.settings.extensionTheme];
-    const codeThemeObject = codeThemes[extSettings.settings.codeTheme];
-
-    Object.keys(extensionThemeObject).forEach((field) => {
-        let value = extensionThemeObject[field];
-
-        customThemeOptions.appendChild(buildColorOptionFields(
-            field,
-            value === 'transparent' ? extensionThemeObject.backgroundColor : value
-        ));
-    });
-
-    Object.keys(codeThemeObject).forEach((field) => {
-        let value = codeThemeObject[field];
-
-        customCodeThemeOptions.appendChild(buildColorOptionFields(
-            field,
-            value === 'transparent' ? codeThemeObject.backgroundColor : value
-        ));
-    });
-}
-
-function buildColorOptionFields(fieldName, defaultValue) {
-    const optionContainer = document.createElement('div');
-    optionContainer.classList.add('optionContainer');
-
-    const label = document.createElement('label');
-    label.setAttribute('for', fieldName);
-    label.innerText = fieldName;
-
-    const toggleInput = document.createElement('input');
-    toggleInput.setAttribute('type', 'checkbox');
-    toggleInput.setAttribute('id', `enable-${fieldName}`);
-
-    const colorInput = document.createElement('input');
-    colorInput.setAttribute('type', 'color');
-    colorInput.setAttribute('id', fieldName);
-    colorInput.setAttribute('name', fieldName);
-    colorInput.setAttribute('value', defaultValue);
-    colorInput.setAttribute('disabled', true);
-    
-    const textInput = document.createElement('input');
-    textInput.classList.add('hexVal');
-    textInput.setAttribute('value', colorInput.value);
-    textInput.setAttribute('pattern', '#[0-9A-Fa-f]{6}')
-    textInput.setAttribute('disabled', true);
-
-    toggleInput.addEventListener('change', function (e) {
-        // TOOD: Ensure enabling field properly updateds and renders color
-        if (e.target.checked) {
-            colorInput.removeAttribute('disabled');
-            textInput.removeAttribute('disabled');
-        } else {
-            colorInput.setAttribute('disabled', true);
-            textInput.setAttribute('disabled', true);
-
-            const defaultValue = extSettings.getPresetValue(fieldName);
-            
-            extSettings.update(fieldName, defaultValue, true);
-            extSettings.render();
-        }
-    });
-
-    textInput.addEventListener('input', function (e) {
-        if (e.target.validity.valid) {
-            colorInput.setAttribute('value', e.target.value);
-            extSettings.updateSetting(colorInput.id, e.target.value, true);
-            extSettings.render();
-        }
-    });
-
-    colorInput.addEventListener('change', function (e) {
-        textInput.setAttribute('value', e.target.value);
-        extSettings.updateSetting(colorInput.id, e.target.value, true);
-        extSettings.render();
-    });
-
-    optionContainer.appendChild(label);
-    optionContainer.appendChild(toggleInput);
-    optionContainer.appendChild(colorInput);
-    optionContainer.appendChild(textInput);
-
-    return optionContainer;
-}
-
-function updateColorOptionFields() {
-    // get all active toggles
-    // map to fieldNames for active toggles
-    // reset all the custom fields to the preset values unless they are in an active state
-    // update all the custom fields
-    console.log(defaultSettings);
-    const allToggles = document.querySelectorAll('input[type="checkbox"]');
-    const excludeFieldNames = [...allToggles].filter((toggle) => {
-        if (toggle.checked === true) {
-            const colorInput = toggle.parentElement.querySelector('input[type="color"]');
-            return colorInput.id;
-        }
-    });
-
-    console.log(allToggles.length);
-    console.log(excludeFieldNames);
-    extSettings.reset(...excludeFieldNames);
-
-    console.log(extSettings.settings);
-    allToggles.forEach((toggle) => {
-        const colorInput = toggle.parentElement.querySelector('input[type="color"]');
-        const textInput = toggle.parentElement.querySelector('input[type="color"]');
-        let preset = extSettings.getPresetValue(colorInput.id);
-
-        if (preset === 'transparent') {
-            preset = extSettings.getPresetValue('backgroundColor');
-        }
-
-        colorInput.setAttribute('value', preset);
-        textInput.setAttribute('value', preset);
-    });
-}
-
-function configureStickyControls() {
-    const stickyControls = document.querySelector('.controls');
-    const height = stickyControls.clientHeight;
-
-    const placeholder = document.createElement('div');
-    placeholder.style.cssText = `height: ${height}px; width: 100%;`;
-
-    stickyControls.parentNode.insertBefore(placeholder, stickyControls.nextSibling);
-}
-
-function getActiveCustomThemes() {
-    const activeColorProperties = document.querySelectorAll('input[type="checkbox"]:checked + input[type="color"]');
-
-    if (!activeColorProperties.length) {
-        return null;
+    if (saveButtonEle) {
+        saveButtonEle.addEventListener('click', saveOptions);
     }
 
-    const customThemeClone = extSettings.deepClone(themes[extSettings.settings.extensionTheme]);
-    const customCodeThemeClone = extSettings.deepClone(codeThemes[extSettings.settings.codeTheme]);
+    if (resetButtonEle) {
+        resetButtonEle.addEventListener('click', resetOptions);
+    }
 
-    activeColorProperties.forEach((elem) => {
-        const colorInput = elem.parentElement.querySelector('input[type="color"]');
-        const prop = colorInput.id;
+    if (extensionThemeSelector || codeThemeSelector) {
+        populateSelectFields();
+        resetOptions();
+    }
+}
 
-        if (customThemeClone.hasOwnProperty(prop)) {
-            customThemeClone[prop] = colorInput.value;
+/**
+ * This function populates two select fields with options based on the keys of two objects.
+ */
+function populateSelectFields() {
+    Object.keys(extensionThemes).forEach((key) => {
+        const optionEle = document.createElement('option');
+        optionEle.value = key;
+        optionEle.innerText = key;
+
+        extensionThemeSelector.appendChild(optionEle);
+    });
+
+    Object.keys(codeThemes).forEach((key) => {
+        const optionEle = document.createElement('option');
+        optionEle.value = key;
+        optionEle.innerText = key;
+
+        codeThemeSelector.appendChild(optionEle);
+    });
+}
+
+/**
+ * This function saves the selected options for the extension and code themes in Chrome storage and
+ * updates the root styles accordingly.
+ */
+function saveOptions() {
+    const extensionThemeOption = document.getElementById('extensionThemeOption').value;
+    const codeThemeOption = document.getElementById('codeThemeOption').value;
+    
+    chrome.storage.sync.set(
+        { extensionTheme: extensionThemeOption, codeTheme: codeThemeOption, },
+        () => {
+            updateRootStyles(extensionThemeOption, codeThemeOption);
         }
+    );
+};
 
-        if (customCodeThemeClone.hasOwnProperty(prop)) {
-            customCodeThemeClone[prop] = colorInput.value;
+/**
+ * The function resets options by retrieving default settings and updating root styles.
+ */
+function resetOptions() {
+    chrome.storage.sync.get(
+        defaultSettings,
+        (settings) => {
+            updateRootStyles(settings.extensionTheme, settings.codeTheme);
         }
-    })
+    );
+};
 
-    return { customTheme: customThemeClone, customCodeTheme: customCodeThemeClone };
+/**
+ * This function updates the root styles of a webpage based on the selected extension and code themes.
+ * @param extensionTheme - The selected theme for the browser extension.
+ * @param codeTheme - The code theme is a string that represents the selected theme for the code
+ * editor. It is used to retrieve the corresponding object of CSS variables for that theme from the
+ * `codeThemes` object.
+ */
+export function updateRootStyles(extensionTheme, codeTheme) {
+    const extensionThemeSelector = document.getElementById('extensionThemeOption');
+    const codeThemeSelector = document.getElementById('codeThemeOption');
+    const extensionThemeObject = extensionThemes[extensionTheme];
+    const codeThemeObject = codeThemes[codeTheme];
+
+    Object.entries(extensionThemeObject).forEach(([key, value]) => {
+        document.body.style.setProperty(`--${key}`, value);
+    });
+
+    Object.entries(codeThemeObject).forEach(([key, value]) => {
+        document.body.style.setProperty(`--${key}`, value);
+    });
+
+    if (extensionThemeSelector) {
+        extensionThemeSelector.value = extensionTheme;
+    }
+
+    if (codeThemeSelector) {
+        codeThemeSelector.value = codeTheme;
+    }
+}
+
+export const extensionThemes = {
+    dark: {
+        alertColor: '#f46036',
+        backgroundColor: '#403d39',
+        backgroundHoverColor: '#ccc5b9',
+        borderColor: '#ccc5b9',
+        buttonBackgroundColor: 'transparent',
+        buttonBorderColor: '#ccc5b9',
+        buttonHoverBackgroundColor: 'transparent',
+        buttonHoverBorderColor: '#f46036',
+        buttonHoverTextColor: '#f46036',
+        buttonTextColor: '#ccc5b9',
+        checkedColor: '#008000',
+        textColor: '#ccc5b9',
+        uncheckedColor: '#d90429'
+    },
+    light: {
+        alertColor: '#503BFF',
+        backgroundColor: '#F9F3F3',
+        backgroundHoverColor: '#ccc5b9',
+        borderColor: '#7868E6',
+        buttonBackgroundColor: 'transparent',
+        buttonBorderColor: '#343a40',
+        buttonHoverBackgroundColor: 'transparent',
+        buttonHoverBorderColor: '#7868E6',
+        buttonHoverTextColor: '#7868E6',
+        buttonTextColor: '#343a40',
+        checkedColor: '#61B15A',
+        textColor: '#343a40',
+        uncheckedColor: '#FF3E6D'
+    },
+};
+
+export const codeThemes = {
+    dark: {
+        jsonKey: '#AADAFA',
+        jsonNull: '#A67E6B',
+        jsonBoolean: '#6FBFF9',
+        jsonString: '#A67E6B',
+        jsonNumber: '#B2C4A4'
+    },
+    light: {
+        jsonKey: '#943996',
+        jsonNull: '#383A3C',
+        jsonBoolean: '#986D25',
+        jsonString: '#6C9F61',
+        jsonNumber: '#986D25'
+    }
+};
+
+export const defaultSettings = {
+    extensionTheme: 'dark',
+    codeTheme: 'dark',
+    customTheme: extensionThemes.dark,
+    customCodeTheme: codeThemes.dark,
 }

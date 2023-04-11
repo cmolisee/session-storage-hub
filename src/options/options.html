@@ -23,7 +23,7 @@
                 <div class="selectContainer">
                     <label for="extensionTheme">Extension Theme:</label>
                     <div class="select">
-                        <select name="extensionTheme" id="extensionTheme"></select>
+                        <select name="extensionTheme" id="extensionThemeOption"></select>
                         <span class="focus"></span>
                     </div>
                 </div>
@@ -31,35 +31,36 @@
                 <div class="selectContainer">
                     <label for="codeTheme">Code Theme:</label>
                     <div class="select">
-                        <select name="codeTheme" id="codeTheme"></select>
+                        <select name="codeTheme" id="codeThemeOption"></select>
                         <span class="focus"></span>
                     </div>
                 </div>
             </div>
 
-            <h3>Extension Customizations</h3>
+            <!-- TODO: later on add ability for custom color options -->
+            <!-- <h3>Extension Customizations</h3>
             <p>These values will override values specified in the Extension Theme above</p>
             <div id="customThemeOptions"></div>
 
             <h3>Code Customizations</h2>
             <p>These values will override values specified in the Code Theme above</p>
-            <div id="customCodeThemeOptions"></div>
+            <div id="customCodeThemeOptions"></div> -->
+
+            <div class="controls sticky">
+                <button
+                    class="btn btn-theme"
+                    id="saveButton"
+                    type="button">
+                    Save
+                </button>
+                <button
+                    class="btn btn-theme"
+                    id="resetButton"
+                    type="button">
+                    Reset
+                </button>
+            </div>
         </div>
-        
-        <div class="controls sticky">
-            <div class="buttons">
-                <button type="button" id="save">Save</button>
-                <button type="button" id="reset">Reset</button>
-            </div>
-            <div id="preview">
-                Preview:
-                <div class="jsonKey">Key</div>
-                <div class="jsonVal jsonNullVal">null</div>
-                <div class="jsonVal jsonStringVal">string</div>
-                <div class="jsonVal jsonNumberVal">123.456</div>
-                <div class="jsonVal jsonBooleanVal">false</div>
-            </div>
-        </div> 
     </body>
     <script
         type="module"
