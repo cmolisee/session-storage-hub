@@ -1,5 +1,5 @@
 :root {
-    --alertColor: black;
+    --alertColor: lightGreen;
     --backgroundColor: white;
     --backgroundHoverColor: black;
     --borderColor: black;
@@ -14,7 +14,6 @@
     --uncheckedColor: red;
 }
 
-/****** Defaults and Utilities ******/
 * {
     background-color: var(--backgroundColor);
     border-color: var(--borderColor);
@@ -59,7 +58,6 @@ body {
     border-color: var(--buttonHoverBorderColor) !important;
     color: var(--buttonHoverTextColor) !important;
 }
-/****** End Defaults and Utilities ******/
 
 .btn {
     border-width: 2px;
@@ -71,6 +69,23 @@ body {
     padding: 0.25rem 1rem;
     margin: 0 0.325rem;
     text-align: center;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0.5rem;
+}
+
+#optionsButton {
+    color: var(--buttonTextColor);
+    cursor: pointer;
+    margin-right: 1rem;
+}
+
+#optionsButton:hover {
+    color: var(--buttonHoverTextColor);
 }
 
 input[type='checkbox'] {
@@ -118,9 +133,8 @@ input[type='checkbox']::before {
     clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }
 
-.extUtil__title,
 .extUtil__author {
-    margin: 0.325rem auto;
+    margin: 0.325rem 0.5rem;
 }
 
 .extUtil__notificationBar {
@@ -231,32 +245,4 @@ input[type='checkbox']::before {
     margin-left: 1rem;
     font-size: 0.825rem;
     overflow-y: auto;
-}
-
-.jsonObj,
-.jsonArray {
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-}
-
-.jsonObj > *,
-.jsonArray > * {
-    margin-left: 1rem;
-}
-
-.jsonObj:has(> .jsonVal) {
-    flex-direction: row;
-}
-
-.jsonKey::after {
-    content: ':';
-}
-
-.jsonKey:has(> .jsonObj.hidden)::after {
-    content: ':\00a0';
-}
-
-.jsonVal {
-    word-break: break-all;
 }

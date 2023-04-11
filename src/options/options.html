@@ -3,17 +3,6 @@
     <head>
         <meta charset="utf-8" />
         <meta
-            name="color-scheme"
-            content="light dark" />
-        <meta
-            name="theme-color"
-            content="#ffffff"
-            media="(prefers-color-scheme: light)" />
-        <meta
-            name="theme-color"
-            content="#232323"
-            media="(prefers-color-scheme: dark)" />
-        <meta
             name="viewport"
             content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
@@ -21,103 +10,59 @@
             rel="stylesheet"
             type="text/css"
             href="options.css" />
-
-        <script
-            type="text/javascript"
-            src="options.js"></script>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="../popup/jsonViewer.css" />
     </head>
 
     <body>
-        <div class="optionsContainer">
-            <!-- TODO: insert link to github issues -->
+        <div class="options">
             <h1>Options</h1>
-            <label for="extensionTheme">Extension Theme:</label>
-            <select name="extensionTheme" id="extensionTheme">
-                <!-- TODO: populate from javascript -->
-            </select>
+            <div id="themeOptions">
+                <div class="selectContainer">
+                    <label for="extensionTheme">Extension Theme:</label>
+                    <div class="select">
+                        <select name="extensionTheme" id="extensionThemeOption"></select>
+                        <span class="focus"></span>
+                    </div>
+                </div>
 
-            <label for="codeTheme">Code Theme:</label>
-            <select name="codeTheme" id="codeTheme">
-                <!-- TODO: populate from javascript -->
-            </select>
-            <h3>Extension Customizations</h3>
+                <div class="selectContainer">
+                    <label for="codeTheme">Code Theme:</label>
+                    <div class="select">
+                        <select name="codeTheme" id="codeThemeOption"></select>
+                        <span class="focus"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TODO: later on add ability for custom color options -->
+            <!-- <h3>Extension Customizations</h3>
             <p>These values will override values specified in the Extension Theme above</p>
-            <div>
-                <input type="color" id="alertColor" name="alertColor" value="">
-                <label for="alertColor">Alert Color</label>
-            </div>
-            <div>
-                <input type="color" id="backgroundColor" name="backgroundColor" value="">
-                <label for="backgroundColor">Background Color</label>
-            </div>
-            <div>
-                <input type="color" id="backgroundHoverColor" name="backgroundHoverColor" value="">
-                <label for="backgroundHoverColor">Background Hover Color</label>
-            </div>
-            <div>
-                <input type="color" id="borderColor" name="borderColor" value="">
-                <label for="borderColor">Border Color</label>
-            </div>
-            <div>
-                <input type="color" id="buttonBackgroundColor" name="buttonBackgroundColor" value="">
-                <label for="buttonBackgroundColor">Button Background Color</label>
-            </div>
-            <div>
-                <input type="color" id="buttonBorderColor" name="buttonBorderColor" value="">
-                <label for="buttonBorderColor">Button Border Color</label>
-            </div>
-            <div>
-                <input type="color" id="buttonHoverBackgroundColor" name="buttonHoverBackgroundColor" value="">
-                <label for="buttonHoverBackgroundColor">Button Background Hover Color</label>
-            </div>
-            <div>
-                <input type="color" id="buttonHoverBorderColor" name="buttonHoverBorderColor" value="">
-                <label for="buttonHoverBorderColor">Button Border Hover Color</label>
-            </div>
-            <div>
-                <input type="color" id="buttonHoverTextColor" name="buttonHoverTextColor" value="">
-                <label for="buttonHoverTextColor">Button Text Hover Color</label>
-            </div>
-            <div>
-                <input type="color" id="buttonTextColor" name="buttonTextColor" value="">
-                <label for="buttonTextColor">Button Text Color</label>
-            </div>
-            <div>
-                <input type="color" id="checkedColor" name="checkedColor" value="">
-                <label for="checkedColor">Checked Color</label>
-            </div>
-            <div>
-                <input type="color" id="textColor" name="textColor" value="">
-                <label for="textColor">Text Color</label>
-            </div>
-            <div>
-                <input type="color" id="uncheckedColor" name="uncheckedColor" value="">
-                <label for="uncheckedColor">Unchecked Color</label>
-            </div>
+            <div id="customThemeOptions"></div>
 
-            <h2>Code Customizations</h2>
+            <h3>Code Customizations</h2>
             <p>These values will override values specified in the Code Theme above</p>
-            <div>
-                <input type="color" id="jsonKey" name="jsonKey" value="">
-                <label for="jsonKey">Key Color</label>
-            </div>
+            <div id="customCodeThemeOptions"></div> -->
 
-            <div>
-                <input type="color" id="jsonNull" name="jsonNull" value="">
-                <label for="jsonNull">Null Color</label>
-            </div>
-            <div>
-                <input type="color" id="jsonBoolean" name="jsonBoolean" value="">
-                <label for="jsonBoolean">Boolean Color</label>
-            </div>
-            <div>
-                <input type="color" id="jsonNumber" name="jsonNumber" value="">
-                <label for="jsonNumber">Number Color</label>
-            </div>
-            <div>
-                <input type="color" id="jsonString" name="jsonString" value="">
-                <label for="jsonString">String Color</label>
+            <div class="controls sticky">
+                <button
+                    class="btn btn-theme"
+                    id="saveButton"
+                    type="button">
+                    Save
+                </button>
+                <button
+                    class="btn btn-theme"
+                    id="resetButton"
+                    type="button">
+                    Reset
+                </button>
             </div>
         </div>
     </body>
+    <script
+        type="module"
+        src="options.js"></script>
 </html>
