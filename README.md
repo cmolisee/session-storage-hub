@@ -1,6 +1,6 @@
 # Session Storage Hub
 
-Current Version: v2.0.0
+Current Version: v2.0.1
 
 Chrome browser extension to easily view, copy, and paste session storage data from one tab to another.
 
@@ -18,10 +18,12 @@ How to install:
 
 Architecture Overview:
 
+```
 +---------+
 | browser | <--- Service Worker <-------+
 |         | <--- Content Script <-------+-- Manifest
 +---------+ <--- Injected Script(s) <---+
+```
 
 Manifest contains extension configurations and permissions for all files.
 Service Worker facilitates communication to/from web pages and the extension.
@@ -34,6 +36,7 @@ Injected Scripts are scripts that get injected into the webpage DOM.
 
 File Structure:
 
+```
 Session-Storage-Browser-Extension/
 ├─ src/
 │  ├─ icons/
@@ -53,3 +56,4 @@ Session-Storage-Browser-Extension/
 │  │  ├─ popup.html
 │  ├─ manifest.json
 ├─ tests/
+```
