@@ -61,7 +61,7 @@ optionsButtonEle.addEventListener('click', function() {
 
 copyButtonEle.addEventListener('click', function (e) {
     copySelectedToStorageClipboard();
-    createAndShowNotification('Checked Session Storage items have been copied');
+    createAndShowNotification('Session Storage items have been copied');
 });
 
 pasteButtonEle.addEventListener('click', function (e) {
@@ -234,12 +234,11 @@ async function getClipboardObject() {
  * method. The content script will then handle the pasting of the data.
  */
 async function dispatchPasteEvent(obj) {
-    const currentTab = await chrome.tabs.query({
-        active: true,
-        lastFocusedWindow: true,
-    });
-    const currentTabId = currentTab[0].id.toString();
-    chrome.tabs.sendMessage(parseInt(currentTabId), obj, function (res) {
+    const currentWindow = await chrome.windows.getCurrent();
+    const tabs = await chrome.tabs.query({active: true, windowId: currentWindow.id});
+    const currentTab = await tabs[0].id;
+    
+    chrome.tabs.sendMessage(parseInt(currentTab), obj, function (res) {
         if (chrome.runtime.lastError && chrome.runtime.lastError.message) {
             createAndShowNotification(
                 'Error Pasting: ' + chrome.runtime.lastError.message
