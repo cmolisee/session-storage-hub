@@ -61,7 +61,7 @@ optionsButtonEle.addEventListener('click', function() {
 
 copyButtonEle.addEventListener('click', function (e) {
     copySelectedToStorageClipboard();
-    createAndShowNotification('Checked Session Storage items have been copied');
+    createAndShowNotification('Session Storage items have been copied');
 });
 
 pasteButtonEle.addEventListener('click', function (e) {
@@ -203,12 +203,13 @@ function createAndShowNotification(message) {
  * This function copies selected items to the storage clipboard by removing unchecked items from the
  * current session storage data.
  */
+// TODO: bug - we seem to be copying escape characters and escaping the escape characters...
 function copySelectedToStorageClipboard() {
-    const allCheckedElems = document.querySelectorAll(
+    const allUncheckedElems = document.querySelectorAll(
         '.extUtil__ssItem input:not(:checked)'
     );
     const clipboardObject = Object.assign({}, currentSessionStorageData);
-    allCheckedElems.forEach((inputEle) => {
+    allUncheckedElems.forEach((inputEle) => {
         const id = inputEle.id;
 
         delete clipboardObject[id];
@@ -234,12 +235,11 @@ async function getClipboardObject() {
  * method. The content script will then handle the pasting of the data.
  */
 async function dispatchPasteEvent(obj) {
-    const currentTab = await chrome.tabs.query({
-        active: true,
-        lastFocusedWindow: true,
-    });
-    const currentTabId = currentTab[0].id.toString();
-    chrome.tabs.sendMessage(parseInt(currentTabId), obj, function (res) {
+    const currentWindow = await chrome.windows.getCurrent();
+    const tabs = await chrome.tabs.query({active: true, windowId: currentWindow.id});
+    const currentTab = await tabs[0].id;
+    
+    chrome.tabs.sendMessage(parseInt(currentTab), obj, function (res) {
         if (chrome.runtime.lastError && chrome.runtime.lastError.message) {
             createAndShowNotification(
                 'Error Pasting: ' + chrome.runtime.lastError.message

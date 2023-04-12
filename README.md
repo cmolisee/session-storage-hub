@@ -1,6 +1,6 @@
 # Session Storage Hub
 
-Current Version: v2.0.0
+Current Version: v2.0.1
 
 Chrome browser extension to easily view, copy, and paste session storage data from one tab to another.
 
