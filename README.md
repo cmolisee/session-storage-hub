@@ -18,10 +18,12 @@ How to install:
 
 Architecture Overview:
 
+```
 +---------+
 | browser | <--- Service Worker <-------+
 |         | <--- Content Script <-------+-- Manifest
 +---------+ <--- Injected Script(s) <---+
+```
 
 Manifest contains extension configurations and permissions for all files.
 Service Worker facilitates communication to/from web pages and the extension.
@@ -34,6 +36,7 @@ Injected Scripts are scripts that get injected into the webpage DOM.
 
 File Structure:
 
+```
 Session-Storage-Browser-Extension/
 ├─ src/
 │  ├─ icons/
@@ -53,3 +56,4 @@ Session-Storage-Browser-Extension/
 │  │  ├─ popup.html
 │  ├─ manifest.json
 ├─ tests/
+```
