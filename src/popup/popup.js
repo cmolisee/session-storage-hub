@@ -203,12 +203,13 @@ function createAndShowNotification(message) {
  * This function copies selected items to the storage clipboard by removing unchecked items from the
  * current session storage data.
  */
+// TODO: bug - we seem to be copying escape characters and escaping the escape characters...
 function copySelectedToStorageClipboard() {
-    const allCheckedElems = document.querySelectorAll(
+    const allUncheckedElems = document.querySelectorAll(
         '.extUtil__ssItem input:not(:checked)'
     );
     const clipboardObject = Object.assign({}, currentSessionStorageData);
-    allCheckedElems.forEach((inputEle) => {
+    allUncheckedElems.forEach((inputEle) => {
         const id = inputEle.id;
 
         delete clipboardObject[id];
