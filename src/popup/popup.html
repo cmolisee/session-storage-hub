@@ -3,17 +3,6 @@
     <head>
         <meta charset="utf-8" />
         <meta
-            name="color-scheme"
-            content="light dark" />
-        <meta
-            name="theme-color"
-            content="#ffffff"
-            media="(prefers-color-scheme: light)" />
-        <meta
-            name="theme-color"
-            content="#232323"
-            media="(prefers-color-scheme: dark)" />
-        <meta
             name="viewport"
             content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
@@ -21,23 +10,30 @@
             rel="stylesheet"
             type="text/css"
             href="popup.css" />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="jsonViewer.css" />
     </head>
 
     <body>
         <div class="extUtil">
-            <h1 class="extUtil__title">Session Storage Utilities</h1>
-            <p class="extUtil__author">Version 1.3.1</p>
+            <div class="heading">
+                <h1 class="extUtil__title">Session Storage Hub</h1>
+                <p id="optionsButton">Options</p>
+            </div>
+            <p class="extUtil__author">v2.0.0</p>
             <div class="extUtil__notificationBar"></div>
             <div class="extUtil__content">
                 <div class="extUtil__tabItem">
                     <div class="extUtil__tabItemControls">
                         <button
-                            class="btn btn--copy"
+                            class="btn btn-theme copyButton"
                             type="button">
                             Copy
                         </button>
                         <button
-                            class="btn btn--paste"
+                            class="btn btn-theme pasteButton"
                             type="button">
                             Paste
                         </button>
@@ -65,7 +61,4 @@
     <script
         type="module"
         src="popup.js"></script>
-    <script
-        type="module"
-        src="../utils/json-viewer.js"></script>
 </html>

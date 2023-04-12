@@ -3,17 +3,6 @@
     <head>
         <meta charset="utf-8" />
         <meta
-            name="color-scheme"
-            content="light dark" />
-        <meta
-            name="theme-color"
-            content="#ffffff"
-            media="(prefers-color-scheme: light)" />
-        <meta
-            name="theme-color"
-            content="#232323"
-            media="(prefers-color-scheme: dark)" />
-        <meta
             name="viewport"
             content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
@@ -21,27 +10,59 @@
             rel="stylesheet"
             type="text/css"
             href="options.css" />
-
-        <script
-            type="text/javascript"
-            src="options.js"></script>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="../popup/jsonViewer.css" />
     </head>
 
     <body>
-        <div class="optionsContainer">
+        <div class="options">
             <h1>Options</h1>
-            <label>
-                <input
-                    type="checkbox"
-                    id="check1" />
-                <span data-i18n="option a"></span>
-            </label>
-            <label>
-                <input
-                    type="checkbox"
-                    id="check2" />
-                <span data-i18n="option b"></span>
-            </label>
+            <div id="themeOptions">
+                <div class="selectContainer">
+                    <label for="extensionTheme">Extension Theme:</label>
+                    <div class="select">
+                        <select name="extensionTheme" id="extensionThemeOption"></select>
+                        <span class="focus"></span>
+                    </div>
+                </div>
+
+                <div class="selectContainer">
+                    <label for="codeTheme">Code Theme:</label>
+                    <div class="select">
+                        <select name="codeTheme" id="codeThemeOption"></select>
+                        <span class="focus"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TODO: later on add ability for custom color options -->
+            <!-- <h3>Extension Customizations</h3>
+            <p>These values will override values specified in the Extension Theme above</p>
+            <div id="customThemeOptions"></div>
+
+            <h3>Code Customizations</h2>
+            <p>These values will override values specified in the Code Theme above</p>
+            <div id="customCodeThemeOptions"></div> -->
+
+            <div class="controls sticky">
+                <button
+                    class="btn btn-theme"
+                    id="saveButton"
+                    type="button">
+                    Save
+                </button>
+                <button
+                    class="btn btn-theme"
+                    id="resetButton"
+                    type="button">
+                    Reset
+                </button>
+            </div>
         </div>
     </body>
+    <script
+        type="module"
+        src="options.js"></script>
 </html>

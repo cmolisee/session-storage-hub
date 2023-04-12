@@ -1,8 +1,11 @@
 {
     "env": {
         "browser": true,
-        "node": true
+        "es2021": true
     },
+    "extends": "standard",
+    "overrides": [
+    ],
     "parserOptions": {
         "ecmaVersion": "latest",
         "sourceType": "module"
@@ -21,7 +24,10 @@
                 "ignoreReadBeforeAssign": false
             }
         ],
-        "array-bracket-newline": ["error", { "multiline": true, "minItems": 4 }],
+        "array-bracket-newline": [
+            "error",
+            { "multiline": true, "minItems": 4 }
+        ],
         "array-bracket-spacing": ["error", "always"],
         "arrow-parens": ["error", "always"],
         "block-spacing": ["error", "always"],

@@ -1,9 +1,9 @@
 {
-    "bracketSameLine": true,
-    "jsxSingleQuote": true,
-    "singleAttributePerLine": true,
-    "singleQuote": true,
     "tabWidth": 4,
+    "useTabs": true,
+    "singleAttributePerLine":  true,
+    "singleQuote": true,
     "trailingComma": "es5",
-    "useTabs": false
+    "bracketSpacing": true,
+    "arrowParens": "always"
 }
