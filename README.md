@@ -16,6 +16,19 @@ How to install:
 
 ---
 
+How to Update:
+
+_You need to update the extension files you coppied and saved to your computer with the most up-to-date 'main' branch from the repository._
+
+1. Go to your terminal and change directory to where you cloned the 'main' branch.
+2. Once there run `git fetch && git pull`. You should see some updates in the terminal.
+3. Go to your browser and open the extension manager.
+4. Select the 'Session Storage Hub' extension and click 'Update'.
+5. You may need to reload your browser or reload the pages you are trying to use the browser on.
+
+
+---
+
 Architecture Overview:
 
 ```
