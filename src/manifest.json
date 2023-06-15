@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Session Storage Hub",
     "description": "Utilities for session storage.",
-    "version": "2.0.1",
+    "version": "2.1.1",
     "author": "molisee.cody@gmail.com",
     "offline_enabled": true,
     "options_page": "options/options.html",

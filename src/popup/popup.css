@@ -246,3 +246,19 @@ input[type='checkbox']::before {
     font-size: 0.825rem;
     overflow-y: auto;
 }
+
+.toggleOptions {
+    padding: 0 1.5rem;
+    margin: 0.125rem;
+}
+
+.selectAll,
+.unselectAll {
+    cursor: pointer;
+}
+
+.selectAll:hover,
+.unselectAll:hover {
+    text-decoration: underline;
+    color: var(--buttonHoverTextColor);
+}
