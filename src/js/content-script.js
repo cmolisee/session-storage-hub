@@ -31,7 +31,7 @@ the Chrome runtime using `chrome.runtime.sendMessage()`. */
     ) {
         const data = message;
         Object.entries(data).forEach((entry) => {
-            sessionStorage.setItem(entry[0], JSON.stringify(entry[1]));
+            sessionStorage.setItem(entry[0], entry[1]);
         });
 
         window.dispatchEvent(new Event('storage'));
