@@ -50,6 +50,8 @@ const listEle = document.querySelector('.extUtil__tableList');
 const viewEle = document.querySelector('.extUtil__tableView');
 const copyButtonEle = document.querySelector('.copyButton');
 const pasteButtonEle = document.querySelector('.pasteButton');
+const selectAllButtonEle = document.querySelector('.selectAll');
+const unselectAllButtonEle = document.querySelector('.unselectAll');
 
 optionsButtonEle.addEventListener('click', function() {
     if (chrome.runtime.openOptionsPage) {
@@ -71,6 +73,26 @@ pasteButtonEle.addEventListener('click', function (e) {
         } else {
             dispatchPasteEvent(obj.clipboard);
         }
+    });
+});
+
+selectAllButtonEle.addEventListener('click', function (e) {
+    e.preventDefault();
+    console.log('select all');
+    const inputElems = document.querySelectorAll('.extUtil__ssItem input');
+
+    inputElems.forEach((input) => {
+        input.checked = true;
+    });
+});
+
+unselectAllButtonEle.addEventListener('click', function (e) {
+    e.preventDefault();
+    console.log('unselect all');
+    const inputElems = document.querySelectorAll('.extUtil__ssItem input');
+
+    inputElems.forEach((input) => {
+        input.checked = false;
     });
 });
 
