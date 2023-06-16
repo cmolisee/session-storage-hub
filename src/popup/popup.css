@@ -249,7 +249,7 @@ input[type='checkbox']::before {
     display: grid;
     grid-template-areas: 'list view';
     grid-template-columns: 1fr 3fr;
-    height: 65vh;
+    /* height: 65vh; */
 }
 
 .extUtil__tableList {
@@ -258,6 +258,8 @@ input[type='checkbox']::before {
     border-right-style: solid;
     padding: 0.325rem;
     overflow-y: auto;
+    overflow-x: clip;
+    min-height: fit-content;
 }
 
 .extUtil__ssItem {
