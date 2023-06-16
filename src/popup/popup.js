@@ -44,12 +44,14 @@ window.addEventListener('DOMContentLoaded', async function () {
     );
 });
 
-const notificationBarEle = document.querySelector('.extUtil__notificationBar');
+const toastEle = document.getElementById('toast');
 const optionsButtonEle = document.querySelector('#optionsButton');
 const listEle = document.querySelector('.extUtil__tableList');
 const viewEle = document.querySelector('.extUtil__tableView');
 const copyButtonEle = document.querySelector('.copyButton');
 const pasteButtonEle = document.querySelector('.pasteButton');
+const selectAllButtonEle = document.querySelector('.selectAll');
+const unselectAllButtonEle = document.querySelector('.unselectAll');
 
 optionsButtonEle.addEventListener('click', function() {
     if (chrome.runtime.openOptionsPage) {
@@ -71,6 +73,26 @@ pasteButtonEle.addEventListener('click', function (e) {
         } else {
             dispatchPasteEvent(obj.clipboard);
         }
+    });
+});
+
+selectAllButtonEle.addEventListener('click', function (e) {
+    e.preventDefault();
+    console.log('select all');
+    const inputElems = document.querySelectorAll('.extUtil__ssItem input');
+
+    inputElems.forEach((input) => {
+        input.checked = true;
+    });
+});
+
+unselectAllButtonEle.addEventListener('click', function (e) {
+    e.preventDefault();
+    console.log('unselect all');
+    const inputElems = document.querySelectorAll('.extUtil__ssItem input');
+
+    inputElems.forEach((input) => {
+        input.checked = false;
     });
 });
 
@@ -168,35 +190,34 @@ async function updateViewWithCurrentData(data) {
  * doing anything.
  */
 function createAndShowNotification(message) {
-    if (!notificationBarEle) {
+    if (!toastEle) {
         return;
     }
 
-    const existingNotificationEle = notificationBarEle.querySelector(
-        '.extUtil__notification'
-    );
-
-    if (existingNotificationEle) {
-        notificationBarEle.removeChild(existingNotificationEle);
+    if (toastEle.innerHTML) {
+        toastEle.style.cssText = 'transform:translateY(100%);opacity:0;';
+        toastEle.innerHTML = '';
     }
 
-    const notificationEle = document.createElement('div');
-    notificationEle.classList.add('extUtil__notification', 'alert');
+    const toastBodyEle = document.createElement('div');
+    toastBodyEle.classList.add('toast__body');
 
-    const iconEle = document.createElement('div');
-    iconEle.classList.add('extUtil__notificationIcon', 'alert');
-    iconEle.appendChild(document.createElement('i'));
+    const toastTextEle = document.createElement('p');
+    toastTextEle.classList.add('toast__text');
+    toastTextEle.innerHTML = message;
 
-    const textEle = document.createElement('div');
-    textEle.classList.add('extUtil__notificationText', 'alert');
-    textEle.innerHTML = message;
+    toastBodyEle.appendChild(toastTextEle);
 
-    notificationEle.appendChild(iconEle);
-    notificationEle.appendChild(textEle);
+    toastEle.appendChild(toastBodyEle);
 
-    notificationBarEle.appendChild(notificationEle);
+    toastEle.style.cssText = 'transform:translateY(0);opacity:1;';
 
-    notificationBarEle.style.display = 'flex';
+    setTimeout(function () { 
+        if (toastEle.innerHTML) {
+            toastEle.style.cssText = 'transform:translateY(100%);opacity:0;';
+            toastEle.innerHTML = '';
+        }
+    }, 3000);
 }
 
 /**
