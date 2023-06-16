@@ -1,17 +1,18 @@
+/* Utility */
 :root {
-    --alertColor: lightGreen;
-    --backgroundColor: white;
-    --backgroundHoverColor: black;
-    --borderColor: black;
-    --buttonBackgroundColor: white;
-    --buttonBorderColor: black;
-    --buttonHoverBackgroundColor: transparent;
-    --buttonHoverBorderColor: black;
-    --buttonHoverTextColor: black;
-    --buttonTextColor: black;
-    --checkedColor: green;
-    --textColor: black;
-    --uncheckedColor: red;
+    --alertColor: '#f46036';
+    --backgroundColor: '#403d39';
+    --backgroundHoverColor: '#ccc5b9';
+    --borderColor: '#ccc5b9';
+    --buttonBackgroundColor: 'transparent';
+    --buttonBorderColor: '#ccc5b9';
+    --buttonHoverBackgroundColor: 'transparent';
+    --buttonHoverBorderColor: '#f46036';
+    --buttonHoverTextColor: '#f46036';
+    --buttonTextColor: '#ccc5b9';
+    --checkedColor: '#008000';
+    --textColor: '#ccc5b9';
+    --uncheckedColor: '#d90429';
 }
 
 * {
@@ -22,6 +23,8 @@
 }
 
 body {
+    margin: 0;
+    padding: 0.25rem;
     width: 47rem;
     height: 100%;
     overflow: hidden;
@@ -47,6 +50,8 @@ body {
     color: var(--backgroundColor) !important;
 }
 
+/* Buttons */
+
 .btn-theme {
     border-color: var(--buttonBorderColor) !important;
     background-color: var(--buttonBackgroundColor) !important;
@@ -71,15 +76,8 @@ body {
     text-align: center;
 }
 
-.heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 0.5rem;
-}
-
 #optionsButton {
-    color: var(--buttonTextColor);
+    /* color: var(--buttonTextColor); */
     cursor: pointer;
     margin-right: 1rem;
 }
@@ -87,6 +85,41 @@ body {
 #optionsButton:hover {
     color: var(--buttonHoverTextColor);
 }
+
+.toggleOptions {
+    padding: 0 1.5rem;
+    margin: 0.125rem;
+}
+
+.selectAll,
+.unselectAll {
+    cursor: pointer;
+}
+
+.selectAll:hover,
+.unselectAll:hover {
+    text-decoration: underline;
+    color: var(--buttonHoverTextColor);
+}
+
+/* Heading */
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0.5rem;
+}
+
+.extUtil__title {
+    margin-bottom: 0.25rem;
+}
+
+.extUtil__version {
+    margin: 0.325rem 0.5rem;
+}
+
+/* Inputs */
 
 input[type='checkbox'] {
     appearance: none;
@@ -133,49 +166,53 @@ input[type='checkbox']::before {
     clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }
 
-.extUtil__author {
-    margin: 0.325rem 0.5rem;
+/* Notifications */
+
+#toast {
+    position: fixed;
+    bottom: 5%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    max-width: 30rem;
+    white-space: nowrap;
+    transform: translateY(100%);
+    opacity: 0;
+    transition: ease-in-out opacity 500ms, transform 500ms;
 }
 
-.extUtil__notificationBar {
-    display: none;
-    border-radius: 0.5rem;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+.toast__body {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3125rem;
+    width: 100%;
+    background-color: var(--buttonHoverTextColor);
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.toast__text {
+    padding: 0 1rem;
+    background: transparent;
+    color: var(--backgroundColor);
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin: 0 0.5rem;
+}
+
+.toast__closeButton {
+    font-size: 0.625rem;
+    background: transparent;
+    color: var(--backgroundColor);
+}
+
+.toast__closeButton:hover {
+    text-decoration: underline;
 }
 
 /* create transition for notification bar when display changed to flex */
 
-.extUtil__notification {
-    display: flex;
-    padding: 0.3125rem;
-    align-items: center;
-}
-
-.extUtil__notificationIcon {
-    height: 100%;
-    width: 3rem;
-    display: flex;
-    border-right-width: 3px;
-    border-right-style: solid;
-    align-items: center;
-    margin-right: 0.5rem;
-    justify-content: center;
-}
-
-.extUtil__notificationIcon i {
-    width: 1.5rem;
-    height: 1.5rem;
-    background-size: cover;
-    background-repeat: no-repeat;
-    display: inline-block;
-    background-image: url('../icons/notification-48.png');
-}
-
-.extUtil__notificationText {
-    font-size: 1rem;
-    font-weight: 500;
-}
+/* Session Storage Table/Content */
 
 .extUtil__content {
     margin-top: 1rem;
@@ -245,20 +282,4 @@ input[type='checkbox']::before {
     margin-left: 1rem;
     font-size: 0.825rem;
     overflow-y: auto;
-}
-
-.toggleOptions {
-    padding: 0 1.5rem;
-    margin: 0.125rem;
-}
-
-.selectAll,
-.unselectAll {
-    cursor: pointer;
-}
-
-.selectAll:hover,
-.unselectAll:hover {
-    text-decoration: underline;
-    color: var(--buttonHoverTextColor);
 }
