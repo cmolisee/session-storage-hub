@@ -1,47 +1,44 @@
 import JSONViewer from '../js/json-viewer.js';
 import { defaultSettings, updateRootStyles } from '../options/options.js';
 
-var currentSessionStorageData = {};
-var currentSessionStorageElements = [];
+const currentSessionStorageData = {};
+const currentSessionStorageElements = [];
 
 chrome.storage.onChanged.addListener(function (changes, areaName) {
-    if (areaName === 'local' && !changes.clipboard && !changes.settings) {
-        Object.keys(changes).forEach((key) => {
-            const updateObject = changes[key].newValue;
-            Object.assign(currentSessionStorageData, updateObject);
-        });
+	if (areaName === 'local' && !changes.clipboard && !changes.settings) {
+		Object.keys(changes).forEach((key) => {
+			const updateObject = changes[key].newValue;
+			Object.assign(currentSessionStorageData, updateObject);
+		});
 
-        buildSessionStorageElements(currentSessionStorageData);
-        updateViewWithCurrentData(currentSessionStorageData);
-    }
+		buildSessionStorageElements(currentSessionStorageData);
+		updateViewWithCurrentData(currentSessionStorageData);
+	}
 });
 
 window.addEventListener('DOMContentLoaded', async function () {
-    const currentTab = await chrome.tabs.query({
-        active: true,
-        lastFocusedWindow: true,
-    });
-    const currentTabId = currentTab[0].id.toString();
-    
-    chrome.storage.local
-        .get(currentTabId)
-        .then(async (response) => {
-            const obj = await response;
-            return obj[currentTabId];
-        })
-        .then((data) => {
-            Object.assign(currentSessionStorageData, data);
+	const currentTab = await chrome.tabs.query({
+		active: true,
+		lastFocusedWindow: true,
+	});
+	const currentTabId = currentTab[0].id.toString();
 
-            buildSessionStorageElements(currentSessionStorageData);
-            updateViewWithCurrentData(currentSessionStorageData);
-        });
+	chrome.storage.local
+		.get(currentTabId)
+		.then(async (response) => {
+			const obj = await response;
+			return obj[currentTabId];
+		})
+		.then((data) => {
+			Object.assign(currentSessionStorageData, data);
 
-    chrome.storage.sync.get(
-        defaultSettings,
-        (settings) => {
-            updateRootStyles(settings.extensionTheme, settings.codeTheme);
-        }
-    );
+			buildSessionStorageElements(currentSessionStorageData);
+			updateViewWithCurrentData(currentSessionStorageData);
+		});
+
+	chrome.storage.sync.get(defaultSettings, (settings) => {
+		updateRootStyles(settings.extensionTheme, settings.codeTheme);
+	});
 });
 
 const toastEle = document.getElementById('toast');
@@ -53,47 +50,47 @@ const pasteButtonEle = document.querySelector('.pasteButton');
 const selectAllButtonEle = document.querySelector('.selectAll');
 const unselectAllButtonEle = document.querySelector('.unselectAll');
 
-optionsButtonEle.addEventListener('click', function() {
-    if (chrome.runtime.openOptionsPage) {
-      chrome.runtime.openOptionsPage();
-    } else {
-      window.open(chrome.runtime.getURL('options.html'));
-    }
+optionsButtonEle.addEventListener('click', function () {
+	if (chrome.runtime.openOptionsPage) {
+		chrome.runtime.openOptionsPage();
+	} else {
+		window.open(chrome.runtime.getURL('options.html'));
+	}
 });
 
 copyButtonEle.addEventListener('click', function (e) {
-    copySelectedToStorageClipboard();
-    createAndShowNotification('Session Storage items have been copied');
+	copySelectedToStorageClipboard();
+	createAndShowNotification('Session Storage items have been copied');
 });
 
 pasteButtonEle.addEventListener('click', function (e) {
-    getClipboardObject().then((obj) => {
-        if (!Object.keys(obj.clipboard).length) {
-            createAndShowNotification('Clipboard is empty');
-        } else {
-            dispatchPasteEvent(obj.clipboard);
-        }
-    });
+	getClipboardObject().then((obj) => {
+		if (!Object.keys(obj.clipboard).length) {
+			createAndShowNotification('Clipboard is empty');
+		} else {
+			dispatchPasteEvent(obj.clipboard);
+		}
+	});
 });
 
 selectAllButtonEle.addEventListener('click', function (e) {
-    e.preventDefault();
-    console.log('select all');
-    const inputElems = document.querySelectorAll('.extUtil__ssItem input');
+	e.preventDefault();
+	console.log('select all');
+	const inputElems = document.querySelectorAll('.extUtil__ssItem input');
 
-    inputElems.forEach((input) => {
-        input.checked = true;
-    });
+	inputElems.forEach((input) => {
+		input.checked = true;
+	});
 });
 
 unselectAllButtonEle.addEventListener('click', function (e) {
-    e.preventDefault();
-    console.log('unselect all');
-    const inputElems = document.querySelectorAll('.extUtil__ssItem input');
+	e.preventDefault();
+	console.log('unselect all');
+	const inputElems = document.querySelectorAll('.extUtil__ssItem input');
 
-    inputElems.forEach((input) => {
-        input.checked = false;
-    });
+	inputElems.forEach((input) => {
+		input.checked = false;
+	});
 });
 
 /**
@@ -104,46 +101,48 @@ unselectAllButtonEle.addEventListener('click', function (e) {
  * the values are the corresponding data values.
  */
 async function buildSessionStorageElements(data) {
-    while (listEle.firstChild) {
-        listEle.removeChild(listEle.firstChild);
-    }
+	while (listEle.firstChild) {
+		listEle.removeChild(listEle.firstChild);
+	}
 
-    Object.entries(data).forEach((item, i) => {
-        const itemEle = document.createElement('div');
-        const id = item[0];
+	Object.entries(data).forEach((item, i) => {
+		const itemEle = document.createElement('div');
+		const id = item[0];
 
-        itemEle.classList.add('extUtil__ssItem');
+		itemEle.classList.add('extUtil__ssItem');
 
-        const inputEle = document.createElement('input');
-        inputEle.type = 'checkbox';
-        inputEle.id = id;
-        inputEle.value = true;
-        inputEle.checked = true;
+		const inputEle = document.createElement('input');
+		inputEle.type = 'checkbox';
+		inputEle.id = id;
+		inputEle.value = true;
+		inputEle.checked = true;
 
-        const labelEle = document.createElement('p');
-        if (i === 0) {
-            labelEle.classList.add('selected');
-        }
-        labelEle.innerHTML = id.replace(/(.{17})..+/, '$1&hellip;');
-        labelEle.addEventListener('click', function (e) {
-            e.preventDefault();
+		const labelEle = document.createElement('p');
+		if (i === 0) {
+			labelEle.classList.add('selected');
+		}
+		labelEle.innerHTML = id.replace(/(.{17})..+/, '$1&hellip;');
+		labelEle.addEventListener('click', function (e) {
+			e.preventDefault();
 
-            const current = document.querySelector('.extUtil__ssItem p.selected');
-            if (e.target === current) {
-                return;
-            }
+			const current = document.querySelector(
+				'.extUtil__ssItem p.selected'
+			);
+			if (e.target === current) {
+				return;
+			}
 
-            current.classList.remove('selected');
-            e.target.classList.add('selected');
+			current.classList.remove('selected');
+			e.target.classList.add('selected');
 
-            updateViewWithCurrentData(currentSessionStorageData);
-        });
+			updateViewWithCurrentData(currentSessionStorageData);
+		});
 
-        itemEle.appendChild(inputEle);
-        itemEle.appendChild(labelEle);
-        listEle.appendChild(itemEle);
-        currentSessionStorageElements.push(itemEle);
-    });
+		itemEle.appendChild(inputEle);
+		itemEle.appendChild(labelEle);
+		listEle.appendChild(itemEle);
+		currentSessionStorageElements.push(itemEle);
+	});
 }
 
 /**
@@ -155,31 +154,31 @@ async function buildSessionStorageElements(data) {
  * element is not found.
  */
 async function updateViewWithCurrentData(data) {
-    const currentSelection = document.querySelector(
-        '.extUtil__ssItem:has(p.selected)'
-    );
+	const currentSelection = document.querySelector(
+		'.extUtil__ssItem:has(p.selected)'
+	);
 
-    if (!currentSelection) {
-        return;
-    }
+	if (!currentSelection) {
+		return;
+	}
 
-    const selectedInputEle = currentSelection.querySelector('input');
+	const selectedInputEle = currentSelection.querySelector('input');
 
-    if (!selectedInputEle) {
-        return;
-    }
+	if (!selectedInputEle) {
+		return;
+	}
 
-    const dataKey = selectedInputEle.id;
+	const dataKey = selectedInputEle.id;
 
-    viewEle.innerHTML = '';
+	viewEle.innerHTML = '';
 
-    Object.entries(data).forEach((item) => {
-        const key = item[0];
+	Object.entries(data).forEach((item) => {
+		const key = item[0];
 
-        if (dataKey === key) {
-            new JSONViewer({ data: item[1], parentEle: viewEle, });
-        }
-    });
+		if (dataKey === key) {
+			JSONViewer({ data: item[1], parentEle: viewEle });
+		}
+	});
 }
 
 /**
@@ -190,34 +189,34 @@ async function updateViewWithCurrentData(data) {
  * doing anything.
  */
 function createAndShowNotification(message) {
-    if (!toastEle) {
-        return;
-    }
+	if (!toastEle) {
+		return;
+	}
 
-    if (toastEle.innerHTML) {
-        toastEle.style.cssText = 'transform:translateY(100%);opacity:0;';
-        toastEle.innerHTML = '';
-    }
+	if (toastEle.innerHTML) {
+		toastEle.style.cssText = 'transform:translateY(100%);opacity:0;';
+		toastEle.innerHTML = '';
+	}
 
-    const toastBodyEle = document.createElement('div');
-    toastBodyEle.classList.add('toast__body');
+	const toastBodyEle = document.createElement('div');
+	toastBodyEle.classList.add('toast__body');
 
-    const toastTextEle = document.createElement('p');
-    toastTextEle.classList.add('toast__text');
-    toastTextEle.innerHTML = message;
+	const toastTextEle = document.createElement('p');
+	toastTextEle.classList.add('toast__text');
+	toastTextEle.innerHTML = message;
 
-    toastBodyEle.appendChild(toastTextEle);
+	toastBodyEle.appendChild(toastTextEle);
 
-    toastEle.appendChild(toastBodyEle);
+	toastEle.appendChild(toastBodyEle);
 
-    toastEle.style.cssText = 'transform:translateY(0);opacity:1;';
+	toastEle.style.cssText = 'transform:translateY(0);opacity:1;';
 
-    setTimeout(function () { 
-        if (toastEle.innerHTML) {
-            toastEle.style.cssText = 'transform:translateY(100%);opacity:0;';
-            toastEle.innerHTML = '';
-        }
-    }, 3000);
+	setTimeout(function () {
+		if (toastEle.innerHTML) {
+			toastEle.style.cssText = 'transform:translateY(100%);opacity:0;';
+			toastEle.innerHTML = '';
+		}
+	}, 3000);
 }
 
 /**
@@ -226,17 +225,17 @@ function createAndShowNotification(message) {
  */
 // TODO: bug - we seem to be copying escape characters and escaping the escape characters...
 function copySelectedToStorageClipboard() {
-    const allUncheckedElems = document.querySelectorAll(
-        '.extUtil__ssItem input:not(:checked)'
-    );
-    const clipboardObject = Object.assign({}, currentSessionStorageData);
-    allUncheckedElems.forEach((inputEle) => {
-        const id = inputEle.id;
+	const allUncheckedElems = document.querySelectorAll(
+		'.extUtil__ssItem input:not(:checked)'
+	);
+	const clipboardObject = Object.assign({}, currentSessionStorageData);
+	allUncheckedElems.forEach((inputEle) => {
+		const id = inputEle.id;
 
-        delete clipboardObject[id];
-    });
+		delete clipboardObject[id];
+	});
 
-    chrome.storage.local.set({ clipboard: clipboardObject, });
+	chrome.storage.local.set({ clipboard: clipboardObject });
 }
 
 /**
@@ -245,7 +244,7 @@ function copySelectedToStorageClipboard() {
  * browser. The function is asynchronous and returns a promise that resolves to the object.
  */
 async function getClipboardObject() {
-    return await chrome.storage.local.get([ 'clipboard', ]);
+	return await chrome.storage.local.get(['clipboard']);
 }
 
 /**
@@ -256,17 +255,20 @@ async function getClipboardObject() {
  * method. The content script will then handle the pasting of the data.
  */
 async function dispatchPasteEvent(obj) {
-    const currentWindow = await chrome.windows.getCurrent();
-    const tabs = await chrome.tabs.query({active: true, windowId: currentWindow.id});
-    const currentTab = await tabs[0].id;
-    
-    chrome.tabs.sendMessage(parseInt(currentTab), obj, function (res) {
-        if (chrome.runtime.lastError && chrome.runtime.lastError.message) {
-            createAndShowNotification(
-                'Error Pasting: ' + chrome.runtime.lastError.message
-            );
-        } else {
-            createAndShowNotification(res);
-        }
-    });
+	const currentWindow = await chrome.windows.getCurrent();
+	const tabs = await chrome.tabs.query({
+		active: true,
+		windowId: currentWindow.id,
+	});
+	const currentTab = await tabs[0].id;
+
+	chrome.tabs.sendMessage(parseInt(currentTab), obj, function (res) {
+		if (chrome.runtime.lastError && chrome.runtime.lastError.message) {
+			createAndShowNotification(
+				'Error Pasting: ' + chrome.runtime.lastError.message
+			);
+		} else {
+			createAndShowNotification(res);
+		}
+	});
 }

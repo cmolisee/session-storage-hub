@@ -1,67 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, viewport-fit=cover" />
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, viewport-fit=cover"
+		/>
 
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="popup.css" />
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="jsonViewer.css" />
-    </head>
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="popup.css"
+		/>
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="jsonViewer.css"
+		/>
+	</head>
 
-    <body>
-        <div class="extUtil">
-            <div class="heading">
-                <h1 class="extUtil__title alert">Session Storage Hub</h1>
-                <p id="optionsButton">Options</p>
-            </div>
-            <p class="extUtil__version alert">v2.2.1</p>
-            <div class="extUtil__content">
-                <div class="extUtil__tabItem">
-                    <div class="extUtil__tabItemControls">
-                        <button
-                            class="btn btn-theme copyButton"
-                            type="button">
-                            Copy
-                        </button>
-                        <button
-                            class="btn btn-theme pasteButton"
-                            type="button">
-                            Paste
-                        </button>
-                    </div>
-                    <div class="extUtil__contentInfo">
-                        <p class="note">
-                            - Use the checkboxes to include or exclude the
-                            corresponding session storage object/item.
-                        </p>
-                        <p class="note">
-                            - Expand/Close the JSON items in the viewing area to
-                            the left by clicking them.
-                        </p>
-                    </div>
-                    <div>
-                        <p class="toggleOptions"><a class="selectAll">Select All</a> | <a class="unselectAll">Unselect All</a></p>
-                    </div>
-                    <div class="extUtil__tabItemContent">
-                        <div class="extUtil__table">
-                            <div class="extUtil__tableList"></div>
-                            <div class="extUtil__tableView"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="toast"></div>
-        </div>
-    </body>
-    <script
-        type="module"
-        src="popup.js"></script>
+	<body>
+		<div class="extUtil">
+			<div class="heading">
+				<h1 class="extUtil__title alert">Session Storage Hub</h1>
+				<p id="optionsButton">Options</p>
+			</div>
+			<p class="extUtil__version alert">v2.2.1</p>
+			<div class="extUtil__content">
+				<div class="extUtil__tabItem">
+					<div class="extUtil__tabItemControls">
+						<button
+							class="btn btn-theme copyButton"
+							type="button"
+						>
+							Copy
+						</button>
+						<button
+							class="btn btn-theme pasteButton"
+							type="button"
+						>
+							Paste
+						</button>
+					</div>
+					<div class="extUtil__contentInfo">
+						<p class="note">
+							- Use the checkboxes to include or exclude the
+							corresponding session storage object/item.
+						</p>
+						<p class="note">
+							- Expand/Close the JSON items in the viewing area to
+							the left by clicking them.
+						</p>
+					</div>
+					<div>
+						<p class="toggleOptions">
+							<a class="selectAll">Select All</a> |
+							<a class="unselectAll">Unselect All</a>
+						</p>
+					</div>
+					<div class="extUtil__tabItemContent">
+						<div class="extUtil__table">
+							<div class="extUtil__tableList"></div>
+							<div class="extUtil__tableView"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="toast"></div>
+		</div>
+	</body>
+	<script
+		type="module"
+		src="popup.js"
+	></script>
 </html>

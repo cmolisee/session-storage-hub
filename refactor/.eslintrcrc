@@ -1,0 +1,56 @@
+{
+    "root": true,
+	"extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime"
+    ],
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "env": {
+		"browser": true,
+		"webextensions": true,
+		"es2021": true
+	},
+    "parser": "@typescript-eslint/parser",
+    "ignorePatterns": [],
+	"overrides": [],
+	
+	"rules": {
+		"arrow-body-style": ["error", "always"],
+		"curly": ["error", "all"],
+		"default-case": ["error", { "commentPattern": "^no\\sdefault" }],
+		"eqeqeq": ["error", "always"],
+		"no-nested-ternary": "error",
+		"one-var": ["error", "never"],
+		"prefer-const": [
+			"error",
+			{
+				"destructuring": "any",
+				"ignoreReadBeforeAssign": false
+			}
+		],
+		"array-bracket-newline": [
+			"error",
+			{ "multiline": true, "minItems": 4 }
+		],
+		"array-bracket-spacing": ["error", "always"],
+		"arrow-parens": ["error", "always"],
+		"block-spacing": ["error", "always"],
+		"arrow-spacing": ["error", { "before": true, "after": true }],
+		"comma-dangle": [
+			"error",
+			{
+				"arrays": "always",
+				"objects": "always",
+				"imports": "never",
+				"exports": "never",
+				"functions": "never"
+			}
+		],
+		"quotes": ["error", "single"]
+	}
+}

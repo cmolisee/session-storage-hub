@@ -5,17 +5,17 @@ message and the value being the data contained in the message. It then saves thi
 local storage using the Chrome storage API. This allows the extension to store data from webpages
 and access it later. */
 chrome.runtime.onMessage.addListener(async function (
-    message,
-    sender,
-    response
+	message,
+	sender,
+	response
 ) {
-    if (message?.initiator && message.initiator === 'WEBPAGE') {
-        const key = sender.tab.id;
-        const dataObject = {};
+	if (message?.initiator && message.initiator === 'WEBPAGE') {
+		const key = sender.tab.id;
+		const dataObject = {};
 
-        dataObject[key] = message.data;
-        chrome.storage.local.set(dataObject);
-    }
+		dataObject[key] = message.data;
+		chrome.storage.local.set(dataObject);
+	}
 });
 
 // TODO: add listener to remove data from local storage when tab closes.

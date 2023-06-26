@@ -1,0 +1,15 @@
+@import '../../global';
+
+.List {
+    font-size: 0.875rem;
+    color: $ssh-white-100;
+    margin: 0.5rem 0.325rem;
+
+    &__dash {
+        list-style: none;
+    
+        li::marker {
+            content: "-";
+        }
+    }
+}

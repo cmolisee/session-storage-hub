@@ -1,0 +1,25 @@
+@import '../../global';
+
+.ViewGrid {
+    display: grid;
+    grid-template-columns: 3fr 7fr;
+    grid-template-areas: "key value";
+    border: 0.0625rem solid $ssh-white-100;
+	padding: 0.325rem;
+    min-height: 2rem;
+
+    &__30,
+    &__70 {
+        display: flex;
+        width: 100%;
+    }
+
+    &__30 {
+        border-right: 0.0125rem solid $ssh-white-100;
+        grid-area: key;
+    }
+
+    &__70 {
+        grid-area: value;
+    }
+}
