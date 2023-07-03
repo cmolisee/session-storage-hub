@@ -1,0 +1,62 @@
+.ViewGridKey {
+    display: flex;
+    align-items: center;
+    margin: 0.25rem 0;
+    font-size: 0.825rem;
+    width: 100%;
+
+    input {
+        appearance: none;
+        margin: 0;
+        color: green;
+        width: 1.15em;
+        height: 1.15em;
+        border-radius: 0.15em;
+        transform: translateY(-0.065em);
+        display: grid;
+        place-content: center;
+        cursor: pointer;
+    }
+
+    input::before {
+        content: '';
+        width: 1.15em;
+        height: 1.15em;
+        transform: scale(0);
+        transition: 120ms transform ease-in-out;
+        box-shadow: inset 1em 1em green;
+        clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    }
+
+    input:checked::before {
+        transform: scale(1);
+    }
+
+    input:not(:checked) {
+        box-shadow: inset 1em 1em red;
+        clip-path: polygon(
+            20% 0%,
+            0% 20%,
+            30% 50%,
+            0% 80%,
+            20% 100%,
+            50% 70%,
+            80% 100%,
+            100% 80%,
+            70% 50%,
+            100% 20%,
+            80% 0%,
+            50% 30%
+        );
+    }
+
+    p {
+        margin: 0 0.25rem;
+        font-size: 1rem;
+        cursor: pointer;
+
+        &[aria-selected="true"] {
+            border-radius: 0.25rem;
+        }
+    }
+}

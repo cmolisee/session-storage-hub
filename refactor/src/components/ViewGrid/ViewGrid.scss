@@ -17,6 +17,7 @@
     &__30 {
         border-right: 0.0125rem solid $ssh-white-100;
         grid-area: key;
+        flex-direction: column;
     }
 
     &__70 {
