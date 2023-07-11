@@ -1,0 +1,15 @@
+.JsonKey {
+    cursor: pointer;
+    color: orange;
+    width: fit-content;
+    margin-right: 0.625rem;
+
+    &::before {
+        content: '-';
+        margin-right: 0.325rem;
+    }
+
+    &::after {
+        content: ':';
+    }
+}

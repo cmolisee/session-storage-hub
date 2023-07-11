@@ -1,25 +1,36 @@
-import { PropsWithChildren, useState } from "react";
 import './ViewGridKey.scss';
+import { useStorageData } from "../../providers/useStorageData";
 
 interface IViewGridKeyProps {
-    isSelected?: boolean;
+    keyName: string;
     callback: () => void;
 }
 
 const ViewGridKey = ({
-    isSelected,
+    keyName,
     callback,
-    children
-}: PropsWithChildren<IViewGridKeyProps>) => {
-    const [isChecked, setIsChecked] = useState<boolean>(() => isSelected as boolean);
+}: IViewGridKeyProps) => {
+    const {selectedKeys, setSelectedKeys} = useStorageData();
+
+    const handleIsChecked = () => {
+        return selectedKeys?.includes(keyName) ?? false;
+    }
+
+    const handleOnChange = () => {
+        if (selectedKeys?.includes(keyName)) {
+            setSelectedKeys(selectedKeys.filter((k) => k !== keyName))
+        } else {
+            setSelectedKeys([...selectedKeys as string[], keyName]);
+        }
+    };
     
     return (
         <div className={'ViewGridKey'}>
             <input type={'checkbox'} 
-                checked={isChecked} 
-                onClick={() => setIsChecked(!isChecked)}/>
-            <p aria-selected={isSelected} onClick={callback}>
-                {children}
+                checked={handleIsChecked()} 
+                onChange={handleOnChange}/>
+            <p aria-selected={handleIsChecked()} onClick={callback}>
+                {keyName}
             </p>
         </div>
     );

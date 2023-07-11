@@ -7,6 +7,7 @@
     "license": "MIT",
     "private": false,
     "dependencies": {
+        "@craco/craco": "^7.1.0",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^13.4.0",
         "@testing-library/user-event": "^13.5.0",
@@ -22,6 +23,7 @@
         "web-vitals": "^2.1.4"
     },
     "devDependencies": {
+        "@types/chrome": "^0.0.240",
         "@typescript-eslint/eslint-plugin": "^5.60.0",
         "@typescript-eslint/parser": "^5.60.0",
         "eslint": "^8.0.1",
@@ -41,7 +43,7 @@
     },
     "scripts": {
         "start": "react-scripts start",
-        "build": "react-scripts build",
+        "build": "craco build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "lint": "eslint --fix --ext .js .",

@@ -1,4 +1,5 @@
-import { PropsWithChildren } from "react";
+import { useStorageData } from "../../providers/useStorageData";
+import JsonObject from "../JsonObject";
 import './ViewGridValue.scss';
 
 interface IViewGridValueProps {
@@ -7,11 +8,12 @@ interface IViewGridValueProps {
 
 const ViewGridValue = ({
     className,
-    children,
-}: PropsWithChildren<IViewGridValueProps>) => {
+}: IViewGridValueProps) => {
+    const {dataValue} = useStorageData();
+    
     return (
-        <div className={'ViewGridValue'}>
-            {children}
+        <div className={`ViewGridValue ${className as string}`}>
+            <JsonObject data={dataValue} />
         </div>
     );
 }

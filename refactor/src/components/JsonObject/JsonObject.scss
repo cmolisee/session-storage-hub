@@ -1,0 +1,18 @@
+.JsonObject {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+
+    .JsonObject {
+        margin-left: 1rem;
+    }
+
+    .JsonValue {
+        width: fit-content;
+        margin-left: 1rem;
+    }
+
+    &__array .JsonValue {
+        width: 100%;
+    }
+}
