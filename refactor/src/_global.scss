@@ -12,6 +12,17 @@ $ssh-green-100: #008000;
 $ssh-red: #ff0000;
 $ssh-red-100: #d90429;
 
-.root {
+* {
+    box-sizing: border-box;
+}
+
+body {
+    width: 47rem;
+	height: fit-content;
+    max-height: 100%;
+	overflow: hidden;
+}
+
+#root {
     margin: 0.0125rem;
 }

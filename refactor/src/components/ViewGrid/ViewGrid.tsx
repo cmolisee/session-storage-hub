@@ -2,7 +2,7 @@ import ViewGridKey from '../ViewGridKey';
 import ViewGridValue from '../ViewGridValue';
 import './ViewGrid.scss';
 import { useStorageData } from '../../providers/useStorageData';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { subscribe, unsubscribe } from '../../utils/CustomEvents';
 import { Action, IChromeMessage, Sender } from '../../types/types';
 import { getCurrentTabUId } from '../../utils/Chrome-Utils';
@@ -19,23 +19,21 @@ const ViewGrid = ({
     className,
 }: IViewGridProps) => {
     const {data, keys, selectedKeys, setDataKey, selectAll, unselectAll} = useStorageData();
-
-    const handleCopy = () => {
-        console.log('copy');
-
+    
+    const handleCopy = useCallback(async () => {            
         let clipboard = {};
         Object.entries(data).forEach((e) => {
+            console.log(e);
             if (selectedKeys.indexOf(e[0]) >= 0) {
                 clipboard[e[0] as keyof typeof data] = e[1];
             }
         });
 
-        chrome.storage.local.set({ clipboard: clipboard });
-    }
+        await chrome.storage.local.set({ clipboard: clipboard });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data]);
 
-    const handlePaste = async () => {
-        console.log('paste');
-        
+    const handlePaste = useCallback(async () => {
         const clipboard = await chrome.storage.local.get(['clipboard']);
         const message: IChromeMessage = {
             from: Sender.Extension,
@@ -43,17 +41,24 @@ const ViewGrid = ({
             message: clipboard,
         };
 
+        console.log('clipboard', clipboard);
+        console.log('msg', message);
+
         getCurrentTabUId((id) => {
             id && chrome.tabs.sendMessage(
                 id,
                 message,
                 (res) => {
                     console.log('response from request', res);
-                    // handle possible error response
+                    
+                    if (res.error) {
+                        console.log(res.error);
+                    }
                 }
             );
         });
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     
     useEffect(() => {
         subscribe('selectAllEvent', selectAll);
@@ -67,7 +72,8 @@ const ViewGrid = ({
             unsubscribe('copyEvent', handleCopy);
             unsubscribe('pasteEvent', handlePaste);
         }
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data]);
 
     return (
         <div className={`ViewGrid ${className ?? ''}`}>

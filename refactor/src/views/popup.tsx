@@ -5,28 +5,11 @@ import List from "../components/List";
 import ViewGrid from "../components/ViewGrid";
 import { StorageDataProvider } from "../providers/useStorageData";
 import { publishEvent } from "../utils/CustomEvents";
-import { Action, IChromeMessage, Sender } from "../types/types";
+import { Action, IChromeMessage, IMessageResponse, Sender } from "../types/types";
 import { getCurrentTabUId } from "../utils/Chrome-Utils";
 
 const Popup = () => {
-    const [data, setData] = useState(() => {
-        return {
-            testKey1: 'value',
-            testKey2: ['a', 'b', 'c'],
-            testKey3: {
-                a: {
-                    c: 'd'
-                }
-            },
-            testKey4: {
-                a: ['b', 'c', 'd'],
-                1: {
-                    2: '3'
-                },
-                x: 'y'
-            }
-        };
-    });
+    const [data, setData] = useState<Object>({});
     const optionsLink = <Button version={'link'} onClickCallback={() => console.log('options')}>Options</Button>;
 
     useEffect(() => { // request the session storage data
@@ -40,9 +23,19 @@ const Popup = () => {
             id && chrome.tabs.sendMessage(
                 id,
                 message,
-                (res) => {
+                (res: IMessageResponse) => {
                     console.log('response from request', res);
-                    // handle possible error response
+                    
+                    if (res.error) {
+                        console.log(res.error);
+                    }
+
+                    if (res.data) {
+                        console.log('setting data state: ', res.data);
+                        setData(res.data);
+                    } else {
+                        console.log('Something else went wrong');
+                    }
                 }
             );
         });
@@ -61,7 +54,6 @@ const Popup = () => {
                 setData(updated);
             }
         });
-        
     })
 
     return (
