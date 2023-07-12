@@ -4,7 +4,7 @@ import './ViewGrid.scss';
 import { useStorageData } from '../../providers/useStorageData';
 import { useCallback, useEffect } from 'react';
 import { subscribe, unsubscribe } from '../../utils/CustomEvents';
-import { Action, IChromeMessage, Sender } from '../../types/types';
+import { Action, IChromeMessage, IMessageResponse, Sender } from '../../types/types';
 import { getCurrentTabUId } from '../../utils/Chrome-Utils';
 
 export interface IKeyValuePair {
@@ -23,13 +23,13 @@ const ViewGrid = ({
     const handleCopy = useCallback(async () => {            
         let clipboard = {};
         Object.entries(data).forEach((e) => {
-            console.log(e);
             if (selectedKeys.indexOf(e[0]) >= 0) {
                 clipboard[e[0] as keyof typeof data] = e[1];
             }
         });
 
         await chrome.storage.local.set({ clipboard: clipboard });
+        // todo: handle toast for successful copy to clipboard
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
@@ -41,18 +41,19 @@ const ViewGrid = ({
             message: clipboard,
         };
 
-        console.log('clipboard', clipboard);
-        console.log('msg', message);
-
         getCurrentTabUId((id) => {
             id && chrome.tabs.sendMessage(
                 id,
                 message,
-                (res) => {
-                    console.log('response from request', res);
-                    
+                async (res: IMessageResponse) => {
                     if (res.error) {
                         console.log(res.error);
+                        // todo: handle toast with error
+                    }
+
+                    if (res.data) {
+                        await chrome.storage.local.set({ data: res.data });
+                        // todo: handle success toast
                     }
                 }
             );

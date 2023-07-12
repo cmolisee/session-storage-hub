@@ -6,14 +6,14 @@ chrome.runtime.onInstalled.addListener((details) => {
 });
 
 chrome.runtime.onConnect.addListener((port) => {
-    console.log('[background.js] onConnect', port)
+    console.log('[background.js] onConnect', port);
 });
 
 chrome.runtime.onStartup.addListener(() => {
-    console.log('[background.js] onStartup')
+    console.log('[background.js] onStartup');
 });
 
 // before unload
 chrome.runtime.onSuspend.addListener(() => {
-    console.log('[background.js] onSuspend')
+    console.log('[background.js] onSuspend');
 });

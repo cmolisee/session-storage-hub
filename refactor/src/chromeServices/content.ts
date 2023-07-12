@@ -19,7 +19,7 @@ const requestMessageListener = (
     if (validateSender(Sender.Extension, Action.Request, message, sender)) {
         const data = Object.assign({}, sessionStorage);
         const res = {
-            error: !data ? 'Error getting session storage' : null,
+            error: !data ? 'Error retrieving session storage' : null,
             data: data
         }
 
@@ -34,14 +34,15 @@ const updateMessageListener = (
 ) => {
     if (validateSender(Sender.Extension, Action.Update, message, sender)) {
         try {
-            Object.entries(message.message).forEach((e) => {
+            console.log('updateMessageListener message: ', message);
+            Object.entries(message.message?.clipboard ?? {}).forEach((e) => {
                 sessionStorage.setItem(e[0], e[1] as string);
             });
 
             const data = Object.assign({}, sessionStorage);
             response({ error: null, data: data });
         } catch {
-            response ({ error: 'Error updating session storage in browser', data: null })
+            response ({ error: 'Error updating session storage data', data: null })
         }
     }
 }

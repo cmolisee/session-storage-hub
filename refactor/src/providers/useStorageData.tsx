@@ -34,13 +34,11 @@ const defaultStorageData: IStorageDataProps = {
 function reducer(state: any, action: { type: string, data: any}) {
     switch(action.type) {
         case 'setData': {
-            console.log('setData: ', action);
             const d = action.data.data ?? state.data;
             const k = Object.keys(d);
             const dk = k[0];
             const dv = d[dk];
 
-            console.log(d);
             return {
                 data: d,
                 keys: k,
@@ -128,7 +126,6 @@ export const StorageDataProvider = ({
     useEffect(() => {
         if (dataObject) {
             dispatch({ type: 'setData', data: { data: dataObject }});
-            console.log(dataState.data);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataObject]);

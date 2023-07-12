@@ -23,22 +23,23 @@ const Popup = () => {
             id && chrome.tabs.sendMessage(
                 id,
                 message,
-                (res: IMessageResponse) => {
-                    console.log('response from request', res);
-                    
+                async (res: IMessageResponse) => {
                     if (res.error) {
                         console.log(res.error);
+                        // todo: handle toast for error
                     }
 
                     if (res.data) {
-                        console.log('setting data state: ', res.data);
+                        await chrome.storage.local.set({ data: res.data });
                         setData(res.data);
                     } else {
                         console.log('Something else went wrong');
+                        // todo: handle toast for misc. error
                     }
                 }
             );
         });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -47,14 +48,17 @@ const Popup = () => {
                 let updated = Object.assign({}, data);
 
                 Object.keys(changes).forEach((key) => {
-                    const updateObject = changes[key].newValue;
-                    Object.assign(updated, updateObject);
+                    if (key !== 'clipboard') {
+                        const updateObject = changes[key].newValue;
+                        Object.assign(updated, updateObject);
+                    }
                 });
-        
+
                 setData(updated);
             }
         });
-    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <>
@@ -75,5 +79,16 @@ const Popup = () => {
         </>
     );
 }
+
+// toast('🦄 Wow so easy!', {
+//     position: "bottom-center",
+//     autoClose: 2000,
+//     hideProgressBar: true,
+//     closeOnClick: true,
+//     pauseOnHover: true,
+//     draggable: false,
+//     progress: undefined,
+//     theme: "colored",
+//     });
 
 export default Popup;
