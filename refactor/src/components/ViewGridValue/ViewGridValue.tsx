@@ -12,7 +12,7 @@ const ViewGridValue = ({
     const {dataValue} = useStorageData();
     
     return (
-        <div className={`ViewGridValue ${className as string}`}>
+        <div className={`ViewGridValue ${className ?? ''}`}>
             <JsonObject data={dataValue} />
         </div>
     );

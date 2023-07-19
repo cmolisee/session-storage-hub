@@ -7,12 +7,7 @@
         margin-left: 1rem;
     }
 
-    .JsonValue {
-        width: fit-content;
-        margin-left: 1rem;
-    }
-
-    &__array .JsonValue {
-        width: 100%;
+    &__array .JsonKey:has(+ .JsonValue)::before {
+        content: none;
     }
 }

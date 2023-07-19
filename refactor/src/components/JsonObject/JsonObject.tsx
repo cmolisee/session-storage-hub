@@ -23,16 +23,20 @@ const JsonObject = ({
         setIsHidden(prev => !prev);
     }
 
+    console.log('data: ', formattedData);
+    console.log('type: ', type);
+
     if (type === 'object') {
         return (
-            <div className={`JsonObject ${className as string}`}>
+            <div className={`JsonObject ${className ?? ''}`}>
                 {formattedData && Object.entries(formattedData).map((entry, i) => {
-                    const isNotAnObject = getObjectType(entry[1]).match(/^(string|number|boolean|null)$/);
-
+                        // TODO: issue with rendering here. we only have 1 state object and if we have an
+                        // an object with multiple nested objects then that state will toggle both.
+                        // we need a different way to toggle or a way to handle this use case.
                         return (
                             <Fragment key={`${entry[0]}_${i}`}>
-                                <JsonKey onClickCallback={handleClick}>{entry[0]}</JsonKey>
-                                {(!isHidden || isNotAnObject) && <JsonObject data={entry[1]} />}
+                                <JsonKey onClickCallback={handleClick} isHidden={isHidden}>{entry[0]}</JsonKey>
+                                {!isHidden && <JsonObject data={entry[1]} />}
                             </Fragment>
                         );
                     })
@@ -42,21 +46,14 @@ const JsonObject = ({
     }
 
     if (type === 'array') {
-        const isArrayOfObjects = getObjectType((formattedData as any[])[0]);
         return (
-            <div className={`JsonObject JsonObject__array ${className as string}`}>
-                <JsonKey onClickCallback={handleClick}>{`[${formattedData[0].split(0,5)}, ...]`}</JsonKey>
-                {/* Array of primitives */}
-                {!isHidden && isArrayOfObjects !== 'object' && (
-                    <JsonValue className={`JsonValue--string`}>
-                        {(formattedData as any[]).join(', ')}
-                    </JsonValue>
-                )}
-                {/* Array of objects */}
-                {/* TODO: there is an error when dealing with an array of arrays */}
+            <div className={`JsonObject JsonObject__array ${className ?? ''}`}>
+                <JsonKey onClickCallback={handleClick} isHidden={isHidden}>{`[${JSON.stringify(formattedData[0])}, ...]`}</JsonKey>
                 {!isHidden && (
                     formattedData as any[]).map((val: any, i) => {
-                        return <JsonObject key={i} data={val} />;
+                        const dataType = getObjectType(val);
+                        console.log(dataType);
+                        return <JsonObject key={i} data={!dataType.match(/^(object|array)$/) ? {[i]: val} : val} />;
                 })}
             </div>
         );

@@ -2,14 +2,23 @@
     cursor: pointer;
     color: orange;
     width: fit-content;
-    margin-right: 0.625rem;
+    // fix for char width issue causing 1px alignment issue
+    min-width: 2ch;
+
+    & + .JsonKey {
+        width: 100% !important;
+    }
 
     &::before {
-        content: '-';
+        content: '+';
         margin-right: 0.325rem;
+    }
+
+    &[is-hidden="false"]::before {
+        content: '-'
     }
 
     &::after {
         content: ':';
-    }
+    }    
 }
