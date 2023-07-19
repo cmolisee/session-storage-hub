@@ -6,6 +6,7 @@ import { useCallback, useEffect } from 'react';
 import { subscribe, unsubscribe } from '../../utils/CustomEvents';
 import { Action, IChromeMessage, IMessageResponse, Sender } from '../../types/types';
 import { getCurrentTabUId } from '../../utils/Chrome-Utils';
+import { toast } from 'react-toastify';
 
 export interface IKeyValuePair {
     [key: string]: any;
@@ -20,6 +21,11 @@ const ViewGrid = ({
 }: IViewGridProps) => {
     const {data, keys, selectedKeys, setDataKey, selectAll, unselectAll} = useStorageData();
     
+    const handleNotification = (message: string, type: 'error' | 'info' | 'success') => {
+        toast.dismiss();
+        toast(message, { type: type });
+    }
+
     const handleCopy = useCallback(async () => {            
         let clipboard = {};
         Object.entries(data).forEach((e) => {
@@ -29,7 +35,7 @@ const ViewGrid = ({
         });
 
         await chrome.storage.local.set({ clipboard: clipboard });
-        // todo: handle toast for successful copy to clipboard
+        handleNotification('Session Storage Coppied.', 'info');
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
@@ -48,12 +54,12 @@ const ViewGrid = ({
                 async (res: IMessageResponse) => {
                     if (res.error) {
                         console.log(res.error);
-                        // todo: handle toast with error
+                        handleNotification(res.error, 'error');
                     }
 
                     if (res.data) {
                         await chrome.storage.local.set({ data: res.data });
-                        // todo: handle success toast
+                        handleNotification('Session Storage Pasted.', 'success');
                     }
                 }
             );

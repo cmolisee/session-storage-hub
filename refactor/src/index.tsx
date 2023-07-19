@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Popup from './views/popup';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, Flip } from 'react-toastify';
+// TODO: figure out why the styling isn't auto-compiling
+import 'react-toastify/scss/main.scss';
 
 const rootEle = document.getElementById('root') as HTMLElement;
 const root = ReactDOM.createRoot(rootEle);
@@ -10,8 +12,10 @@ root.render(
     <Popup />
     <ToastContainer
       position="bottom-center"
-      autoClose={2000}
+      transition={Flip}
+      autoClose={500}
       hideProgressBar
+      limit={1}
       newestOnTop
       closeOnClick
       rtl={false}

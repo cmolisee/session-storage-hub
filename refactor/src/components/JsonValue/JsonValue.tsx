@@ -10,7 +10,7 @@ const JsonValue = ({
     children,
 }: PropsWithChildren<IJsonValueProps>) => {
     return (
-        <div className={`JsonValue ${className}`}>
+        <div className={`JsonValue ${className as string}`}>
             {children}
         </div>
     );

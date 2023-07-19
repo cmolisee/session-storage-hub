@@ -7,10 +7,16 @@ import { StorageDataProvider } from "../providers/useStorageData";
 import { publishEvent } from "../utils/CustomEvents";
 import { Action, IChromeMessage, IMessageResponse, Sender } from "../types/types";
 import { getCurrentTabUId } from "../utils/Chrome-Utils";
+import { toast } from 'react-toastify';
 
 const Popup = () => {
     const [data, setData] = useState<Object>({});
     const optionsLink = <Button version={'link'} onClickCallback={() => console.log('options')}>Options</Button>;
+
+    const handleNotification = (message: string, type: 'error' | 'info' | 'success') => {
+        toast.dismiss();
+        toast(message, { type: type });
+    }
 
     useEffect(() => { // request the session storage data
         const message: IChromeMessage = {
@@ -26,15 +32,14 @@ const Popup = () => {
                 async (res: IMessageResponse) => {
                     if (res.error) {
                         console.log(res.error);
-                        // todo: handle toast for error
+                        handleNotification(res.error, 'error');
                     }
 
                     if (res.data) {
                         await chrome.storage.local.set({ data: res.data });
                         setData(res.data);
                     } else {
-                        console.log('Something else went wrong');
-                        // todo: handle toast for misc. error
+                        handleNotification('There was an error requesting Session Storage Data.', 'error');
                     }
                 }
             );
@@ -79,16 +84,5 @@ const Popup = () => {
         </>
     );
 }
-
-// toast('🦄 Wow so easy!', {
-//     position: "bottom-center",
-//     autoClose: 2000,
-//     hideProgressBar: true,
-//     closeOnClick: true,
-//     pauseOnHover: true,
-//     draggable: false,
-//     progress: undefined,
-//     theme: "colored",
-//     });
 
 export default Popup;
