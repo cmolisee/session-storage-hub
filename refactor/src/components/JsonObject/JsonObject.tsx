@@ -1,4 +1,4 @@
-import { Fragment, MouseEvent, useState } from "react";
+import { Fragment, MouseEvent, useEffect, useState } from "react";
 import { getFormatedJson, getObjectType } from "../../utils/Json-Utils";
 import JsonKey from "../JsonKey";
 import JsonValue from "../JsonValue";
@@ -15,28 +15,47 @@ const JsonObject = ({
 }:IJsonObjectProps) => {
     const formattedData = getFormatedJson(data);
     const type = getObjectType(formattedData);
-    const [isHidden, setIsHidden] = useState(true);
+    const [isHidden, setIsHidden] = useState<boolean[]>([]);
 
-    const handleClick = (e: MouseEvent<HTMLDivElement>) => {
+    const handleClick = (key: number) => (e: MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        setIsHidden(prev => !prev);
+        console.log('on click for: ', key);
+        setIsHidden((prev) => {
+            const updated = [...prev!];
+            updated[key] = !updated[key];
+            return updated;
+        });
     }
 
-    console.log('data: ', formattedData);
-    console.log('type: ', type);
+    // useEffect(() => {
+    //     if (!isHidden?.length) {
+    //         if (formattedData && type === 'object') {
+    //             const keys = Object.keys(formattedData);
+    //             console.log('is an object and keys are: ', keys);
+    //             console.log('key map: ', keys.map(() => true));
+    //             setIsHidden(keys.map(() => true));
+    //         }
+    
+    //         setIsHidden([true]);
+    //     }
+    // }, [formattedData])
+
+    console.log('formattedData: ', formattedData);
+    console.log('isHidden: ', isHidden);
 
     if (type === 'object') {
         return (
             <div className={`JsonObject ${className ?? ''}`}>
                 {formattedData && Object.entries(formattedData).map((entry, i) => {
+                        setIsHidden((prev) => [...prev, true]);
                         // TODO: issue with rendering here. we only have 1 state object and if we have an
                         // an object with multiple nested objects then that state will toggle both.
                         // we need a different way to toggle or a way to handle this use case.
                         return (
                             <Fragment key={`${entry[0]}_${i}`}>
-                                <JsonKey onClickCallback={handleClick} isHidden={isHidden}>{entry[0]}</JsonKey>
-                                {!isHidden && <JsonObject data={entry[1]} />}
+                                <JsonKey onClickCallback={handleClick(i)} isHidden={isHidden ? isHidden[i] : true}>{entry[0]}</JsonKey>
+                                {!(isHidden ? isHidden[i] : false) && <JsonObject data={entry[1]} />}
                             </Fragment>
                         );
                     })
@@ -46,13 +65,13 @@ const JsonObject = ({
     }
 
     if (type === 'array') {
+        setIsHidden((prev) => [...prev, true]);
         return (
             <div className={`JsonObject JsonObject__array ${className ?? ''}`}>
-                <JsonKey onClickCallback={handleClick} isHidden={isHidden}>{`[${JSON.stringify(formattedData[0])}, ...]`}</JsonKey>
-                {!isHidden && (
+                <JsonKey onClickCallback={handleClick(0)} isHidden={isHidden ? isHidden[0] : true}>{`[${JSON.stringify(formattedData[0])}, ...]`}</JsonKey>
+                {!(isHidden ? isHidden[0] : true) && (
                     formattedData as any[]).map((val: any, i) => {
                         const dataType = getObjectType(val);
-                        console.log(dataType);
                         return <JsonObject key={i} data={!dataType.match(/^(object|array)$/) ? {[i]: val} : val} />;
                 })}
             </div>
