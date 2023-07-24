@@ -1,5 +1,5 @@
-import { Fragment, MouseEvent, useEffect, useState } from "react";
-import { getFormatedJson, getObjectType } from "../../utils/Json-Utils";
+import { Fragment, MouseEvent, useState } from "react";
+import { getDataAsFormattedJson, getDataType } from "../../utils/Json-Utils";
 import JsonKey from "../JsonKey";
 import JsonValue from "../JsonValue";
 import './JsonObject.scss';
@@ -13,8 +13,8 @@ const JsonObject = ({
     className,
     data,
 }:IJsonObjectProps) => {
-    const formattedData = getFormatedJson(data);
-    const type = getObjectType(formattedData);
+    const formattedData = getDataAsFormattedJson(data);
+    const type = getDataType(formattedData);
     const [isHidden, setIsHidden] = useState<boolean[]>([]);
 
     const handleClick = (key: number) => (e: MouseEvent<HTMLDivElement>) => {
@@ -71,7 +71,7 @@ const JsonObject = ({
                 <JsonKey onClickCallback={handleClick(0)} isHidden={isHidden ? isHidden[0] : true}>{`[${JSON.stringify(formattedData[0])}, ...]`}</JsonKey>
                 {!(isHidden ? isHidden[0] : true) && (
                     formattedData as any[]).map((val: any, i) => {
-                        const dataType = getObjectType(val);
+                        const dataType = getDataType(val);
                         return <JsonObject key={i} data={!dataType.match(/^(object|array)$/) ? {[i]: val} : val} />;
                 })}
             </div>

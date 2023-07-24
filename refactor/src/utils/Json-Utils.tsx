@@ -1,4 +1,4 @@
-export function getFormatedJson(object: any) {
+export function getDataAsFormattedJson(object: any) {
 	try {
 		return JSON.parse(object);
 	} catch {
@@ -6,9 +6,8 @@ export function getFormatedJson(object: any) {
 	}
 };
 
-export function getObjectType(object: any) {
-    if (object === 'undefined') {
-    } else if (typeof object === 'object') {
+export function getDataType(object: any) {
+    if (typeof object === 'object') {
         return Array.isArray(object) ? 'array' : 'object';
     } else if (object === null || object === 'null') {
 		return 'null';
