@@ -27,10 +27,10 @@ const renderArray = (data: any[], isExpanded: boolean = false) => {
     console.log('data array key: ', buildKeyString(data));
 
     return (
-        <DataItem id={'arrayData'}
-            key={buildKeyString(data)}
+        <DataItem dataId={'arrayData'}
+            dataKey={buildKeyString(data)}
             isExpanded={isExpanded}>
-            {data.map((arrayData, i) => <Fragment key={i}>{RenderData(arrayData)}</Fragment>)}
+            {data.map((arrayData, i) => <RenderData key={i} data={arrayData} />)}
         </DataItem>
     )
 }
@@ -49,7 +49,7 @@ const RenderData = ({
     }
 
     return (
-        <DataItem id={'primitiveData'}
+        <DataItem dataId={'primitiveData'}
             isExpanded={true}>
             {data}
         </DataItem>

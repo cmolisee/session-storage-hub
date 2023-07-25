@@ -2,29 +2,29 @@ import { PropsWithChildren, useState } from "react";
 import { getDataType } from "../../utils/Json-Utils";
 
 interface IDataItemProps {
-    id: string;
+    dataId: string;
     isExpanded: boolean;
-    key?: string;
+    dataKey?: string;
 }
 
 const DataItem = ({
-    id,
+    dataId,
     isExpanded,
-    key,
+    dataKey,
     children,
 }: PropsWithChildren<IDataItemProps>) => {
     const [isOpen, setIsOpen] = useState(isExpanded);
     const dataType = getDataType(children);
 
-    console.log('dataItem id: ', key);
+    console.log('dataItem id: ', dataId);
     console.log('dataItem isExpanded: ', isExpanded);
-    console.log('dataItem key: ', key);
+    console.log('dataItem key: ', dataKey);
 
     return (
-        <div className={`DataItem`} id={id}>
-            {key && (
+        <div className={`DataItem`} id={dataId}>
+            {dataKey && (
                 <div className={`DataItem__key`} onClick={() => setIsOpen(!isOpen)} is-open={isOpen}>
-                    {key}
+                    {dataKey}
                 </div>
             )}
             {isOpen && (
