@@ -6,7 +6,8 @@
     grid-template-areas: "key value";
     border: 0.0625rem solid $ssh-white-100;
 	padding: 0.325rem;
-    min-height: 2rem;
+    min-height: 20rem;
+    overflow: scroll;
 
     &__30,
     &__70 {

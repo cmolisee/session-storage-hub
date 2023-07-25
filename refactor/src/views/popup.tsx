@@ -67,7 +67,7 @@ const Popup = () => {
 
     return (
         <>
-            <Header title={'Session Storage Hub'} versionNumber={'2.1.1'} link={optionsLink} />
+            <Header title={'Session Storage Hub'} versionNumber={'3.0.0'} link={optionsLink} />
             <Button onClickCallback={() => publishEvent('copyEvent', {})}>Copy</Button>
             <Button onClickCallback={() => publishEvent('pasteEvent', {})}>Paste</Button>
             <List bullet={'dash'}>

@@ -1,6 +1,6 @@
 # Session Storage Hub
 
-Current Version: v2.1.1
+Current Version: v3.0.0
 
 Chrome browser extension to easily view, copy, and paste session storage data
 from one tab to another.
@@ -11,6 +11,8 @@ How to install:
 
 1. Copy or clone the main branch from this repo to a folder onto your local
    machine.
+2. Open a terminal an `cd` into the folder.
+3. Run `npm run build` and you should have a `build` folder generated.
 2. Open google chrome web browser and navigate to the chrome extension tab
    `chrome://extensions/`.
 3. Turn on Developer Mode in the top right corner.
