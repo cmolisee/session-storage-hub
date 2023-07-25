@@ -12,7 +12,7 @@ const ViewGridValue = ({}: IViewGridValueProps) => {
 
     return (
         <div className={`ViewGridValue`}>
-            {data && <RenderData data={data} isExpanded={true} />}
+            {data && <RenderData data={data} />}
         </div>
     );
 }

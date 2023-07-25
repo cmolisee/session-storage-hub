@@ -3,31 +3,31 @@ import { getDataType } from "../../utils/Json-Utils";
 
 interface IDataItemProps {
     dataId: string;
-    isExpanded: boolean;
+    isOpen: boolean;
     dataKey?: string;
 }
 
 const DataItem = ({
     dataId,
-    isExpanded,
+    isOpen,
     dataKey,
     children,
 }: PropsWithChildren<IDataItemProps>) => {
-    const [isOpen, setIsOpen] = useState(isExpanded);
+    const [showData, setShowData] = useState(isOpen || !dataKey);
     const dataType = getDataType(children);
 
     console.log('dataItem id: ', dataId);
-    console.log('dataItem isExpanded: ', isExpanded);
+    console.log('dataItem isExpanded: ', showData);
     console.log('dataItem key: ', dataKey);
 
     return (
         <div className={`DataItem`} id={dataId}>
             {dataKey && (
-                <div className={`DataItem__key`} onClick={() => setIsOpen(!isOpen)} is-open={isOpen}>
+                <div className={`DataItem__key`} onClick={() => setShowData(!showData)} show-data={showData}>
                     {dataKey}
                 </div>
             )}
-            {isOpen && (
+            {showData && (
                 <div className={`DataItem__value DataItem__${dataType}`}>
                     {children}
                 </div>

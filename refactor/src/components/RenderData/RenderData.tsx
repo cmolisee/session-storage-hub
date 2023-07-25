@@ -4,14 +4,14 @@ import DataItem from '../DataItem';
 
 interface IRenderDataProps {
     data: any;
-    isExpanded?: boolean;
+    isOpen?: boolean;
 }
 
-const renderObject = (data: object, isExpanded: boolean = false) => {
+const renderObject = (data: object, isOpen: boolean = false) => {
     return <>{JSON.stringify(data)}</>
 }
 
-const renderArray = (data: any[], isExpanded: boolean = false) => {
+const renderArray = (data: any[], isOpen: boolean = false) => {
     const buildKeyString = (arr: any[]) => {
         const key = arr.toString();
 
@@ -29,7 +29,7 @@ const renderArray = (data: any[], isExpanded: boolean = false) => {
     return (
         <DataItem dataId={'arrayData'}
             dataKey={buildKeyString(data)}
-            isExpanded={isExpanded}>
+            isOpen={isOpen}>
             {data.map((arrayData, i) => <RenderData key={i} data={arrayData} />)}
         </DataItem>
     )
@@ -37,20 +37,20 @@ const renderArray = (data: any[], isExpanded: boolean = false) => {
 
 const RenderData = ({
     data,
-    isExpanded = false,
+    isOpen = false,
 }: IRenderDataProps) => {
     const dataType = getDataType(data);
 
     if (dataType === 'object') {
-        return renderObject(data, isExpanded);
+        return renderObject(data, isOpen);
     } else if (dataType === 'array') {
-        console.log('rendering array data with: ', data, isExpanded);
-        return renderArray(data, isExpanded);
+        console.log('rendering array data with: ', data, isOpen);
+        return renderArray(data, isOpen);
     }
 
     return (
         <DataItem dataId={'primitiveData'}
-            isExpanded={true}>
+            isOpen={true}>
             {data}
         </DataItem>
     )
