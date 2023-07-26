@@ -1,8 +1,10 @@
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { getDataType } from "../../utils/Json-Utils";
+import { CaretDownFilled, CaretRightFilled } from '@ant-design/icons';
+import './DataItem.scss';
 
 interface IDataItemProps {
-    dataId: string;
+    dataId?: string;
     isOpen: boolean;
     dataKey?: string;
 }
@@ -13,17 +15,18 @@ const DataItem = ({
     dataKey,
     children,
 }: PropsWithChildren<IDataItemProps>) => {
-    const [showData, setShowData] = useState(isOpen || !dataKey);
+    const [showData, setShowData] = useState<boolean>(false);
     const dataType = getDataType(children);
 
-    console.log('dataItem id: ', dataId);
-    console.log('dataItem isExpanded: ', showData);
-    console.log('dataItem key: ', dataKey);
+    useEffect(() => {
+        setShowData(isOpen || !dataKey);
+    }, [isOpen, dataKey])
 
     return (
-        <div className={`DataItem`} id={dataId}>
+        <div className={`DataItem`} id={dataId as string}>
             {dataKey && (
                 <div className={`DataItem__key`} onClick={() => setShowData(!showData)} show-data={showData}>
+                    <span style={{ fontSize: '0.725rem', paddingRight: '0.125rem' }}>{showData ? <CaretRightFilled /> : <CaretDownFilled />}</span>
                     {dataKey}
                 </div>
             )}

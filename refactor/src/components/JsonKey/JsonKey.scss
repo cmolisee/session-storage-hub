@@ -3,6 +3,7 @@
     color: orange;
     width: fit-content;
     // fix for char width issue causing 1px alignment issue
+    
     min-width: 2ch;
 
     // TODO: might need to alter this after fixing rendering issues with object siblings and nesting

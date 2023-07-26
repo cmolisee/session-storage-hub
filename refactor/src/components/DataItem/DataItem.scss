@@ -1,0 +1,35 @@
+$key: #8F0693;
+$object: #8F0693;
+$primitive: #3D793B;
+
+.DataItem {
+    display: flex;
+    flex-direction: column;
+
+    &#emptyObject > div,
+    &#emptyArray > div {
+        color: gray;
+        font-style: italic;
+    }
+
+    &__key {
+        cursor: pointer;
+        color: $key;
+    }
+
+    &__object,
+    &__array {
+        color: $object;
+    }
+
+    &__string,
+    &__number,
+    &__boolean,
+    &__null {
+        color: $primitive;
+    }
+
+    .DataItem {
+        margin-left: 1rem;
+    }
+}

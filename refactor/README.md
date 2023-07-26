@@ -17,7 +17,7 @@ How to install:
    `chrome://extensions/`.
 3. Turn on Developer Mode in the top right corner.
 4. Select 'Load Unpacked'.
-5. Select the 'src' folder of the extension.
+5. Select the 'build' folder of the extension.
 
 ---
 
@@ -30,9 +30,10 @@ with the most up-to-date 'main' branch from the repository._
    branch.
 2. Once there run `git fetch && git pull`. You should see some updates in the
    terminal.
-3. Go to your browser and open the extension manager.
-4. Select the 'Session Storage Hub' extension and click 'Update'.
-5. You may need to reload your browser or reload the pages you are trying to use
+3. While still in the terminal run `npm run build` and you should have a `build` folder generated.
+4. Go to your browser and open the extension manager.
+5. Select the 'Session Storage Hub' extension and click 'Update'.
+6. You may need to reload your browser or reload the pages you are trying to use
    the browser on.
 
 ---

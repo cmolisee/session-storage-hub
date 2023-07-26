@@ -1,4 +1,3 @@
-import { Fragment } from 'react'
 import { getDataType } from '../../utils/Json-Utils';
 import DataItem from '../DataItem';
 
@@ -8,12 +7,34 @@ interface IRenderDataProps {
 }
 
 const renderObject = (data: object, isOpen: boolean = false) => {
-    return <>{JSON.stringify(data)}</>
+    const dataEntries = Object.entries(data);
+
+    if (dataEntries.length) {
+        return (
+            <>
+                {
+                    dataEntries.map((entry, i) => {
+                        return <DataItem dataKey={entry[0]}
+                                isOpen={isOpen}>
+                            <RenderData key={i} data={entry[1]} />
+                        </DataItem>
+                    })
+                }
+            </>
+        )
+    }
+
+    return (
+        <DataItem dataId={'emptyObject'}
+            isOpen={true}>
+            {'Empty Object'}
+        </DataItem>
+    )
 }
 
 const renderArray = (data: any[], isOpen: boolean = false) => {
     const buildKeyString = (arr: any[]) => {
-        const key = arr.toString();
+        const key = JSON.stringify(arr).replace(/^\[(.+)\]$/, '$1');
 
         if (key.length > 20) {
             const formatted = key.substring(0, 20);
@@ -24,16 +45,24 @@ const renderArray = (data: any[], isOpen: boolean = false) => {
         return `[${key}]`;
     };
 
-    console.log('data array key: ', buildKeyString(data));
+    if (data.length) {
+        return (
+            <DataItem dataKey={buildKeyString(data)}
+                isOpen={isOpen}>
+                {data.map((arrayData, i) => <RenderData key={i} data={arrayData} />)}
+            </DataItem>
+        )
+    }
 
     return (
-        <DataItem dataId={'arrayData'}
-            dataKey={buildKeyString(data)}
-            isOpen={isOpen}>
-            {data.map((arrayData, i) => <RenderData key={i} data={arrayData} />)}
+        <DataItem dataId={'emptyArray'}
+            isOpen={true}>
+            {'Empty Array'}
         </DataItem>
     )
 }
+
+// TODO: boolean primitives are not displaying properly
 
 const RenderData = ({
     data,
@@ -44,14 +73,12 @@ const RenderData = ({
     if (dataType === 'object') {
         return renderObject(data, isOpen);
     } else if (dataType === 'array') {
-        console.log('rendering array data with: ', data, isOpen);
         return renderArray(data, isOpen);
     }
 
     return (
-        <DataItem dataId={'primitiveData'}
-            isOpen={true}>
-            {data}
+        <DataItem isOpen={true}>
+            {data.toString()}
         </DataItem>
     )
 }
