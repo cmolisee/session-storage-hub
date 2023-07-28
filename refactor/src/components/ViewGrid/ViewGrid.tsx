@@ -37,7 +37,7 @@ const ViewGrid = ({
         await chrome.storage.local.set({ clipboard: clipboard });
         handleNotification('Session Storage Coppied.', 'info');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data]);
+    }, [data, selectedKeys]);
 
     const handlePaste = useCallback(async () => {
         const clipboard = await chrome.storage.local.get(['clipboard']);
@@ -65,7 +65,7 @@ const ViewGrid = ({
             );
         });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [data, selectedKeys]);
     
     useEffect(() => {
         subscribe('selectAllEvent', selectAll);
@@ -80,7 +80,7 @@ const ViewGrid = ({
             unsubscribe('pasteEvent', handlePaste);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data]);
+    }, [data, selectedKeys]);
 
     return (
         <div className={`ViewGrid ${className ?? ''}`}>

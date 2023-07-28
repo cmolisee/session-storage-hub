@@ -26,7 +26,7 @@ const DataItem = ({
         <div className={`DataItem`} id={dataId as string}>
             {dataKey && (
                 <div className={`DataItem__key`} onClick={() => setShowData(!showData)} show-data={showData}>
-                    <span style={{ fontSize: '0.725rem', paddingRight: '0.125rem' }}>{showData ? <CaretRightFilled /> : <CaretDownFilled />}</span>
+                    <span style={{ fontSize: '0.725rem', paddingRight: '0.125rem' }}>{showData ? <CaretDownFilled /> : <CaretRightFilled />}</span>
                     {dataKey}
                 </div>
             )}

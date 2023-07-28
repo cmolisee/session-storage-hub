@@ -1,6 +1,6 @@
 import './List.scss';
 
-interface IListProps extends React.OlHTMLAttributes<HTMLLIElement> {
+interface IListProps extends React.OlHTMLAttributes<HTMLOListElement> {
     bullet: 'default' | 'dash';
 }
 
@@ -10,9 +10,9 @@ const List = ({
     ...props
 }: IListProps) => {
     return (
-        <li className={`List List__${bullet}`} {...props}>
+        <ol className={`List List__${bullet}`} {...props}>
             {children}
-        </li>
+        </ol>
     );
 }
 

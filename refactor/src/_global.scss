@@ -12,6 +12,10 @@ $ssh-red-100: #d90429;
     box-sizing: border-box;
 }
 
+html {
+    overflow: hidden;
+}
+
 body {
     width: 47rem;
     max-height: 100%;
@@ -21,4 +25,5 @@ body {
 
 #root {
     margin: 0.0125rem;
+    overflow: hidden;
 }

@@ -8,7 +8,7 @@
     input {
         appearance: none;
         margin: 0;
-        color: green;
+        color: #54a427;
         width: 1.15em;
         height: 1.15em;
         border-radius: 0.15em;
@@ -24,7 +24,7 @@
         height: 1.15em;
         transform: scale(0);
         transition: 120ms transform ease-in-out;
-        box-shadow: inset 1em 1em green;
+        box-shadow: inset 1em 1em #54a427;
         clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
     }
 
@@ -33,7 +33,7 @@
     }
 
     input:not(:checked) {
-        box-shadow: inset 1em 1em red;
+        box-shadow: inset 1em 1em #ff4d4f;
         clip-path: polygon(
             20% 0%,
             0% 20%,
