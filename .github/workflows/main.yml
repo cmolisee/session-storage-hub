@@ -22,6 +22,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+        fetch-depth: 0
         
     - uses: paulhatch/semantic-version@v5.0.2
       with:
