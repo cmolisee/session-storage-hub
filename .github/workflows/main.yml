@@ -22,16 +22,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        fetch-depth: 0
-        
-    - name: Generate version
-      uses: paulhatch/semantic-version@v5.0.2
-      with:
-        tag_prefix: ""
-        format: "${major}.${minor}.${patch}"
-        
-    - name: Create tag and push
-      run: git tag ${{ steps.generate-version.outputs.version }} && git push --tags
 
     - name: Build
       run: |
