@@ -1,31 +1,40 @@
 # Session Storage Hub
 
-Current Version: v2.1.1
+Current Version: v3.0.0
 
-Chrome browser extension to easily view, copy, and paste session storage data from one tab to another.
+Chrome browser extension to easily view, copy, and paste session storage data
+from one tab to another.
 
 ---
 
 How to install:
 
-1. Copy or clone the main branch from this repo to a folder onto your local machine.
-2. Open google chrome web browser and navigate to the chrome extension tab `chrome://extensions/`.
+1. Copy or clone the main branch from this repo to a folder onto your local
+   machine.
+2. Open a terminal an `cd` into the folder.
+3. Run `npm run build` and you should have a `build` folder generated.
+2. Open google chrome web browser and navigate to the chrome extension tab
+   `chrome://extensions/`.
 3. Turn on Developer Mode in the top right corner.
 4. Select 'Load Unpacked'.
-5. Select the 'src' folder of the extension.
+5. Select the 'build' folder of the extension.
 
 ---
 
 How to Update:
 
-_You need to update the extension files you coppied and saved to your computer with the most up-to-date 'main' branch from the repository._
+_You need to update the extension files you coppied and saved to your computer
+with the most up-to-date 'main' branch from the repository._
 
-1. Go to your terminal and change directory to where you cloned the 'main' branch.
-2. Once there run `git fetch && git pull`. You should see some updates in the terminal.
-3. Go to your browser and open the extension manager.
-4. Select the 'Session Storage Hub' extension and click 'Update'.
-5. You may need to reload your browser or reload the pages you are trying to use the browser on.
-
+1. Go to your terminal and change directory to where you cloned the 'main'
+   branch.
+2. Once there run `git fetch && git pull`. You should see some updates in the
+   terminal.
+3. While still in the terminal run `npm run build` and you should have a `build` folder generated.
+4. Go to your browser and open the extension manager.
+5. Select the 'Session Storage Hub' extension and click 'Update'.
+6. You may need to reload your browser or reload the pages you are trying to use
+   the browser on.
 
 ---
 
@@ -40,10 +49,12 @@ Architecture Overview:
 
 Manifest contains extension configurations and permissions for all files.
 Service Worker facilitates communication to/from web pages and the extension.
-Content Script runs in the context of the web page and communicates information to the service worker.
-Injected Scripts are scripts that get injected into the webpage DOM.
+Content Script runs in the context of the web page and communicates information
+to the service worker. Injected Scripts are scripts that get injected into the
+webpage DOM.
 
-- This includes the session storage script which gets injected from the content script.
+-   This includes the session storage script which gets injected from the
+    content script.
 
 ---
 

@@ -1,0 +1,51 @@
+@import '../../global';
+
+$dark-gray: #8c8c8c;
+// powershell light theme
+$powershell-blue: #00008b; // key
+$powershell-green: #006400; // string
+$powershell-orange: #ff4804; // boolean
+$powershell-red: #8b0000; // null
+$powershell-purple: #800080; // number
+
+.DataItem {
+    display: flex;
+    flex-direction: column;
+
+    &#emptyObject > div,
+    &#emptyArray > div {
+        color: $dark-gray;
+        font-style: italic;
+    }
+
+    &__key {
+        cursor: pointer;
+        color: $powershell-blue;
+    }
+
+    &__object,
+    &__array {
+        color: $powershell-blue;
+    }
+
+    &__string {
+        color: $powershell-green;
+    }
+
+    &__number {
+        color: $powershell-purple;
+    }
+
+    &__boolean {
+        color: $powershell-orange;
+    }
+    
+    &__null,
+    &__undefined {
+        color: $dark-gray;
+    }
+
+    .DataItem {
+        margin-left: 1rem;
+    }
+}
