@@ -1,0 +1,24 @@
+.Header {
+    display: flex;
+    flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0 0.5rem 1rem;
+    color: #ffa500;
+    width: 100%;
+
+    div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    h1 {
+        margin-bottom: 0.25rem;
+    }
+
+    p {
+        margin: 0.325rem 0.5rem;
+    }
+}

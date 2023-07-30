@@ -1,9 +1,12 @@
 {
-    "tabWidth": 4,
-    "useTabs": true,
-    "singleAttributePerLine":  true,
-    "singleQuote": true,
-    "trailingComma": "es5",
-    "bracketSpacing": true,
-    "arrowParens": "always"
+	"tabWidth": 4,
+	"useTabs": true,
+	"singleAttributePerLine": true,
+	"singleQuote": true,
+	"trailingComma": "es5",
+	"bracketSpacing": true,
+	"arrowParens": "always",
+	"semi": true,
+	"jsxBracketSameLine": true,
+	"proseWrap": "always"
 }

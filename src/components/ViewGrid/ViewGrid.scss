@@ -1,0 +1,28 @@
+.ViewGrid {
+    display: grid;
+    grid-template-columns: 3fr 7fr;
+    grid-template-areas: "key value";
+    border: 0.0625rem solid #8c8c8c;
+	padding: 0.325rem;
+    max-height: 19.5rem;
+    height: 100%;
+    overflow: hidden;
+
+    &__30,
+    &__70 {
+        display: flex;
+        width: 100%;
+        overflow-wrap: break-word;
+        overflow-y: auto;
+    }
+
+    &__30 {
+        border-right: 0.0125rem solid #8c8c8c;
+        grid-area: key;
+        flex-direction: column;
+    }
+
+    &__70 {
+        grid-area: value;
+    }
+}

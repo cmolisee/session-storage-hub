@@ -1,0 +1,17 @@
+.List {
+    font-size: 0.875rem;
+    color: #8c8c8c;
+    margin: 0.5rem 0.325rem;
+
+    li {
+        margin-top: 0.325rem;
+    }
+
+    &__dash {
+        list-style: none;
+    
+        li::marker {
+            content: "-";
+        }
+    }
+}
