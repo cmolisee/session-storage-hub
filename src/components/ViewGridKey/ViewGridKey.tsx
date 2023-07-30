@@ -10,11 +10,11 @@ const ViewGridKey = ({
     keyName,
     callback,
 }: IViewGridKeyProps) => {
-    const {selectedKeys, setSelectedKeys} = useStorageData();
+    const {selectedKeys, setSelectedKeys, dataKey} = useStorageData();
 
     const handleIsChecked = () => {
         return selectedKeys?.includes(keyName) ?? false;
-    }
+    };
 
     const handleOnChange = () => {
         if (selectedKeys?.includes(keyName)) {
@@ -25,11 +25,11 @@ const ViewGridKey = ({
     };
     
     return (
-        <div className={'ViewGridKey'}>
+        <div className={'ViewGridKey'} aria-selected={dataKey === keyName}>
             <input type={'checkbox'} 
                 checked={handleIsChecked()} 
                 onChange={handleOnChange}/>
-            <p aria-selected={handleIsChecked()} onClick={callback}>
+            <p onClick={callback}>
                 {keyName}
             </p>
         </div>

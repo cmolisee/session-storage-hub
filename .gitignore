@@ -2,8 +2,6 @@
 
 /coverage
 
-/build
-
 /DS_Store
 .env
 .env.local
