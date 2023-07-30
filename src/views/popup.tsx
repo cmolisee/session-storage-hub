@@ -15,7 +15,7 @@ const Popup = () => {
     const handleNotification = (message: string, type: 'error' | 'info' | 'success') => {
         toast.dismiss();
         toast(message, { type: type });
-    }
+    };
 
     const optionsLink = <Button version={'link'} onClickCallback={() => handleNotification('Options Page Under Construction...', 'info')}>Options</Button>;
 
