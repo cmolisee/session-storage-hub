@@ -2,7 +2,7 @@
 	display: grid;
 	grid-template-columns: 3fr 7fr;
 	grid-template-areas: 'key value';
-	border: 0.0625rem solid #8c8c8c;
+	border: 0.0625rem solid var(--borderColor);
 	padding: 0.325rem;
 	max-height: 19.5rem;
 	height: 100%;
@@ -17,9 +17,12 @@
 	}
 
 	&__30 {
-		border-right: 0.0125rem solid #8c8c8c;
+		border-right: 0.0125rem solid var(--borderColor);
 		grid-area: key;
 		flex-direction: column;
+		word-wrap: break-word;
+		word-break: break-all;
+		overflow-x: clip;
 	}
 
 	&__70 {

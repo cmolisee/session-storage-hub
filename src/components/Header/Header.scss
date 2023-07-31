@@ -4,7 +4,7 @@
 	justify-content: space-between;
 	align-items: center;
 	margin: 0 0.5rem 1rem;
-	color: #ffa500;
+	color: var(--specialTextColor);
 	width: 100%;
 
 	div {
@@ -20,5 +20,9 @@
 
 	p {
 		margin: 0.325rem 0.5rem;
+	}
+
+	a {
+		padding-right: 0.5rem;
 	}
 }

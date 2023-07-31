@@ -1,7 +1,7 @@
 import './List.scss';
 
 interface IListProps extends React.OlHTMLAttributes<HTMLOListElement> {
-	bullet: 'default' | 'dash';
+	bullet: 'default' | 'dash' | 'none';
 }
 
 const List = ({ bullet = 'default', children, ...props }: IListProps) => {

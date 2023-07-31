@@ -1,6 +1,6 @@
 .List {
 	font-size: 0.875rem;
-	color: #8c8c8c;
+	color: var(--textColor);
 	margin: 0.5rem 0.325rem;
 
 	li {
@@ -13,5 +13,9 @@
 		li::marker {
 			content: '-';
 		}
+	}
+
+	&__none {
+		list-style: none;
 	}
 }

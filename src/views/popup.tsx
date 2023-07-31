@@ -13,8 +13,11 @@ import {
 } from '../types/types';
 import { getCurrentTabUId } from '../utils/Chrome-Utils';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import { Themes, useTheme } from '../providers/useTheme';
 
 const Popup = () => {
+	const { styles, setTheme } = useTheme();
 	const [data, setData] = useState<Object>({});
 
 	const handleNotification = (
@@ -26,14 +29,7 @@ const Popup = () => {
 	};
 
 	const optionsLink = (
-		<Button
-			version={'link'}
-			onClickCallback={() =>
-				handleNotification('Options Page Under Construction...', 'info')
-			}
-		>
-			Options
-		</Button>
+		<Link style={{'textDecoration':'none'}} className={'Button Button__link'} to={'/options'}>Options</Link>
 	);
 
 	useEffect(() => {
@@ -87,9 +83,18 @@ const Popup = () => {
 
 				setData(updated);
 			}
+
+			if (areaName === 'sync' && changes.options?.newValue) {
+				// placeholder in case we need an update on sync storage change for options
+			}
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		const html = document.documentElement;
+		Object.entries(styles).forEach((s) => html.style.setProperty(s[0], s[1]));
+	}, [styles]);
 
 	return (
 		<>

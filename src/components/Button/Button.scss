@@ -2,10 +2,10 @@
 	background-color: transparent;
 	border: none;
 	cursor: pointer;
-	color: #8c8c8c;
+	color: var(--buttonColor);
 
 	&__default {
-		border: 0.125rem solid #8c8c8c;
+		border: 0.125rem solid var(--buttonColor);
 		border-radius: 0.325rem;
 		font-weight: 800;
 		padding: 0.25rem 1rem;
@@ -18,8 +18,8 @@
 	}
 
 	&:hover {
-		border-color: #ffa500;
-		color: #ffa500;
+		border-color: var(--buttonHoverColor);
+		color: var(--buttonHoverColor);
 		text-decoration: none;
 	}
 }

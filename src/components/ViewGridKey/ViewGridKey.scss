@@ -6,7 +6,7 @@
 	width: 100%;
 
 	&[aria-selected='true'] {
-		background-color: #e1e1e1;
+		background-color: var(--keySelectedColor);
 		border: 0px solid;
 		border-radius: 0.25rem;
 	}
@@ -14,7 +14,7 @@
 	input {
 		appearance: none;
 		margin: 0;
-		color: #006400;
+		color: var(--selectedIconColor);
 		width: 1.15em;
 		height: 1.15em;
 		border-radius: 0.15em;
@@ -30,7 +30,7 @@
 		height: 1.15em;
 		transform: scale(0);
 		transition: 120ms transform ease-in-out;
-		box-shadow: inset 1em 1em #006400;
+		box-shadow: inset 1em 1em var(--selectedIconColor);
 		clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 	}
 
@@ -39,7 +39,7 @@
 	}
 
 	input:not(:checked) {
-		box-shadow: inset 1em 1em #8b0000;
+		box-shadow: inset 1em 1em var(--unselectedIconColor);
 		clip-path: polygon(
 			20% 0%,
 			0% 20%,
@@ -61,5 +61,6 @@
 		font-size: 1rem;
 		cursor: pointer;
 		width: 100%;
+		color: var(--keyColor)
 	}
 }
