@@ -18,7 +18,9 @@
     "parser": "@typescript-eslint/parser",
     "ignorePatterns": [],
 	"overrides": [],
-	
+	"globals": {
+		"chrome": true
+	},
 	"rules": {
 		"arrow-body-style": ["error", "always"],
 		"curly": ["error", "all"],

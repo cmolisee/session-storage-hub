@@ -9,43 +9,43 @@ $powershell-red: #8b0000; // null
 $powershell-purple: #800080; // number
 
 .DataItem {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 
-    &#emptyObject > div,
-    &#emptyArray > div {
-        color: $dark-gray;
-        font-style: italic;
-    }
+	&#emptyObject > div,
+	&#emptyArray > div {
+		color: $dark-gray;
+		font-style: italic;
+	}
 
-    &__key {
-        cursor: pointer;
-        color: $powershell-blue;
-    }
+	&__key {
+		cursor: pointer;
+		color: $powershell-blue;
+	}
 
-    &__object,
-    &__array {
-        color: $powershell-blue;
-    }
+	&__object,
+	&__array {
+		color: $powershell-blue;
+	}
 
-    &__string {
-        color: $powershell-green;
-    }
+	&__string {
+		color: $powershell-green;
+	}
 
-    &__number {
-        color: $powershell-purple;
-    }
+	&__number {
+		color: $powershell-purple;
+	}
 
-    &__boolean {
-        color: $powershell-orange;
-    }
-    
-    &__null,
-    &__undefined {
-        color: $dark-gray;
-    }
+	&__boolean {
+		color: $powershell-orange;
+	}
 
-    .DataItem {
-        margin-left: 1rem;
-    }
+	&__null,
+	&__undefined {
+		color: $dark-gray;
+	}
+
+	.DataItem {
+		margin-left: 1rem;
+	}
 }

@@ -1,25 +1,25 @@
 .Button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    color: #8c8c8c;
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	color: #8c8c8c;
 
-    &__default {
-        border: 0.125rem solid #8c8c8c;
-        border-radius: 0.325rem;
-        font-weight: 800;
-        padding: 0.25rem 1rem;
-        margin: 0 0.325rem;
-        text-align: center;
-    }
+	&__default {
+		border: 0.125rem solid #8c8c8c;
+		border-radius: 0.325rem;
+		font-weight: 800;
+		padding: 0.25rem 1rem;
+		margin: 0 0.325rem;
+		text-align: center;
+	}
 
-    &__link {
-        margin: 0.125rem 0.5rem;
-    }
+	&__link {
+		margin: 0.125rem 0.5rem;
+	}
 
-    &:hover {
-        border-color: #ffa500;
-        color: #ffa500;
-        text-decoration: none;
-    }
+	&:hover {
+		border-color: #ffa500;
+		color: #ffa500;
+		text-decoration: none;
+	}
 }
