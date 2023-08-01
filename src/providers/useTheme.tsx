@@ -1,4 +1,12 @@
-import { createContext, useContext, PropsWithChildren, Dispatch, SetStateAction, useState, useEffect } from 'react';
+import {
+	createContext,
+	useContext,
+	PropsWithChildren,
+	Dispatch,
+	SetStateAction,
+	useState,
+	useEffect,
+} from 'react';
 import jsonThemes from '../themes.json';
 import { requestOptions } from '../utils/Chrome-Utils';
 
@@ -55,49 +63,52 @@ export interface IThemeStyles {
 }
 
 interface IThemeContextProps {
-    theme: Themes,
-    styles: IThemeStyles,
-    setTheme: Dispatch<SetStateAction<Themes>> | null,
+	theme: Themes;
+	styles: IThemeStyles;
+	setTheme: Dispatch<SetStateAction<Themes>> | null;
 }
 
 export const DefaultTheme = {
-    theme: Themes.a11yLight,
-    styles: getStylesFromTheme(Themes.a11yLight),
-    setTheme: null,
+	theme: Themes.a11yLight,
+	styles: getStylesFromTheme(Themes.a11yLight),
+	setTheme: null,
 };
 
 export const ThemeContext = createContext<IThemeContextProps>(DefaultTheme);
 export const useTheme = () => useContext(ThemeContext);
 
 function getStylesFromTheme(name: Themes) {
-	const theme = jsonThemes.filter((t: ITheme) => t.name.valueOf() === name.valueOf())[0] ?? jsonThemes[0];
-    return {
-        '--backgroundColor': theme.colors.backgroundColor,
-        '--textColor': theme.colors.textColor,
-        '--specialTextColor': theme.colors.specialTextColor,
-        '--buttonColor': theme.colors.buttonColor,
-        '--buttonHoverColor': theme.colors.buttonHoverColor,
-        '--borderColor': theme.colors.borderColor,
-        '--selectedIconColor': theme.colors.selectedIconColor,
-        '--unselectedIconColor': theme.colors.unselectedIconColor,
-        '--keyColor': theme.colors.keyColor,
-        '--keySelectedColor': theme.colors.keySelectedColor,
-        '--objectColor': theme.colors.objectColor,
-        '--arrayColor': theme.colors.arrayColor,
-        '--stringColor': theme.colors.stringColor,
-        '--numberColor': theme.colors.numberColor,
-        '--booleanColor': theme.colors.booleanColor,
-        '--nullColor': theme.colors.nullColor,
-        '--undefinedColor': theme.colors.undefinedColor,
-        '--emptyColor': theme.colors.emptyColor,
-    } as IThemeStyles;
+	const theme =
+		jsonThemes.filter(
+			(t: ITheme) => t.name.valueOf() === name.valueOf()
+		)[0] ?? jsonThemes[0];
+	return {
+		'--backgroundColor': theme.colors.backgroundColor,
+		'--textColor': theme.colors.textColor,
+		'--specialTextColor': theme.colors.specialTextColor,
+		'--buttonColor': theme.colors.buttonColor,
+		'--buttonHoverColor': theme.colors.buttonHoverColor,
+		'--borderColor': theme.colors.borderColor,
+		'--selectedIconColor': theme.colors.selectedIconColor,
+		'--unselectedIconColor': theme.colors.unselectedIconColor,
+		'--keyColor': theme.colors.keyColor,
+		'--keySelectedColor': theme.colors.keySelectedColor,
+		'--objectColor': theme.colors.objectColor,
+		'--arrayColor': theme.colors.arrayColor,
+		'--stringColor': theme.colors.stringColor,
+		'--numberColor': theme.colors.numberColor,
+		'--booleanColor': theme.colors.booleanColor,
+		'--nullColor': theme.colors.nullColor,
+		'--undefinedColor': theme.colors.undefinedColor,
+		'--emptyColor': theme.colors.emptyColor,
+	} as IThemeStyles;
 }
 
 export const ThemeProvider = ({
-    defaultThemeName,
-    children
-}: PropsWithChildren<{defaultThemeName: Themes}>) => {
-    const [theme, setTheme] = useState<Themes>(defaultThemeName);
+	defaultThemeName,
+	children,
+}: PropsWithChildren<{ defaultThemeName: Themes }>) => {
+	const [theme, setTheme] = useState<Themes>(defaultThemeName);
 
 	useEffect(() => {
 		requestOptions((items) => {
@@ -107,13 +118,15 @@ export const ThemeProvider = ({
 		});
 	}, []);
 
-    return (
-        <ThemeContext.Provider value={{
-            theme: theme,
-            styles: getStylesFromTheme(theme),
-            setTheme: setTheme,
-        }}>
-          {children}
-        </ThemeContext.Provider>
-      )
-}
+	return (
+		<ThemeContext.Provider
+			value={{
+				theme: theme,
+				styles: getStylesFromTheme(theme),
+				setTheme: setTheme,
+			}}
+		>
+			{children}
+		</ThemeContext.Provider>
+	);
+};

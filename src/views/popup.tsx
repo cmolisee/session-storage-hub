@@ -14,10 +14,10 @@ import {
 import { getCurrentTabUId } from '../utils/Chrome-Utils';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import { Themes, useTheme } from '../providers/useTheme';
+import { useTheme } from '../providers/useTheme';
 
 const Popup = () => {
-	const { styles, setTheme } = useTheme();
+	const { styles } = useTheme();
 	const [data, setData] = useState<Object>({});
 
 	const handleNotification = (
@@ -29,7 +29,13 @@ const Popup = () => {
 	};
 
 	const optionsLink = (
-		<Link style={{'textDecoration':'none'}} className={'Button Button__link'} to={'/options'}>Options</Link>
+		<Link
+			style={{ textDecoration: 'none' }}
+			className={'Button Button__link'}
+			to={'/options'}
+		>
+			Options
+		</Link>
 	);
 
 	useEffect(() => {
@@ -93,7 +99,9 @@ const Popup = () => {
 
 	useEffect(() => {
 		const html = document.documentElement;
-		Object.entries(styles).forEach((s) => html.style.setProperty(s[0], s[1]));
+		Object.entries(styles).forEach((s) =>
+			html.style.setProperty(s[0], s[1])
+		);
 	}, [styles]);
 
 	return (

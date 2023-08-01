@@ -1,4 +1,4 @@
-import { Themes } from "../providers/useTheme";
+import { Themes } from '../providers/useTheme';
 
 export const getCurrentTabUId = (callback: (id?: number) => void): void => {
 	const queryInfo = { active: true, currentWindow: true };
@@ -9,7 +9,10 @@ export const getCurrentTabUId = (callback: (id?: number) => void): void => {
 		});
 };
 
-export const saveOptions = (options: {name: Themes}, callback?: () => void) => {
+export const saveOptions = (
+	options: { name: Themes },
+	callback?: () => void
+) => {
 	chrome.storage.sync.set({ options: options }, () => callback && callback());
 };
 
