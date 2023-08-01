@@ -1,51 +1,47 @@
-@import '../../global';
-
-$dark-gray: #8c8c8c;
-// powershell light theme
-$powershell-blue: #00008b; // key
-$powershell-green: #006400; // string
-$powershell-orange: #ff4804; // boolean
-$powershell-red: #8b0000; // null
-$powershell-purple: #800080; // number
-
 .DataItem {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 
-    &#emptyObject > div,
-    &#emptyArray > div {
-        color: $dark-gray;
-        font-style: italic;
-    }
+	&#emptyObject > div,
+	&#emptyArray > div {
+		color: var(--emptyColor);
+		font-style: italic;
+	}
 
-    &__key {
-        cursor: pointer;
-        color: $powershell-blue;
-    }
+	&__key {
+		cursor: pointer;
+		color: var(--objectColor);
+	}
 
-    &__object,
-    &__array {
-        color: $powershell-blue;
-    }
+	&__object {
+		color: var(--objectColor);
+	}
 
-    &__string {
-        color: $powershell-green;
-    }
+	&__array {
+		color: var(--arrayColor);
+	}
 
-    &__number {
-        color: $powershell-purple;
-    }
+	&__string {
+		color: var(--stringColor);
+	}
 
-    &__boolean {
-        color: $powershell-orange;
-    }
-    
-    &__null,
-    &__undefined {
-        color: $dark-gray;
-    }
+	&__number {
+		color: var(--numberColor);
+	}
 
-    .DataItem {
-        margin-left: 1rem;
-    }
+	&__boolean {
+		color: var(--booleanColor);
+	}
+
+	&__null {
+		color: var(--nullColor);
+	}
+
+	&__undefined {
+		color: var(--undefinedColor);
+	}
+
+	.DataItem {
+		margin-left: 1rem;
+	}
 }

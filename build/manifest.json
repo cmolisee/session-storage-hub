@@ -1,35 +1,30 @@
 {
-    "name": "Session Storage Hub",
-    "description": "Utilities for session storage",
-    "version": "3.0.0",
-    "manifest_version": 3,
-    "action": {
-        "default_popup": "index.html",
-        "default_title": "Session Storage Utilities"
-    },
-    "options_ui": {
-      "page": "index.html"
-    },
-    "icons": {
-        "16": "icon-16.png",
+	"name": "Session Storage Hub",
+	"description": "Utilities for session storage",
+	"version": "3.0.0",
+	"manifest_version": 3,
+	"action": {
+		"default_popup": "index.html",
+		"default_title": "Session Storage Utilities"
+	},
+	"options_ui": {
+		"page": "index.html"
+	},
+	"icons": {
+		"16": "icon-16.png",
 		"32": "icon-32.png",
 		"64": "icon-64.png",
 		"96": "icon-96.png"
-    },
-    "background": {
-      "service_worker": 
-        "./static/js/background.js"
-    },
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["./static/js/content.js"]
-      }
-    ],
-    "devtools_page": "index.html",
-    "permissions": [
-        "tabs",
-        "activeTab",
-        "storage"
-    ]
+	},
+	"background": {
+		"service_worker": "./static/js/background.js"
+	},
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["./static/js/content.js"]
+		}
+	],
+	"devtools_page": "index.html",
+	"permissions": ["tabs", "activeTab", "storage"]
 }
