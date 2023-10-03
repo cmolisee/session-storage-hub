@@ -34,3 +34,17 @@ jobs:
             - name: Build
               run: |
                   npm run build
+            
+            - name: Semantic Release
+              uses: cycjimmy/semantic-release-action@v4
+              with:
+                branches: |
+                  [
+                    'main',
+                    {
+                      name: 'alpha',
+                      prerelease: true
+                    }
+                  ]
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
