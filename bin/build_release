@@ -30,9 +30,7 @@ mkdir -p releases
 echo "Create a folder to hold our new release session_storage_hub.$VERSION.zip... ✅"
 zip -r "releases/session_storage_hub.$VERSION.zip" tmp.txt
 
-# finally we clean up any assets we don't need. We don't strickly
-# need to do this and could just rely on our .gitIgnore file
-# ignoring any assets we don't care about.
+# finally we clean up any assets we don't need.
 echo "cleanup any assets we no longer need ... ✅"
 rm tmp.txt
 
