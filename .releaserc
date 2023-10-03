@@ -17,5 +17,6 @@
         ],
         "@semantic-release/git",
         "@semantic-release/changelog"
-    ]
+    ],
+    "branches": ["master", "next", { "name": "alpha", "prerelease": true }]
 }
