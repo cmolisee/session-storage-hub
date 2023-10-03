@@ -1,0 +1,21 @@
+name: pre-checks
+
+on: [push]
+
+jobs:
+    pre-checks:
+      runs-on: ubuntu-latest
+      timeout-minutes: 5
+  
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Format
+          run: |
+            npm run format
+        
+        - name: Format
+          run: |
+            npm run lint
+        
+        # put test run step here...
