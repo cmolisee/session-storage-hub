@@ -18,5 +18,5 @@
         "@semantic-release/git",
         "@semantic-release/changelog"
     ],
-    "branches": ["main", "next", { "name": "pre", "prerelease": true }]
+    "branches": ["main", { "name": "pre", "prerelease": true }]
 }
