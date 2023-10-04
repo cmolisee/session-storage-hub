@@ -19,7 +19,8 @@
             "@semantic-release/git",
             {
                 "assets": [
-                    "VERSION"
+                    "VERSION",
+                    "package.json"
                 ],
                 "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
             }
@@ -30,7 +31,7 @@
                 "assets": [
                     {
                         "path": "releases/*.zip",
-                        "label": "Our Demo Package (${nextRelease.version})"
+                        "label": "Session Storage Hub (${nextRelease.version})"
                     }
                 ]
             }
