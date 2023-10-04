@@ -25,7 +25,7 @@ echo $VERSION > VERSION
 echo "Bump the version number in manifest.json... ✅"
 ls
 pwd
-sed --debug -i "s|\(\"version\": \)\(.*\),|\1\"$VERSION\",|g" ./public/manifest.json
+sed -i "s|\(\"version\": \)\(.*\),|\1\"$VERSION\",|g" ./public/manifest.json
 
 # Just creating a folder to dump our release in.
 echo "Create tmp releases dir... ✅"
