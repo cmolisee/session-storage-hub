@@ -19,7 +19,6 @@
             "@semantic-release/git",
             {
                 "assets": [
-                    "VERSION",
                     "package.json",
                     "public/manifest.json"
                 ],

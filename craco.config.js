@@ -1,12 +1,13 @@
 /* eslint-disable no-undef */
 const webpack = require('webpack');
-const fs = require('fs');
 
 module.exports = {
 	webpack: {
 		plugins: [
 			new webpack.DefinePlugin({
-				'process.env.VERSION': JSON.stringify(fs.readFileSync('./VERSION', 'utf-8')),
+				'process.env.VERSION': JSON.stringify(
+					require('./public/manifest.json').version
+				),
 			}),
 		],
 		configure: (webpackConfig, { env, paths }) => {

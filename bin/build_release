@@ -15,16 +15,8 @@ echo $VERSION >> tmp.txt
 echo "Add release notes to tmp.txt... ✅"
 echo $NOTES >> tmp.txt
 
-# Here we are also replacing the version we have in our VERSION
-# file with the latest version passed to this script. We will
-# also commit this changed file later in the package process
-echo "Bump the VERSION file we have... ✅"
-echo $VERSION > VERSION
-
 # update manifest version
-echo "Bump the version number in manifest.json... ✅"
-ls
-pwd
+echo "Bump the version in manifest.json... ✅"
 sed -i "s|\(\"version\": \)\(.*\),|\1\"$VERSION\",|g" ./public/manifest.json
 
 # Just creating a folder to dump our release in.
