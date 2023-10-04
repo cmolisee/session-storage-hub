@@ -4,12 +4,14 @@
         "@semantic-release/commit-analyzer",
         "@semantic-release/release-notes-generator",
         [
-            "@semantic-release/exec",
+            "@semantic-release/git",
             {
-                "prepareCmd": "./bin/build_release ${nextRelease.version} \"${nextRelease.notes}\""
+                "assets": [
+                    "VERSION"
+                ],
+                "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
             }
         ],
-        "@semantic-release/changelog",
         [
             "@semantic-release/github",
             {
@@ -21,13 +23,11 @@
                 ]
             }
         ],
+        "@semantic-release/changelog",
         [
-            "@semantic-release/git",
+            "@semantic-release/exec",
             {
-                "assets": [
-                    "VERSION"
-                ],
-                "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+                "prepareCmd": "./bin/build_release ${nextRelease.version} \"${nextRelease.notes}\""
             }
         ]
     ]
