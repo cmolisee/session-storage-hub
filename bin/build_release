@@ -21,6 +21,10 @@ echo $NOTES >> tmp.txt
 echo "Bump the VERSION file we have... ✅"
 echo $VERSION > VERSION
 
+# update manifest version
+echo "Bump the version number in manifest.json..."
+sed -i "s|\(\"version\": \)\(.*\),|\1\"3.0.5\",|g" ./public/manifest.json
+
 # Just creating a folder to dump our release in.
 echo "Create tmp releases dir... ✅"
 mkdir -p releases
