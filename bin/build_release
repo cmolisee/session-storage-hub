@@ -24,7 +24,7 @@ echo $VERSION > VERSION
 # update manifest version
 echo "Bump the version number in manifest.json... ✅"
 cd ./public
-sed -i 's|\("version": \)\(.*\),|\1"3.0.5",|g' manifest.json
+sed -i "s|\(\"version\": \)\(.*\),|\1\"${VERSION}\",|g" manifest.json
 cd ../
 
 # Just creating a folder to dump our release in.
