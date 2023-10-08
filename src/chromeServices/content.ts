@@ -91,7 +91,7 @@ const checkReleaseListener = (
 							convertMsToHr(
 								message.message.timestamp -
 									(data.timestamp as number)
-							) > 5,
+							),
 					});
 
 					fetch(

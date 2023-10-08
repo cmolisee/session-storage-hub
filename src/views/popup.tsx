@@ -68,8 +68,7 @@ const Popup = () => {
 					}
 				}
 			);
-
-			console.log('making request for version check...');
+            
 			// check release version
 			chrome.tabs.sendMessage(
 				id,
