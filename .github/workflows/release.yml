@@ -2,34 +2,34 @@ name: packaging
 
 on:
     workflow_run:
-      workflows: [pre-checks]
-      types:
-        - completed
+        workflows: [pre-checks]
+        types:
+            - completed
 
 jobs:
-  packaging:
-    if: ${{ github.ref_name == 'main' && github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
+    packaging:
+        if:
+            ${{ github.ref_name == 'main' &&
+            github.event.workflow_run.conclusion == 'success' }}
+        runs-on: ubuntu-latest
 
-    steps:
-        - name: Checkout
-          uses: actions/checkout@v3
-          with:
-            fetch-depth: 0
-            token: ${{ secrets.GH_TOKEN }}
-            
-        - name: Setup Node.js
-          uses: actions/setup-node@v3
-          with:
-            node-version: 18
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GH_TOKEN }}
 
-        - name: Install dependencies
-          run: |
-            npm ci
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18
 
-        - name: Release
-          run: npx semantic-release
-          env:
-            GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        
-        
+            - name: Install dependencies
+              run: |
+                  npm ci
+
+            - name: Release
+              run: npx semantic-release
+              env:
+                  GH_TOKEN: ${{ secrets.GH_TOKEN }}

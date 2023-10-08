@@ -7,7 +7,7 @@ export enum Action {
 	Request,
 	Update,
 	Post,
-    Check,
+	Check,
 }
 
 export interface IChromeMessage {
@@ -22,7 +22,7 @@ export interface IMessageResponse {
 }
 
 export type TVersionData = {
-    isUpToDate?: boolean;
-    timestamp?: number;
-    releaseUrl?: string;
-}
+	isUpToDate?: boolean;
+	timestamp?: number;
+	releaseUrl?: string;
+};

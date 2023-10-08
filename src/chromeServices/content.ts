@@ -3,7 +3,7 @@ import {
 	IChromeMessage,
 	IMessageResponse,
 	Sender,
-    TVersionData,
+	TVersionData,
 } from '../types/types';
 import { convertMsToHr } from '../utils/helperUtils';
 
@@ -34,9 +34,9 @@ const requestMessageListener = (
 			error: !data ? 'Error retrieving session storage' : null,
 			data: data,
 		});
-        return true; // we will eventually return a response
+		return true; // we will eventually return a response
 	}
-    return false; // do not expect a response
+	return false; // do not expect a response
 };
 
 const updateMessageListener = (
@@ -58,9 +58,9 @@ const updateMessageListener = (
 				data: null,
 			});
 		}
-        return true; // we will eventually return a response
+		return true; // we will eventually return a response
 	}
-    return false; // do not expect a response
+	return false; // do not expect a response
 };
 
 // messageListeners must return a boolean so they cannot be async
@@ -71,57 +71,66 @@ const checkReleaseListener = (
 ) => {
 	if (validateSender(Sender.Extension, Action.Check, message, sender)) {
 		try {
-            // request release information from local storage
-            chrome.storage.local.get('versionData', (data: TVersionData) => {
-                // if it does not exist, no message passed in message request, or >5hrs since last check
-                // get data from api request
-                if (
-                    !message.message ||
-                    !message.message.timestamp ||
-                    message.message.forceCheck ||
-                    !data || 
-                    !data.timestamp || 
-                    convertMsToHr(message.message.timestamp - data.timestamp) > 5
-                ) {
-                    console.info('Requesting check for latest release', {
-                        message,
-                        data,
-                        timestampDiff: convertMsToHr(message.message.timestamp - (data.timestamp as number)) > 5
-                    });
-                    
-                    fetch('https://api.github.com/repos/cmolisee/session-storage-hub/releases/latest')
-                        .then((res) => res.json())
-                        .then((releaseData) => {
-                            const resData: TVersionData = {
-                                isUpToDate: releaseData['tag_name'].slice[1] !== process.env.VERSION,
-                                timestamp: new Date().getTime(),
-                                releaseUrl: releaseData['html_url']
-                            };
-            
-                            response({ error: null, data: resData });
-                        });
-                } else {
-                    // otherwise data exists, is up to date
-                    response({ error: null, data: data });
-                    return true;
-                }
-            });
+			// request release information from local storage
+			chrome.storage.local.get('versionData', (data: TVersionData) => {
+				// if it does not exist, no message passed in message request, or >5hrs since last check
+				// get data from api request
+				if (
+					!message.message ||
+					!message.message.timestamp ||
+					message.message.forceCheck ||
+					!data ||
+					!data.timestamp ||
+					convertMsToHr(message.message.timestamp - data.timestamp) >
+						5
+				) {
+					console.info('Requesting check for latest release', {
+						message,
+						data,
+						timestampDiff:
+							convertMsToHr(
+								message.message.timestamp -
+									(data.timestamp as number)
+							) > 5,
+					});
+
+					fetch(
+						'https://api.github.com/repos/cmolisee/session-storage-hub/releases/latest'
+					)
+						.then((res) => res.json())
+						.then((releaseData) => {
+							const resData: TVersionData = {
+								isUpToDate:
+									releaseData['tag_name'].slice[1] !==
+									process.env.VERSION,
+								timestamp: new Date().getTime(),
+								releaseUrl: releaseData['html_url'],
+							};
+
+							response({ error: null, data: resData });
+						});
+				} else {
+					// otherwise data exists, is up to date
+					response({ error: null, data: data });
+					return true;
+				}
+			});
 		} catch {
 			response({
 				error: 'Error checking for updated release',
 				data: {},
 			});
 		}
-        return true; // we will eventually return a response
+		return true; // we will eventually return a response
 	}
-    return false; // do not expect a response
+	return false; // do not expect a response
 };
 
 const main = () => {
-    // Fired when a message is sent from either an extension process or a content script.
+	// Fired when a message is sent from either an extension process or a content script.
 	chrome.runtime.onMessage.addListener(requestMessageListener);
 	chrome.runtime.onMessage.addListener(updateMessageListener);
-    chrome.runtime.onMessage.addListener(checkReleaseListener);
+	chrome.runtime.onMessage.addListener(checkReleaseListener);
 };
 
 main();

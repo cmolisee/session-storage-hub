@@ -20,9 +20,7 @@ const Options = () => {
 
 	const handleUpdateTheme = (theme: Themes) => {
 		setTheme!(theme);
-		saveOptions({ name: theme }, () =>
-			console.log('[Theme saved]')
-		);
+		saveOptions({ name: theme }, () => console.log('[Theme saved]'));
 	};
 
 	useEffect(() => {
