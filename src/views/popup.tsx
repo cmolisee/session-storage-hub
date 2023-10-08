@@ -145,19 +145,7 @@ const Popup = () => {
 			<Button onClickCallback={() => publishEvent('pasteEvent', {})}>
 				Paste
 			</Button>
-			<List bullet={'dash'}>
-				<li>
-					{
-						'Use the checkboxes to include or exclude the corresponding session storage object/item.'
-					}
-				</li>
-				<li>
-					{
-						'Expand/Close the JSON items in the viewing area to the left by clicking them.'
-					}
-				</li>
-			</List>
-			<span>
+			<div className={'mt-2'}>
 				<Button
 					version={'link'}
 					onClickCallback={() => publishEvent('selectAllEvent', {})}
@@ -170,7 +158,7 @@ const Popup = () => {
 				>
 					Unselect All
 				</Button>
-			</span>
+			</div>
 			<StorageDataProvider dataObject={data}>
 				<ViewGrid />
 			</StorageDataProvider>
