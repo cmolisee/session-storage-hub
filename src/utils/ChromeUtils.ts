@@ -16,6 +16,6 @@ export const saveOptions = (
 	chrome.storage.sync.set({ options: options }, () => callback && callback());
 };
 
-export const requestOptions = (callback?: (items: any) => void) => {
-	chrome.storage.sync.get('options', (items) => callback && callback(items));
+export const requestData = (key: string, callback?: (items: any) => void) => {
+	chrome.storage.sync.get(key, (items) => callback && callback(items));
 };

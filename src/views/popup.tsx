@@ -10,8 +10,9 @@ import {
 	IChromeMessage,
 	IMessageResponse,
 	Sender,
+    TVersionData,
 } from '../types/types';
-import { getCurrentTabUId } from '../utils/Chrome-Utils';
+import { getCurrentTabUId } from '../utils/ChromeUtils';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../providers/useTheme';
@@ -19,6 +20,7 @@ import { useTheme } from '../providers/useTheme';
 const Popup = () => {
 	const { styles } = useTheme();
 	const [data, setData] = useState<Object>({});
+    const [versionData, setVersionData] = useState<TVersionData>({})
 
 	const handleNotification = (
 		message: string,
@@ -39,34 +41,60 @@ const Popup = () => {
 	);
 
 	useEffect(() => {
-		// request the session storage data
-		const message: IChromeMessage = {
-			from: Sender.Extension,
-			action: Action.Request,
-			message: undefined,
-		};
-
 		getCurrentTabUId((id) => {
-			id &&
-				chrome.tabs.sendMessage(
-					id,
-					message,
-					async (res: IMessageResponse) => {
-						if (res.error) {
-							handleNotification(res.error, 'error');
-						}
+			if (!id) {
+                return;
+            }
+            // get session storage data
+            chrome.tabs.sendMessage(
+                id,
+                {
+                    from: Sender.Extension,
+                    action: Action.Request,
+                    message: undefined,
+                } as IChromeMessage,
+                async (res: IMessageResponse) => {
+                    if (res && res.error) {
+                        handleNotification(res.error, 'error');
+                    }
 
-						if (res.data) {
-							await chrome.storage.local.set({ data: res.data });
-							setData(res.data);
-						} else {
-							handleNotification(
-								'There was an error requesting Session Storage Data.',
-								'error'
-							);
-						}
-					}
-				);
+                    if (res && res.data) {
+                        await chrome.storage.local.set({ data: res.data });
+                        setData(res.data);
+                    } else {
+                        handleNotification(
+                            'There was an error requesting Session Storage Data.',
+                            'error'
+                        );
+                    }
+                }
+            );
+
+            console.log('making request for version check...');
+            // check release version
+            chrome.tabs.sendMessage(
+                id,
+                {
+                    from: Sender.Extension,
+                    action: Action.Check,
+                    message: { timestamp: new Date().getTime(), forceCheck: true },
+                } as IChromeMessage,
+                async (res: IMessageResponse) => {
+                    if (res && res.error) {
+                        handleNotification(res.error, 'error');
+                    }
+
+                    if (res && res.data) {
+                        await chrome.storage.local.set({ versionData: res.data });
+                        setVersionData(res.data as TVersionData);
+                    } else {
+                        handleNotification(
+                            'There was an error retrieving the latest release information.',
+                            'error'
+                        );
+                    }
+                }
+            )
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -108,8 +136,8 @@ const Popup = () => {
 		<>
 			<Header
 				title={'Session Storage Hub'}
+                link={optionsLink}
 				versionNumber={process.env.VERSION as string}
-				link={optionsLink}
 			/>
 			<Button onClickCallback={() => publishEvent('copyEvent', {})}>
 				Copy
@@ -146,6 +174,11 @@ const Popup = () => {
 			<StorageDataProvider dataObject={data}>
 				<ViewGrid />
 			</StorageDataProvider>
+            {versionData && !versionData.isUpToDate && versionData.releaseUrl && (
+                <a href={versionData.releaseUrl} target={'_blank'} rel="noreferrer">
+                    New version available
+                </a>
+            )}
 		</>
 	);
 };

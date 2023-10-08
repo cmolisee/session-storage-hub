@@ -1,5 +1,5 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
-import { getDataType } from '../../utils/Json-Utils';
+import { getDataType } from '../../utils/JsonUtils';
 import { CaretDownFilled, CaretRightFilled } from '@ant-design/icons';
 import './DataItem.scss';
 

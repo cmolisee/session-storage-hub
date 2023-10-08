@@ -17,3 +17,4 @@ chrome.runtime.onStartup.addListener(() => {
 chrome.runtime.onSuspend.addListener(() => {
 	console.log('[background] onSuspend');
 });
+

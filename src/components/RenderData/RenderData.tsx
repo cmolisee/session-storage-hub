@@ -1,4 +1,4 @@
-import { getDataType } from '../../utils/Json-Utils';
+import { getDataType } from '../../utils/JsonUtils';
 import DataItem from '../DataItem';
 
 interface IRenderDataProps {

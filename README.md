@@ -1,105 +1,106 @@
-# Session Storage Hub
+<h1 align="center">Session Storage Hub</h1>
+<p align="center">
+  <a href="CONTRIBUTING.md">Contributing Guidelines</a>
+  ·
+  <a href="path to issues">Submit an Issue</a>
+  <br>
+</p>
 
-Chrome browser extension to easily view, copy, and paste session storage data
-from one tab to another.
+<p align="center">
+    Chrome browser extension to easily view, copy, and paste session storage data from one tab to another.
+</p>
+<p align="center">Author: Cody Molisee</p>
 
----
+<p align="center">
+  <a href="https://github.com/cmolisee/session-storage-hub/issues">
+    <img src="https://img.shields.io/github/issues-raw/cmolisee/session-storage-hub" />
+  </a>&nbsp;
+  <a href="LICENSE.md">
+    <img src="https://img.shields.io/github/license/cmolisee/session-storage-hub" />
+  </a>&nbsp;
+  <a href="https://github.com/cmolisee/session-storage-hub/releases">
+    <img src="https://img.shields.io/github/release-date/cmolisee/session-storage-hub" />
+  </a>&nbsp;
+  <a href="https://github.com/cmolisee/session-storage-hub/releases/latest">
+    <img src="https://img.shields.io/github/downloads/cmolisee/session-storage-hub/{{version}}/total" />
+  </a>&nbsp;
+  <a href="https://github.com/cmolisee/session-storage-hub">
+    <img src="https://img.shields.io/github/languages/code-size/cmolisee/session-storage-hub" />
+    </a>&nbsp;
+    <a href="https://github.com/cmolisee/session-storage-hub">
+        <img src="https://img.shields.io/github/package-json/v/cmolisee/session-storage-hub/main" />
+    </a>
+</p>
 
-### How to install (easy):
+## Documentation
 
-1. Download the most up-to-date 'build' folder from the repository.
-2. Open google chrome web browser and navigate to the chrome extension tab
-   `chrome://extensions/`.
-3. Turn on Developer Mode in the top right corner.
-4. Select 'Load Unpacked'.
-5. Select the 'build' folder of the extension.
+- [Installation](#installation)
+- [Architecture](#architecture)
+- [Issues](#issues)
+- [Releases](https://github.com/cmolisee/session-storage-hub/releases)
+- [Contributing](#contributing)
 
-### How to install (less-easy):
+## Installation
 
-1. Copy or clone the main branch from this repo to a folder onto your local
-   machine.
-2. Open a terminal an `cd` into the folder.
-3. Run `npm run build` and you should have a `build` folder generated.
-4. Open google chrome web browser and navigate to the chrome extension tab
-   `chrome://extensions/`.
-5. Turn on Developer Mode in the top right corner.
-6. Select 'Load Unpacked'.
-7. Select the 'build' folder of the extension.
+### Via Github and Terminal
 
----
+1. In your terminal pull the 'main' branch to your local in a location of your choice (i.e. 'Documents').
+```
+git clone https://github.com/cmolisee/session-storage-hub.git
+```
+2. Change directory to the location you cloned the repo in and install dependencies.
+```
+cd <location>
+npm i
+```
+3. Build the project.
+```
+npm run build
+```
+4. Open your chrome browser and open the extension manager.
+5. Turn on `Developer Mode` and select `Load upacked`.
+6. Select the build folder in the location you built the project. You may need to restart the browser and/or reload tabs.
 
-### How to Update (easy):
+### Via Release Artifacts
 
-1. Download the most up-to-date 'build' folder from the repository and replacing
-   your current saved folder.
-2. Go to your browser and open the extension manager.
-3. Select the 'Session Storage Hub' extension and click 'Update'.
+1. Go to the [Releases](https://github.com/cmolisee/session-storage-hub/releases) page and download the Source Code .zip file from the latest release.
+2. Unpack the .zip file into a location of your choice. It will include all source code including the pre-built latest version.
+3. Open your chrome browser and open the extension manager.
+4. Turn on `Developer Mode` and select `Load upacked`.
+5. Select the build folder in the location you built the project. You may need to restart the browser and/or reload tabs.
 
-_You may need to reload your browser or reload the pages you are trying to use
-the browser on._
+### Upgrading
 
-### How to Update (easy):
+The extension will check for updates the first time you install or about every 5 hours since the last check. If a new version is available it will provide a link to the latest release at the bottom of the extenssion popup window. You can click on that link and follow the steps in the 'Release Artifacts' installation guide above.
 
-1. Go to your terminal and Navigate to where you have the extension folder
-   saved.
-2. Make sure you are on the 'main' branch by running `git checkout main`.
-3. Run `git fetch && git pull` to update the folder.
-4. While still in the terminal run `npm i && npm run build` to install the
-   dependencies and update the 'build' folder.
-5. Go to your browser and open the extension manager.
-6. Select the 'Session Storage Hub' extension and click 'Update'.
-7. You may need to reload your browser or reload the pages you are trying to use
-   the browser on.
+Alternatively, if you can follow 'Github and Terminal' installation and pull the latest version from main.
 
-_You may need to reload your browser or reload the pages you are trying to use
-the browser on._
+### Basic Usage
 
----
+See the [usage](USAGE.md) documentation on how to use this extension.
 
-### Usage:
+## Architecture
 
-Once the Extension is installed you can start using it on any tab in your
-browser.
+This extension is built primarily with react, typescript, and sass.
 
-You can pin the extension next to your browser search bar using the Extension
-Manager.
+Chrome api's are used extensively for browser, tab, and storage functionality and interaction.
 
-#### Selecting/unselecting Items to Copy
+The extension injects a service worker ('background.js') via the manifest file to each webpage in order to read and write session storage data for each tab. Communication between the service worker and the extension is handled by the content script.
 
-In the view area you will see grid with 2 columns. The left column displays the
-<u>keys</u> for all session storage objects. Object that are selected will
-display a green checkmark and objects that are not selected will display a red
-'X'. You can select/unselect by doing the following:
+All necessary files are minified and pacakged into the build folder.
 
-1. Individually clicking on the checkmark or 'X' icon.
-2. Clicking the 'select all' button above the column.
-3. Clicking the 'unselect all' button above the column.
+## Issues
 
-#### Copying/Pasting Items
+If you have questions, found a bug, or have an idea on a future additon you can start a [discussion](https://github.com/cmolisee/session-storage-hub/discussions).
 
-To copy items just select all the items you want on the current browser tab and
-click the 'Copy' button at the top of the extension window. You will see a
-notification that items were successfuly coppied or if there was an error.
+## Releases
 
-Once coppied you can now navigate to a new tab, open the extension, and click
-the 'Paste' button. Again, you will see a notification that items were
-successfuly pasted or if there was an error. Additionally, you should now see
-the newly pasted items in the grid in the extension window and in the dev tools
-window on the page.
+All releases including the latest release can be found [here](https://github.com/cmolisee/session-storage-hub/releases).
 
-#### Viewing Item Values
+## Contributing
 
-In the view area you will see grid with 2 columns. The right column displays the
-<u>values</u> for all session storage objects. To change which object you are
-viewing simply click on the corresponding items <u>key</u> in the right column
-(selected keys will be highlighted).
+Read through our [contributing guidelines](CONTRIBUTE.md) to learn about our submission process, coding conventions, and other information.
 
-The view area will display values as follows:
+## Want to Help or have a Suggestion?
 
--   Any non-complex primitive values (strings, numbers, booleans, null,
-    undefined, empty, etc...) will be openly visible in the view area (the right
-    column).
--   Objects will display the key value. By clicking on the key value the
-    children to that key will be displayed.
--   Arrays will display a preview of the contents in that array as the key
-    value. By clicking on the key value preview the values will be displayed.
+To report a bug or submit an idea for a future change? Read the [contribution guidelines](CONTRIBUTE.md), check out the repo issues section, or try the [Discussion Forum](https://github.com/cmolisee/session-storage-hub/discussions).

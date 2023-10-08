@@ -6,14 +6,14 @@ NOTES=$2
 
 # We first create a new text file which we will be releasing
 echo "Create file to package... ✅"
-touch tmp.txt
+touch release.txt
 
 # We now pump the VERSION and NOTES we passed to this script
 # into our release hello.txt file
-echo "Add version number: $VERSION to tmp.txt... ✅"
-echo $VERSION >> tmp.txt
-echo "Add release notes to tmp.txt... ✅"
-echo $NOTES >> tmp.txt
+echo "Add version number: $VERSION to release.txt... ✅"
+echo $VERSION >> release.txt
+echo "Add release notes to release.txt... ✅"
+echo $NOTES >> release.txt
 
 # update manifest version
 echo "Bump the version in manifest.json... ✅"
@@ -26,11 +26,15 @@ mkdir -p releases
 # Here we create a new release folder to put our hello.txt file in
 # and we zip it up with the zip name using the VERSION in it.
 echo "Create a folder to hold our new release session_storage_hub.$VERSION.zip... ✅"
-zip -r "releases/session_storage_hub.$VERSION.zip" tmp.txt
+zip -r "releases/session_storage_hub.$VERSION.zip" release.txt
 
-# finally we clean up any assets we don't need.
-echo "cleanup any assets we no longer need ... ✅"
-rm tmp.txt
+# Clean up any assets we don't need.
+echo "cleanup any assets we no longer need... ✅"
+rm release.txt
+
+# Build with new release
+echo "build with new release... ✅"
+npm run build
 
 echo
 echo "New release created! [$VERSION] 🥳"
