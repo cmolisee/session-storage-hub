@@ -10,7 +10,7 @@ import {
 	IMessageResponse,
 	Sender,
 } from '../../types/types';
-import { getCurrentTabUId } from '../../utils/Chrome-Utils';
+import { getCurrentTabUId } from '../../utils/ChromeUtils';
 import { toast } from 'react-toastify';
 
 export interface IKeyValuePair {

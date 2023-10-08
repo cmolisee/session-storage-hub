@@ -4,7 +4,7 @@ import List from '../components/List/List';
 import Button from '../components/Button/Button';
 import { Themes, useTheme } from '../providers/useTheme';
 import { useEffect } from 'react';
-import { saveOptions } from '../utils/Chrome-Utils';
+import { saveOptions } from '../utils/ChromeUtils';
 
 const Options = () => {
 	const { styles, setTheme } = useTheme();

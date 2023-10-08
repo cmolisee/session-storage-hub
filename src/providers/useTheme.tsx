@@ -8,7 +8,7 @@ import {
 	useEffect,
 } from 'react';
 import jsonThemes from '../themes.json';
-import { requestOptions } from '../utils/Chrome-Utils';
+import { requestData } from '../utils/ChromeUtils';
 
 export enum Themes {
 	a11yLight = 'a11y-light',
@@ -111,9 +111,9 @@ export const ThemeProvider = ({
 	const [theme, setTheme] = useState<Themes>(defaultThemeName);
 
 	useEffect(() => {
-		requestOptions((items) => {
-			if (Object.values(Themes).includes(items.options.name)) {
-				setTheme(items.options.name);
+		requestData('options', (items) => {
+			if (Object.values(Themes).includes(items.options?.name)) {
+				setTheme(items.options?.name);
 			}
 		});
 	}, []);

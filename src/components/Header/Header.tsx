@@ -2,22 +2,21 @@ import './Header.scss';
 
 interface IHeaderProps {
 	title: string;
-	versionNumber?: string;
+    // generally the link to the options view
 	link: JSX.Element;
+    versionNumber?: string;
 }
 
-const Header = ({ title, versionNumber, link }: IHeaderProps) => {
+const Header = ({ title, link,versionNumber }: IHeaderProps) => {
 	return (
 		<div className={'Header'}>
 			<div>
 				<h1>{title}</h1>
 				{link}
 			</div>
-			{versionNumber && (
-				<div>
-					<p>version {versionNumber}</p>
-				</div>
-			)}
+            <div>
+                <p>version {versionNumber ?? 'UNKNOWN'}</p>
+            </div>
 		</div>
 	);
 };
