@@ -92,6 +92,7 @@ const checkReleaseListener = (
 								message.message.timestamp -
 									(data.timestamp as number)
 							),
+                        currVersion: process.env.VERSION,
 					});
 
 					fetch(
@@ -99,16 +100,17 @@ const checkReleaseListener = (
 					)
 						.then((res) => res.json())
 						.then((releaseData) => {
+                            const latestVersion = releaseData['tag_name'].slice(1);
+                            
 							const resData: TVersionData = {
-								isUpToDate:
-									releaseData['tag_name'].slice[1] !==
-									process.env.VERSION,
+								isUpToDate: latestVersion === process.env.VERSION,
 								timestamp: new Date().getTime(),
 								releaseUrl: releaseData['html_url'],
 							};
 
 							response({ error: null, data: resData });
-						});
+						})
+                        .catch(err => console.log(err));
 				} else {
 					// otherwise data exists, is up to date
 					response({ error: null, data: data });

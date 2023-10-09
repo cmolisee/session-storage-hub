@@ -68,7 +68,7 @@ const Popup = () => {
 					}
 				}
 			);
-            
+
 			// check release version
 			chrome.tabs.sendMessage(
 				id,
@@ -77,7 +77,6 @@ const Popup = () => {
 					action: Action.Check,
 					message: {
 						timestamp: new Date().getTime(),
-						forceCheck: true,
 					},
 				} as IChromeMessage,
 				async (res: IMessageResponse) => {
@@ -168,13 +167,15 @@ const Popup = () => {
 			{versionData &&
 				!versionData.isUpToDate &&
 				versionData.releaseUrl && (
-					<a
-						href={versionData.releaseUrl}
-						target={'_blank'}
-						rel="noreferrer"
-					>
-						New version available
-					</a>
+					<div className={'d-flex m-h justify-end'}>
+                        <a className={'updateVersion'}
+                            href={versionData.releaseUrl}
+                            target={'_blank'}
+                            rel="noreferrer"
+                        >
+                            New version available
+                        </a>
+                    </div>
 				)}
 		</>
 	);

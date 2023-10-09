@@ -40,6 +40,29 @@ body {
 	background: var(--specialTextColor);
 }
 
+a.updateVersion {
+	cursor: pointer;
+	color: var(--buttonColor);
+    text-decoration: none;
+
+    &:hover {
+		color: var(--buttonHoverColor);
+		text-decoration: none;
+	}
+}
+
+.d-flex {
+    display: flex;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.m-h {
+    margin: 0.5rem;
+}
+
 .mt-2 {
 	margin-top: 2rem;
 }
