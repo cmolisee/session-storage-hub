@@ -85,9 +85,7 @@ const Popup = () => {
 					}
 
 					if (res && res.data) {
-						await chrome.storage.local.set({
-							versionData: res.data,
-						});
+						await chrome.storage.sync.set({ versionData: res.data });
 						setVersionData(res.data as TVersionData);
 					} else {
 						handleNotification(

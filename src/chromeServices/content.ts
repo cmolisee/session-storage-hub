@@ -72,7 +72,7 @@ const checkReleaseListener = (
 	if (validateSender(Sender.Extension, Action.Check, message, sender)) {
 		try {
 			// request release information from local storage
-			chrome.storage.local.get('versionData', (data: TVersionData) => {
+			chrome.storage.sync.get('versionData', (data: TVersionData) => {
 				// if it does not exist, no message passed in message request, or >5hrs since last check
 				// get data from api request
 				if (
@@ -89,7 +89,7 @@ const checkReleaseListener = (
 						data,
 						timestampDiff:
 							convertMsToHr(
-								message.message.timestamp -
+								(message.message.timestamp as number) -
 									(data.timestamp as number)
 							),
                         currVersion: process.env.VERSION,
