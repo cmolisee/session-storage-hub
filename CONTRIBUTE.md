@@ -110,12 +110,15 @@ The `<type>` field is mandatory, the `(<scope>)` field is optional.
 
 Must be one of the following (we use the same conventions as angular):
 
--   **major**: Will update the major value of the version (breaking changes, etc...)
--   **minor**: Will update the minor value of the version (small enhancments, etc...)
+-   **major**: Will update the major value of the version (breaking changes,
+    etc...)
+-   **minor**: Will update the minor value of the version (small enhancments,
+    etc...)
 -   **patch**: Will update the patch value of the version (fix's, etc...)
 
-**NOTE**: Adding `no-release` to the scope field will ensure version is not updated.
-**NOTE**: Anything not matching the above will default to the 'angular' semantic versioning rules.
+**NOTE**: Adding `no-release` to the scope field will ensure version is not
+updated. **NOTE**: Anything not matching the above will default to the 'angular'
+semantic versioning rules.
 
 ##### Summary
 

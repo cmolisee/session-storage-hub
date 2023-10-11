@@ -85,7 +85,9 @@ const Popup = () => {
 					}
 
 					if (res && res.data) {
-						await chrome.storage.sync.set({ versionData: res.data });
+						await chrome.storage.sync.set({
+							versionData: res.data,
+						});
 						setVersionData(res.data as TVersionData);
 					} else {
 						handleNotification(
@@ -166,14 +168,15 @@ const Popup = () => {
 				!versionData.isUpToDate &&
 				versionData.releaseUrl && (
 					<div className={'d-flex m-h justify-end'}>
-                        <a className={'updateVersion'}
-                            href={versionData.releaseUrl}
-                            target={'_blank'}
-                            rel="noreferrer"
-                        >
-                            New version available
-                        </a>
-                    </div>
+						<a
+							className={'updateVersion'}
+							href={versionData.releaseUrl}
+							target={'_blank'}
+							rel="noreferrer"
+						>
+							New version available
+						</a>
+					</div>
 				)}
 		</>
 	);
