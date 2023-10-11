@@ -72,7 +72,7 @@ const checkReleaseListener = (
 	if (validateSender(Sender.Extension, Action.Check, message, sender)) {
 		try {
 			// request release information from local storage
-			chrome.storage.local.get('versionData', (data: TVersionData) => {
+			chrome.storage.sync.get('versionData', (data: TVersionData) => {
 				// if it does not exist, no message passed in message request, or >5hrs since last check
 				// get data from api request
 				if (
@@ -84,6 +84,20 @@ const checkReleaseListener = (
 					convertMsToHr(message.message.timestamp - data.timestamp) >
 						5
 				) {
+<<<<<<< HEAD
+=======
+					console.info('Requesting check for latest release', {
+						message,
+						data,
+						timestampDiff:
+							convertMsToHr(
+								(message.message.timestamp as number) -
+									(data.timestamp as number)
+							),
+                        currVersion: process.env.VERSION,
+					});
+
+>>>>>>> cf46235188799fa058a5c573ce11ac72dec1ddd2
 					fetch(
 						'https://api.github.com/repos/cmolisee/session-storage-hub/releases/latest'
 					)
