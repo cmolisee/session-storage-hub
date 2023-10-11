@@ -23,6 +23,13 @@ sed -i "s|\(\"version\": \)\(.*\),|\1\"$VERSION\",|g" ./public/manifest.json
 echo "Create tmp releases dir... ✅"
 mkdir -p releases
 
+# Build with new release
+echo "build with new release... ✅"
+npm run build
+
+echo "DEBUG: manifest.json in build folder should reflect the correct version"
+head ./build/manifest.json
+
 # Here we create a new release folder to put our hello.txt file in
 # and we zip it up with the zip name using the VERSION in it.
 echo "Create a folder to hold our new release session_storage_hub.$VERSION.zip... ✅"
@@ -31,10 +38,6 @@ zip -r "releases/session_storage_hub.$VERSION.zip" release.txt
 # Clean up any assets we don't need.
 echo "cleanup any assets we no longer need... ✅"
 rm release.txt
-
-# Build with new release
-echo "build with new release... ✅"
-npm run build
 
 echo
 echo "New release created! [$VERSION] 🥳"
