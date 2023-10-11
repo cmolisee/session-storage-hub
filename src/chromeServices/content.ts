@@ -84,17 +84,6 @@ const checkReleaseListener = (
 					convertMsToHr(message.message.timestamp - data.timestamp) >
 						5
 				) {
-					console.info('Requesting check for latest release', {
-						message,
-						data,
-						timestampDiff:
-							convertMsToHr(
-								message.message.timestamp -
-									(data.timestamp as number)
-							),
-                        currVersion: process.env.VERSION,
-					});
-
 					fetch(
 						'https://api.github.com/repos/cmolisee/session-storage-hub/releases/latest'
 					)
