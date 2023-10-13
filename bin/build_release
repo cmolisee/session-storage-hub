@@ -4,6 +4,10 @@ set -e
 VERSION=$1
 NOTES=$2
 
+echo "DEBUG: checking directory and manifest in build"
+ls
+head ./build/manifest.json
+
 # We first create a new text file which we will be releasing
 echo "Create file to package... ✅"
 touch release.txt
@@ -27,9 +31,6 @@ mkdir -p releases
 echo "build with new release... ✅"
 npm run build
 
-echo "DEBUG: manifest.json in build folder should reflect the correct version"
-head ./build/manifest.json
-
 # Here we create a new release folder to put our hello.txt file in
 # and we zip it up with the zip name using the VERSION in it.
 echo "Create a folder to hold our new release session_storage_hub.$VERSION.zip... ✅"
@@ -41,3 +42,7 @@ rm release.txt
 
 echo
 echo "New release created! [$VERSION] 🥳"
+
+echo "DEBUG: checking directory and manifest in build"
+ls
+head ./build/manifest.json
