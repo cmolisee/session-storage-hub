@@ -4,6 +4,7 @@ set -e
 VERSION=$1
 NOTES=$2
 
+#  testing things
 echo "DEBUG: checking directory and manifest in build"
 ls
 head ./build/manifest.json
