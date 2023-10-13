@@ -1,7 +1,7 @@
 {
 	"name": "Session Storage Hub",
 	"description": "Utilities for session storage",
-	"version": "4.0.2",
+	"version": "4.0.5",
 	"manifest_version": 3,
 	"action": {
 		"default_popup": "index.html",
