@@ -4,10 +4,6 @@ set -e
 VERSION=$1
 NOTES=$2
 
-echo "DEBUG: checking directory and manifest in build"
-ls
-head ./build/manifest.json
-
 # We first create a new text file which we will be releasing
 echo "Create file to package... ✅"
 touch release.txt
@@ -42,7 +38,3 @@ rm release.txt
 
 echo
 echo "New release created! [$VERSION] 🥳"
-
-echo "DEBUG: checking directory and manifest in build"
-ls
-head ./build/manifest.json
