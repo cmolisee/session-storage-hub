@@ -1,6 +1,6 @@
 {
 	"name": "session-storage-hub",
-	"version": "4.0.3",
+	"version": "4.0.4",
 	"description": "Browser extension for session storage utilities.",
 	"repository": "https://github.com/cmolisee/session-storage-hub.git",
 	"author": "codymolisee <molisee.cody@gmail.com>",
