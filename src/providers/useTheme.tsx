@@ -13,6 +13,7 @@ import { requestData } from '../utils/ChromeUtils';
 export enum Themes {
 	a11yLight = 'a11y-light',
 	darkOrange = 'dark-orange',
+	map = 'map',
 }
 
 export interface ITheme {
