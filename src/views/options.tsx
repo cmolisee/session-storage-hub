@@ -35,6 +35,7 @@ const Options = () => {
 			<Header
 				title={'Options'}
 				link={popupLink}
+				versionNumber={process.env.VERSION as string}
 			/>
 			<List bullet={'none'}>
 				<li>
