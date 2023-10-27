@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './SelectDropdown.scss';
 
 export type TOptionType = { value: string; label: string };
@@ -41,6 +41,7 @@ const SelectDropdown = ({
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
+        // eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -49,6 +50,7 @@ const SelectDropdown = ({
 		if (typeof changeCallback === 'function') {
 			changeCallback(selected);
 		}
+        // eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selected]);
 
 	return (
