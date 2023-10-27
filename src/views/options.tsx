@@ -1,13 +1,14 @@
 import Header from '../components/Header/Header';
 import { Link } from 'react-router-dom';
-import List from '../components/List/List';
-import Button from '../components/Button/Button';
 import { Themes, useTheme } from '../providers/useTheme';
 import { useEffect } from 'react';
 import { saveOptions } from '../utils/ChromeUtils';
+import SelectDropdown from '../components/SelectDropdown';
+import '../options.scss';
+import { getKeyByValue } from '../utils/helperUtils';
 
 const Options = () => {
-	const { styles, setTheme } = useTheme();
+	const { theme, styles, setTheme } = useTheme();
 	const popupLink = (
 		<Link
 			style={{ textDecoration: 'none' }}
@@ -37,26 +38,25 @@ const Options = () => {
 				link={popupLink}
 				versionNumber={process.env.VERSION as string}
 			/>
-			<List bullet={'none'}>
-				<li>
-					<Button
-						onClickCallback={() =>
-							handleUpdateTheme(Themes.a11yLight)
+			<div className={'optionsGrid'}>
+				<div className={'optionsGrid-colOne'}>
+					<SelectDropdown
+						label={'Select a Theme'}
+						initial={{
+							value: theme,
+							label: getKeyByValue(theme, Themes) ?? 'undefined',
+						}}
+						options={Object.entries(Themes).map((e) => ({
+							value: e[0],
+							label: e[1],
+						}))}
+						changeCallback={(option: string) =>
+							handleUpdateTheme(option as Themes)
 						}
-					>
-						a11y-light Theme
-					</Button>
-				</li>
-				<li>
-					<Button
-						onClickCallback={() =>
-							handleUpdateTheme(Themes.darkOrange)
-						}
-					>
-						dark-orange Theme
-					</Button>
-				</li>
-			</List>
+					/>
+				</div>
+				<div className={'optionsGrid-colTwo'}></div>
+			</div>
 		</div>
 	);
 };
