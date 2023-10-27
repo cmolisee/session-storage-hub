@@ -1,4 +1,6 @@
-.optionFields {
-    padding: 2rem;
-    margin: 1rem;
+.optionsGrid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-gap: 20px;
+	margin: 1rem;
 }

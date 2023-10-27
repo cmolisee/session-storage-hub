@@ -1,74 +1,86 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './SelectDropdown.scss';
 
+export type TOptionType = { value: string; label: string };
 export interface ISelectDropdownProps {
-    label: string;
-    initialValue?: string;
-    options: string[];
-    changeCallback?: (option: string) => void;
+	label: string;
+	initial?: TOptionType;
+	options: TOptionType[];
+	changeCallback?: (option: any) => void;
 }
 
 const SelectDropdown = ({
-    label,
-    initialValue,
-    options,
-    changeCallback,
+	label,
+	initial,
+	options,
+	changeCallback,
 }: ISelectDropdownProps) => {
-    const [selected, setSelected] = useState<string>(initialValue as string);
-    const [showDropdown, setShowDropdown] = useState(false);
+	const [selected, setSelected] = useState<string>(initial?.value as string);
+	const [showDropdown, setShowDropdown] = useState(false);
+	const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const handleOptionSelect = (e: React.MouseEvent<HTMLLIElement>) => {
-        setSelected(e.currentTarget.innerText);
-        setShowDropdown(false);
-    }
+	const handleOptionSelect = (e: React.MouseEvent<HTMLLIElement>) => {
+		setSelected(e.currentTarget.innerText);
+		setShowDropdown(false);
+	};
 
-    // useEffect(() => {
-    //     function handleClickOutside (e: any) {
-    //         if (
-    //             !e?.target?.classList?.contains('selectDropdown-options') && 
-    //             !e?.target?.classList?.contains('selectDropdown-option')
-    //         ) {
-    //             setShowDropdown(false);
-    //         }
-    //     }
-    
-    //     if (showDropdown) {
-    //         document.addEventListener('click', handleClickOutside);
-    //     }
+	const handleClickOutside = (e: any) => {
+		if (
+			showDropdown &&
+			!/(selectDropdown-option|selectDropdown-options)/g.test(
+				e.target?.classList
+			)
+		) {
+			setShowDropdown(false);
+		}
+	};
 
-    //     return () => {
-    //       document.removeEventListener('click', handleClickOutside);
-    //     };
-    //   }, [showDropdown]);
+	useEffect(() => {
+		document.addEventListener('mousedown', handleClickOutside);
 
-    useEffect(() => {
-        if (typeof changeCallback === 'function') {
-            changeCallback(selected);
-        }
-    }, [selected]);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, []);
 
-    return (
-        <div className={'selectDropdown'}>
-            <div className={'selectDropdown-label'}>{label}</div>
-            <div className={`selectDropdown-text ${showDropdown ? 'active' : ''}`}
-                onClick={() => setShowDropdown(true)}
-            >
-                {selected}
-            </div>
-            {showDropdown && (
-                <ul className={'selectDropdown-options'}>
-                    {options.map((opt, i) => (
-                        <li className={'selectDropdown-option'}
-                        key={i}
-                        onClick={handleOptionSelect}
-                        >
-                            {opt}
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
-    );
-}
+	useEffect(() => {
+		console.log(typeof changeCallback);
+		console.log(selected);
+		if (typeof changeCallback === 'function') {
+			changeCallback(selected);
+		}
+	}, [selected]);
 
-export default SelectDropdown
+	return (
+		<div
+			className={'selectDropdown'}
+			ref={dropdownRef}
+		>
+			<div className={'selectDropdown-label'}>{label}</div>
+			<div
+				className={`selectDropdown-text ${
+					showDropdown ? 'active' : ''
+				}`}
+				onClick={() => setShowDropdown(true)}
+			>
+				{selected}
+			</div>
+			{showDropdown && (
+				<ul className={'selectDropdown-options'}>
+					{options.map((opt, i) => (
+						<li
+							className={'selectDropdown-option'}
+							key={i}
+							value={opt.value}
+							onClick={handleOptionSelect}
+						>
+							{opt.label}
+						</li>
+					))}
+				</ul>
+			)}
+		</div>
+	);
+};
+
+export default SelectDropdown;
