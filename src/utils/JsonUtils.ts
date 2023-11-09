@@ -7,7 +7,9 @@ export function getDataAsFormattedJson(object: any) {
 }
 
 export function getDataType(object: any) {
-	if (typeof object === 'object') {
+	if (object === null) {
+		return 'null';
+	} else if (typeof object === 'object') {
 		return Array.isArray(object) ? 'array' : 'object';
 	} else if (
 		object === 'true' ||
