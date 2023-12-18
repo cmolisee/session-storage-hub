@@ -61,10 +61,13 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 					message,
 					async (res: IMessageResponse) => {
 						if (chrome.runtime.lastError) {
-							handleNotification('Cannot establish connection on this page...', 'error');
+							handleNotification(
+								'Cannot establish connection on this page...',
+								'error'
+							);
 							return;
 						}
-						
+
 						if (res.error) {
 							handleNotification(res.error, 'error');
 							return;

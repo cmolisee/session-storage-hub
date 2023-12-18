@@ -54,7 +54,10 @@ const Popup = () => {
 				} as IChromeMessage,
 				async (res: IMessageResponse) => {
 					if (chrome.runtime.lastError) {
-						handleNotification('Cannot establish connection on this page...', 'error');
+						handleNotification(
+							'Cannot establish connection on this page...',
+							'error'
+						);
 						return;
 					}
 
@@ -89,7 +92,10 @@ const Popup = () => {
 				} as IChromeMessage,
 				async (res: IMessageResponse) => {
 					if (chrome.runtime.lastError) {
-						handleNotification('Cannot establish connection on this page...', 'error');
+						handleNotification(
+							'Cannot establish connection on this page...',
+							'error'
+						);
 						return;
 					}
 
