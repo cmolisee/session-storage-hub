@@ -53,8 +53,17 @@ const Popup = () => {
 					message: undefined,
 				} as IChromeMessage,
 				async (res: IMessageResponse) => {
+					if (chrome.runtime.lastError) {
+						handleNotification(
+							'Cannot establish connection on this page...',
+							'error'
+						);
+						return;
+					}
+
 					if (res && res.error) {
 						handleNotification(res.error, 'error');
+						return;
 					}
 
 					if (res && res.data) {
@@ -66,6 +75,8 @@ const Popup = () => {
 							'error'
 						);
 					}
+
+					return;
 				}
 			);
 
@@ -80,8 +91,17 @@ const Popup = () => {
 					},
 				} as IChromeMessage,
 				async (res: IMessageResponse) => {
+					if (chrome.runtime.lastError) {
+						handleNotification(
+							'Cannot establish connection on this page...',
+							'error'
+						);
+						return;
+					}
+
 					if (res && res.error) {
 						handleNotification(res.error, 'error');
+						return;
 					}
 
 					if (res && res.data) {
@@ -95,6 +115,8 @@ const Popup = () => {
 							'error'
 						);
 					}
+
+					return;
 				}
 			);
 		});

@@ -36,6 +36,7 @@
 		"@types/chrome": "^0.0.240",
 		"@typescript-eslint/eslint-plugin": "^5.60.0",
 		"@typescript-eslint/parser": "^5.60.0",
+		"conventional-changelog-eslint": "^5.0.0",
 		"eslint": "^8.0.1",
 		"eslint-config-standard": "^17.0.0",
 		"eslint-plugin-import": "^2.25.2",
@@ -54,7 +55,7 @@
 	},
 	"scripts": {
 		"start": "react-scripts start",
-		"build": "craco build",
+		"build": "NODE_ENV=production craco build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"lint": "eslint --fix --ext .js .",
