@@ -17,7 +17,11 @@ const ViewGridValue = ({}: IViewGridValueProps) => {
 
 	return (
 		<div className={`ViewGridValue`}>
-			{typeof data !== 'undefined' ? <RenderData data={data} /> : <DataItem isOpen={true} />}
+			{typeof data !== 'undefined' ? (
+				<RenderData data={data} />
+			) : (
+				<DataItem isOpen={true} />
+			)}
 		</div>
 	);
 };
