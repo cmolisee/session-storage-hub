@@ -18,6 +18,12 @@
             }
         ],
         [
+            "@semantic-release/exec",
+            {
+                "prepareCmd": "./bin/build_release ${nextRelease.version} \"${nextRelease.notes}\""
+            }
+        ],
+        [
             "@semantic-release/release-notes-generator",
             {
                 "preset": "eslint",

@@ -1,9 +1,9 @@
-name: pre-checks
+name: ci
 
 on: [push]
 
 jobs:
-    pre-checks:
+    ci:
         runs-on: ubuntu-latest
         timeout-minutes: 5
 
