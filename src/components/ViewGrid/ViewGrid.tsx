@@ -60,8 +60,14 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 					id,
 					message,
 					async (res: IMessageResponse) => {
+						if (chrome.runtime.lastError) {
+							handleNotification('Cannot establish connection on this page...', 'error');
+							return;
+						}
+						
 						if (res.error) {
 							handleNotification(res.error, 'error');
+							return;
 						}
 
 						if (res.data) {
@@ -70,6 +76,7 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 								'Session Storage Pasted.',
 								'success'
 							);
+							return;
 						}
 					}
 				);
