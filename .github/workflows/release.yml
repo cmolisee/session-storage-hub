@@ -1,13 +1,13 @@
-name: packaging
+name: release
 
 on:
     workflow_run:
-        workflows: [pre-checks]
+        workflows: [ci]
         types:
             - completed
 
 jobs:
-    packaging:
+    release:
         if:
             ${{ github.ref_name == 'main' &&
             github.event.workflow_run.conclusion == 'success' }}
