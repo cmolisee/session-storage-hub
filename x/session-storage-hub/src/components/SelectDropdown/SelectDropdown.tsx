@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import './SelectDropdown.scss';
+import './SelectDropdown.css';
 
 export type TOptionType = { value: string; label: string };
 export interface ISelectDropdownProps {
