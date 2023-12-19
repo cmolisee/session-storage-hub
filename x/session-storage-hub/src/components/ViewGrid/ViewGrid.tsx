@@ -1,6 +1,6 @@
 import ViewGridKey from '../ViewGridKey';
 import ViewGridValue from '../ViewGridValue';
-import './ViewGrid.scss';
+import './ViewGrid.css';
 import { useStorageData } from '../../providers/useStorageData';
 import { useCallback, useEffect } from 'react';
 import { subscribe, unsubscribe } from '../../utils/CustomEvents';
