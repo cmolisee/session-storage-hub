@@ -161,7 +161,7 @@ const Popup = () => {
 			<Header
 				title={'Session Storage Hub'}
 				link={optionsLink}
-				versionNumber={process.env.VERSION as string}
+				versionNumber={VERSION as string}
 			/>
 			<Button onClickCallback={() => publishEvent('copyEvent', {})}>
 				Copy

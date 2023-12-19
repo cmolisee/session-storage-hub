@@ -47,11 +47,11 @@ a.updateVersion {
 	cursor: pointer;
 	color: var(--buttonColor);
 	text-decoration: none;
+}
 
-	&:hover {
-		color: var(--buttonHoverColor);
-		text-decoration: none;
-	}
+a.updateVersion:hover {
+	color: var(--buttonHoverColor);
+	text-decoration: none;
 }
 
 /* Style for options view */

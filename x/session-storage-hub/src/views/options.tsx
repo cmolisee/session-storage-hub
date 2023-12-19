@@ -4,7 +4,6 @@ import { Themes, useTheme } from '../providers/useTheme';
 import { useEffect } from 'react';
 import { saveOptions } from '../utils/ChromeUtils';
 import SelectDropdown from '../components/SelectDropdown';
-import '../options.scss';
 import { getKeyByValue } from '../utils/helperUtils';
 
 const Options = () => {
@@ -36,7 +35,7 @@ const Options = () => {
 			<Header
 				title={'Options'}
 				link={popupLink}
-				versionNumber={process.env.VERSION as string}
+				versionNumber={VERSION as string}
 			/>
 			<div className={'optionsGrid'}>
 				<div className={'optionsGrid-colOne'}>

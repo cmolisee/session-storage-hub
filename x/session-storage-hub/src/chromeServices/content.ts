@@ -94,7 +94,7 @@ const checkReleaseListener = (
 
 							const resData: TVersionData = {
 								isUpToDate:
-									latestVersion === process.env.VERSION,
+									latestVersion === VERSION as string,
 								timestamp: new Date().getTime(),
 								releaseUrl: releaseData['html_url'],
 							};

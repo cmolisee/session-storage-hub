@@ -7,7 +7,7 @@ import {
 	useState,
 	useEffect,
 } from 'react';
-import jsonThemes from '../themes.json';
+import jsonThemes from '../assets/themes.json';
 import { requestData } from '../utils/ChromeUtils';
 
 export enum Themes {
