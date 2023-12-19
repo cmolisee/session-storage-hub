@@ -1,4 +1,4 @@
-import './List.scss';
+import './List.css';
 
 interface IListProps extends React.OlHTMLAttributes<HTMLOListElement> {
 	bullet: 'default' | 'dash' | 'none';

@@ -1,0 +1,21 @@
+.List {
+	font-size: 0.875rem;
+	color: var(--textColor);
+	margin: 0.5rem 0.325rem;
+}
+
+.List li {
+	margin-top: 0.325rem;
+}
+
+.List__dash {
+	list-style: none;
+}
+
+.List__dash li::marker {
+	content: '-';
+}
+
+.List__none {
+	list-style: none;
+}
