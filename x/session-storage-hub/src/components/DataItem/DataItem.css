@@ -1,0 +1,47 @@
+.DataItem {
+	display: flex;
+	flex-direction: column;
+}
+
+.DataItem#emptyObject > div,
+.DataItem#emptyArray > div {
+	color: var(--emptyColor);
+	font-style: italic;
+}
+
+.DataItem__key {
+	cursor: pointer;
+	color: var(--objectColor);
+}
+
+.DataItem__object {
+	color: var(--objectColor);
+}
+
+.DataItem__array {
+	color: var(--arrayColor);
+}
+
+.DataItem__string {
+	color: var(--stringColor);
+}
+
+.DataItem__number {
+	color: var(--numberColor);
+}
+
+.DataItem__boolean {
+	color: var(--booleanColor);
+}
+
+.DataItem__null {
+	color: var(--nullColor);
+}
+
+.DataItem__undefined {
+	color: var(--undefinedColor);
+}
+
+.DataItem {
+	margin-left: 1rem;
+}

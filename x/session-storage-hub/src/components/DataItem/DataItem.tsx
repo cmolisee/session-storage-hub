@@ -1,7 +1,7 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { getDataType } from '../../utils/JsonUtils';
 import { CaretDownFilled, CaretRightFilled } from '@ant-design/icons';
-import './DataItem.scss';
+import './DataItem.css';
 
 interface IDataItemProps {
 	dataId?: string;
