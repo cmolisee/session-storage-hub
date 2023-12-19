@@ -5,7 +5,6 @@ import {
 	Sender,
 	TVersionData,
 } from '../types/types';
-import { convertMsToHr } from '../utils/helperUtils';
 
 type TResponse = (response?: IMessageResponse) => void;
 
@@ -63,6 +62,10 @@ const updateMessageListener = (
 	return false; // do not expect a response
 };
 
+function convertMsToHr(ms: number) {
+	return ms / 2777777;
+}
+
 // messageListeners must return a boolean so they cannot be async
 const checkReleaseListener = (
 	message: IChromeMessage,
@@ -87,21 +90,25 @@ const checkReleaseListener = (
 					fetch(
 						'https://api.github.com/repos/cmolisee/session-storage-hub/releases/latest'
 					)
-						.then((res) => res.json())
+						.then((res) => {
+							return res.json();
+						})
 						.then((releaseData) => {
 							const latestVersion =
 								releaseData['tag_name'].slice(1);
 
 							const resData: TVersionData = {
 								isUpToDate:
-									latestVersion === process.env.VERSION,
+									latestVersion === (VERSION as string),
 								timestamp: new Date().getTime(),
 								releaseUrl: releaseData['html_url'],
 							};
 
 							response({ error: null, data: resData });
 						})
-						.catch((err) => console.log(err));
+						.catch((err) => {
+							return console.log(err);
+						});
 				} else {
 					// otherwise data exists, is up to date
 					response({ error: null, data: data });

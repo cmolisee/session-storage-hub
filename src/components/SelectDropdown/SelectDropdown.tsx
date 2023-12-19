@@ -1,13 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import './SelectDropdown.scss';
-
-export type TOptionType = { value: string; label: string };
-export interface ISelectDropdownProps {
-	label: string;
-	initial?: TOptionType;
-	options: TOptionType[];
-	changeCallback?: (option: any) => void;
-}
+import './SelectDropdown.css';
+import { ISelectDropdownProps } from '../../types/types';
 
 const SelectDropdown = ({
 	label,
@@ -18,6 +11,13 @@ const SelectDropdown = ({
 	const [selected, setSelected] = useState<string>(initial?.value as string);
 	const [showDropdown, setShowDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
+	const mainStyles = 'flex flex-col items-center text-center w-40';
+	const labelStyles =
+		'cursor-pointer text-base text-[var(--buttonColor)] mb-2';
+	const textStyles =
+		'cursor-pointer text-sm p-2 w-32 text-[var(--buttonColor)] border-2 border-solid border-[var(--buttonColor)] rounded-md';
+	const optionStyles =
+		'list-none cursor-pointer w-28 py-4 px-0 text-[var(--buttonHoverColor)] border-b border-solid border-[var(--buttonColor)] hover:text-[var(--backgroundColor)] hover:bg-[var(--buttonHoverColor)]';
 
 	const handleOptionSelect = (e: React.MouseEvent<HTMLLIElement>) => {
 		setSelected(e.currentTarget.innerText);
@@ -41,44 +41,41 @@ const SelectDropdown = ({
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
-		console.log(typeof changeCallback);
-		console.log(selected);
 		if (typeof changeCallback === 'function') {
 			changeCallback(selected);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selected]);
 
 	return (
 		<div
-			className={'selectDropdown'}
-			ref={dropdownRef}
-		>
-			<div className={'selectDropdown-label'}>{label}</div>
+			className={`selectDropdown ${mainStyles}`}
+			ref={dropdownRef}>
+			<div className={`selectDropdown-label ${labelStyles}`}>{label}</div>
 			<div
-				className={`selectDropdown-text ${
+				className={`selectDropdown-text ${textStyles} ${
 					showDropdown ? 'active' : ''
 				}`}
-				onClick={() => setShowDropdown(true)}
-			>
+				onClick={() => {
+					return setShowDropdown(true);
+				}}>
 				{selected}
 			</div>
 			{showDropdown && (
-				<ul className={'selectDropdown-options'}>
-					{options.map((opt, i) => (
-						<li
-							className={'selectDropdown-option'}
-							key={i}
-							value={opt.value}
-							onClick={handleOptionSelect}
-						>
-							{opt.label}
-						</li>
-					))}
+				<ul className={'p-0 m-0 z-[1000] w-28'}>
+					{options.map((opt, i) => {
+						return (
+							<li
+								className={optionStyles}
+								key={i}
+								value={opt.value}
+								onClick={handleOptionSelect}>
+								{opt.label}
+							</li>
+						);
+					})}
 				</ul>
 			)}
 		</div>

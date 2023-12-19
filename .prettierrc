@@ -8,5 +8,6 @@
 	"arrowParens": "always",
 	"semi": true,
 	"jsxBracketSameLine": true,
-	"proseWrap": "always"
+	"proseWrap": "always",
+	"bracketSameLine": true
 }

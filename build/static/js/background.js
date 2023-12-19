@@ -1,2 +1,0 @@
-!function(){"use strict";chrome.runtime.onInstalled.addListener((function(n){console.debug("[background] onInstalled",n)})),chrome.runtime.onConnect.addListener((function(n){console.debug("[background] onConnect",n)})),chrome.runtime.onStartup.addListener((function(){console.debug("[background] onStartup")})),chrome.runtime.onSuspend.addListener((function(){console.debug("[background] onSuspend")}))}();
-//# sourceMappingURL=background.js.map

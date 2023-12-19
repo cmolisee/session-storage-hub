@@ -1,6 +1,4 @@
-import ViewGridKey from '../ViewGridKey';
-import ViewGridValue from '../ViewGridValue';
-import './ViewGrid.scss';
+import './ViewGrid.css';
 import { useStorageData } from '../../providers/useStorageData';
 import { useCallback, useEffect } from 'react';
 import { subscribe, unsubscribe } from '../../utils/CustomEvents';
@@ -12,10 +10,8 @@ import {
 } from '../../types/types';
 import { getCurrentTabUId } from '../../utils/ChromeUtils';
 import { toast } from 'react-toastify';
-
-export interface IKeyValuePair {
-	[key: string]: any;
-}
+import ViewGridKey from '../ViewGridKey/ViewGridKey';
+import ViewGridValue from '../ViewGridValue/ViewGridValue';
 
 interface IViewGridProps {
 	className?: string;
@@ -34,16 +30,17 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 	};
 
 	const handleCopy = useCallback(async () => {
-		let clipboard = {};
+		const clipboard = {};
 		Object.entries(data).forEach((e) => {
 			if (selectedKeys.indexOf(e[0]) >= 0) {
-				clipboard[e[0] as keyof typeof data] = e[1];
+				Object.defineProperty(clipboard, e[0] as keyof typeof data, {
+					value: e[1],
+				});
 			}
 		});
 
 		await chrome.storage.local.set({ clipboard: clipboard });
 		handleNotification('Session Storage Coppied.', 'info');
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data, selectedKeys]);
 
 	const handlePaste = useCallback(async () => {
@@ -84,7 +81,6 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 					}
 				);
 		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data, selectedKeys]);
 
 	useEffect(() => {
@@ -99,7 +95,6 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 			unsubscribe('copyEvent', handleCopy);
 			unsubscribe('pasteEvent', handlePaste);
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data, selectedKeys]);
 
 	return (
@@ -111,7 +106,9 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 							<ViewGridKey
 								key={i}
 								keyName={key}
-								callback={() => setDataKey && setDataKey(key)}
+								callback={() => {
+									return setDataKey && setDataKey(key);
+								}}
 							/>
 						);
 					})}
