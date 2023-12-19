@@ -2,7 +2,7 @@ import { useStorageData } from '../../providers/useStorageData';
 import { getDataAsFormattedJson } from '../../utils/JsonUtils';
 import DataItem from '../DataItem';
 import RenderData from '../RenderData';
-import './ViewGridValue.scss';
+import './ViewGridValue.css';
 
 interface IViewGridValueProps {}
 
