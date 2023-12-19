@@ -45,8 +45,6 @@ const SelectDropdown = ({
 	}, []);
 
 	useEffect(() => {
-		console.log(typeof changeCallback);
-		console.log(selected);
 		if (typeof changeCallback === 'function') {
 			changeCallback(selected);
 		}

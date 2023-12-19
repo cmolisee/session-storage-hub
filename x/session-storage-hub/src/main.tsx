@@ -6,6 +6,7 @@ import Options from './views/options';
 import { ThemeProvider, Themes } from './providers/useTheme';
 import { ToastContainer, Flip } from 'react-toastify';
 import './index.css'
+import 'react-toastify/dist/ReactToastify.css'
 
 const router = createHashRouter([
 	{ path: '/', element: <Popup /> },

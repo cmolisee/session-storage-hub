@@ -66,7 +66,7 @@ const Popup = () => {
 						return;
 					}
 
-					if (res && res.data) {
+					if (res && res.data && chrome?.storage) {
 						await chrome.storage.local.set({ data: res.data });
 						setData(res.data);
 					} else {
@@ -104,7 +104,7 @@ const Popup = () => {
 						return;
 					}
 
-					if (res && res.data) {
+					if (res && res.data && chrome?.storage) {
 						await chrome.storage.sync.set({
 							versionData: res.data,
 						});
@@ -124,6 +124,11 @@ const Popup = () => {
 	}, []);
 
 	useEffect(() => {
+		if (!chrome?.storage) {
+			handleNotification('Chrome api is not available.', 'error');
+			return;
+		}
+		
 		chrome.storage.onChanged.addListener(function (changes, areaName) {
 			if (
 				areaName === 'local' &&

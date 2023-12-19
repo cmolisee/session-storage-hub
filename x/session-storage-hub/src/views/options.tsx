@@ -61,3 +61,14 @@ const Options = () => {
 };
 
 export default Options;
+
+// TODO:
+// consider configuring tailwind/vite nested styles
+// consider altering the chrome api calls so that if they "DNE" they don't totally kill anything.
+// take a look at updating the theme file and theming implmenetation to better work with tailwind and vite
+// once dev server is displaying things as expected move onto the build configs
+	// build the appropriate files and sources to the correct directory
+	// adjust manifest to point to the right files
+	// translate and modify the workflow files, pipelines, scripts, and other path dependent devops stuff
+	// now modify to use with docker
+	// 
