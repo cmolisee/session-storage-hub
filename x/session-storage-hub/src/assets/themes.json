@@ -1,0 +1,94 @@
+[
+	{
+		"name": "a11y-light",
+		"colors": {
+			"backgroundColor": "#fefefe",
+			"textColor": "#545454",
+			"specialTextColor": "#007faa",
+			"buttonColor": "#545454",
+			"buttonHoverColor": "#007faa",
+			"borderColor": "#545454",
+			"selectedIconColor": "#2aaa00",
+			"unselectedIconColor": "#aa2b00",
+			"keyColor": "#7928a1",
+			"keySelectedColor": "#dfeff4",
+			"objectColor": "#7928a1",
+			"arrayColor": "#7928a1",
+			"stringColor": "#008000",
+			"numberColor": "#007faa",
+			"booleanColor": "#007faa",
+			"nullColor": "#696969",
+			"undefinedColor": "#696969",
+			"emptyColor": "#696969"
+		}
+	},
+	{
+		"name": "dark-orange",
+		"colors": {
+			"backgroundColor": "#2f363d",
+			"textColor": "#d1d5da",
+			"specialTextColor": "#ff7300",
+			"buttonColor": "#d1d5da",
+			"buttonHoverColor": "#ff7300",
+			"borderColor": "#d1d5da",
+			"selectedIconColor": "#a5e075",
+			"unselectedIconColor": "#ff616e",
+			"keyColor": "#ff7300",
+			"keySelectedColor": "#7D8186",
+			"objectColor": "#79b8ff",
+			"arrayColor": "#79b8ff",
+			"stringColor": "#28a745",
+			"numberColor": "#ff7300",
+			"booleanColor": "#ff7300",
+			"nullColor": "#d73a49",
+			"undefinedColor": "#d73a49",
+			"emptyColor": "#d73a49"
+		}
+	},
+	{
+		"name": "retro-sunset",
+		"colors": {
+			"backgroundColor": "#355C7D",
+			"textColor": "#fefefa",
+			"specialTextColor": "#F8B195",
+			"buttonColor": "#fefefa",
+			"buttonHoverColor": "#F8B195",
+			"borderColor": "#fefefa",
+			"selectedIconColor": "#0B9B8A",
+			"unselectedIconColor": "#D31638",
+			"keyColor": "#C06C84",
+			"keySelectedColor": "#F8B195",
+			"objectColor": "#F67280",
+			"arrayColor": "#F67280",
+			"stringColor": "#99B898",
+			"numberColor": "#83AF9B",
+			"booleanColor": "#83AF9B",
+			"nullColor": "#F9CDAD",
+			"undefinedColor": "#F9CDAD",
+			"emptyColor": "#F9CDAD"
+		}
+	},
+	{
+		"name": "mf-dracula",
+		"colors": {
+			"backgroundColor": "#282a36",
+			"textColor": "#8be9fd",
+			"specialTextColor": "#ff5555",
+			"buttonColor": "#bd93f9",
+			"buttonHoverColor": "#f8f8f2",
+			"borderColor": "#bd93f9",
+			"selectedIconColor": "#ff5555",
+			"unselectedIconColor": "#6272a4",
+			"keyColor": "#ff5555",
+			"keySelectedColor": "#44475a",
+			"objectColor": "#ff79c6",
+			"arrayColor": "#ff79c6",
+			"stringColor": "#ffb86c",
+			"numberColor": "#50fa7b",
+			"booleanColor": "#50fa7b",
+			"nullColor": "#bd93f9",
+			"undefinedColor": "#bd93f9",
+			"emptyColor": "#bd93f9"
+		}
+	}
+]

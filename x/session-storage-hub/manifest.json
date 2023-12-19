@@ -1,0 +1,27 @@
+{
+	"name": "Session Storage Hub",
+	"description": "Utilities for session storage",
+	"version": "4.2.1",
+	"manifest_version": 3,
+	"action": {
+		"default_popup": "index.html",
+		"default_title": "Session Storage Utilities"
+	},
+	"options_ui": {
+		"page": "index.html"
+	},
+	"icons": {
+		"32": "icon-32.png"
+	},
+	"background": {
+		"service_worker": "./static/js/background.js"
+	},
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["./static/js/content.js"]
+		}
+	],
+	"devtools_page": "index.html",
+	"permissions": ["tabs", "activeTab", "storage"]
+}

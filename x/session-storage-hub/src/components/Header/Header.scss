@@ -1,0 +1,23 @@
+.Header {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0 0 1rem;
+	padding: 0 0.125rem;
+	color: var(--specialTextColor);
+	width: 100%;
+
+	div {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+	}
+
+	h1,
+	p,
+	a {
+		margin: 0.325rem 0 0;
+	}
+}

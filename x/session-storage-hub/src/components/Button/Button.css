@@ -1,0 +1,12 @@
+.Button__default {
+	border: 0.125rem solid var(--buttonColor);
+	border-radius: 0.325rem;
+	font-weight: 800;
+	padding: 0.25rem 1rem;
+	margin: 0 0.325rem;
+	text-align: center;
+}
+
+.Button__link {
+margin: 0.125rem 0.5rem;
+}
