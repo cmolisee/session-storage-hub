@@ -1,4 +1,4 @@
-import './ViewGridKey.scss';
+import './ViewGridKey.css';
 import { useStorageData } from '../../providers/useStorageData';
 
 interface IViewGridKeyProps {
