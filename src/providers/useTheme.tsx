@@ -7,62 +7,9 @@ import {
 	useState,
 	useEffect,
 } from 'react';
-import jsonThemes from '../themes.json';
+import jsonThemes from '../assets/themes.json';
 import { requestData } from '../utils/ChromeUtils';
-
-export enum Themes {
-	a11yLight = 'a11y-light',
-	darkOrange = 'dark-orange',
-	retroSunset = 'retro-sunset',
-	mfDracula = 'mf-dracula',
-}
-
-export interface ITheme {
-	name: string;
-	colors: IColors;
-}
-
-export interface IColors {
-	backgroundColor: string;
-	textColor: string;
-	specialTextColor: string;
-	buttonColor: string;
-	buttonHoverColor: string;
-	borderColor: string;
-	selectedIconColor: string;
-	unselectedIconColor: string;
-	keyColor: string;
-	keySelectedColor: string;
-	objectColor: string;
-	arrayColor: string;
-	stringColor: string;
-	numberColor: string;
-	booleanColor: string;
-	nullColor: string;
-	undefinedColor: string;
-	emptyColor: string;
-}
-
-export interface IThemeStyles {
-	'--backgroundColor': string;
-	'--textColor': string;
-	'--specialTextColor': string;
-	'--buttonColor': string;
-	'--buttonHoverColor': string;
-	'--borderColor': string;
-	'--selectedIconColor': string;
-	'--unselectedIconColor': string;
-	'--keyColor': string;
-	'--keySelectedColor': string;
-	'--objectColor': string;
-	'--arrayColor': string;
-	'--stringColor': string;
-	'--numberColor': string;
-	'--booleanColor': string;
-	'--nullColor': string;
-	'--undefinedColor': string;
-	'--emptyColor': string;
-}
+import { Themes, IThemeStyles, ITheme } from '../types/types';
 
 interface IThemeContextProps {
 	theme: Themes;
@@ -70,20 +17,22 @@ interface IThemeContextProps {
 	setTheme: Dispatch<SetStateAction<Themes>> | null;
 }
 
-export const DefaultTheme = {
+const DefaultTheme = {
 	theme: Themes.a11yLight,
 	styles: getStylesFromTheme(Themes.a11yLight),
 	setTheme: null,
 };
 
-export const ThemeContext = createContext<IThemeContextProps>(DefaultTheme);
-export const useTheme = () => useContext(ThemeContext);
+const ThemeContext = createContext<IThemeContextProps>(DefaultTheme);
+export const useTheme = () => {
+	return useContext(ThemeContext);
+};
 
 function getStylesFromTheme(name: Themes) {
 	const theme =
-		jsonThemes.filter(
-			(t: ITheme) => t.name.valueOf() === name.valueOf()
-		)[0] ?? jsonThemes[0];
+		jsonThemes.filter((t: ITheme) => {
+			return t.name.valueOf() === name.valueOf();
+		})[0] ?? jsonThemes[0];
 	return {
 		'--backgroundColor': theme.colors.backgroundColor,
 		'--textColor': theme.colors.textColor,
@@ -126,8 +75,7 @@ export const ThemeProvider = ({
 				theme: theme,
 				styles: getStylesFromTheme(theme),
 				setTheme: setTheme,
-			}}
-		>
+			}}>
 			{children}
 		</ThemeContext.Provider>
 	);

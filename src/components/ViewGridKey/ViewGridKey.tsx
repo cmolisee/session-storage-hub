@@ -1,4 +1,4 @@
-import './ViewGridKey.scss';
+import './ViewGridKey.css';
 import { useStorageData } from '../../providers/useStorageData';
 
 interface IViewGridKeyProps {
@@ -15,7 +15,11 @@ const ViewGridKey = ({ keyName, callback }: IViewGridKeyProps) => {
 
 	const handleOnChange = () => {
 		if (selectedKeys?.includes(keyName)) {
-			setSelectedKeys(selectedKeys.filter((k) => k !== keyName));
+			setSelectedKeys(
+				selectedKeys.filter((k) => {
+					return k !== keyName;
+				})
+			);
 		} else {
 			setSelectedKeys([...(selectedKeys as string[]), keyName]);
 		}
@@ -24,8 +28,7 @@ const ViewGridKey = ({ keyName, callback }: IViewGridKeyProps) => {
 	return (
 		<div
 			className={'ViewGridKey'}
-			aria-selected={dataKey === keyName}
-		>
+			aria-selected={dataKey === keyName}>
 			<input
 				type={'checkbox'}
 				checked={handleIsChecked()}

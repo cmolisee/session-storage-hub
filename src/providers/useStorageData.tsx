@@ -7,11 +7,11 @@ import {
 } from 'react';
 
 interface IDataObject {
-	dataObject?: Object;
+	dataObject?: object;
 }
 
 interface IStorageData {
-	data: Object;
+	data: object;
 	keys: string[];
 	selectedKeys: string[];
 	dataKey: string;
@@ -107,10 +107,11 @@ function reducer(state: any, action: { type: string; data: any }) {
 	}
 }
 
-export const StorageDataContext =
-	createContext<IStorageDataProps>(defaultStorageData);
+const StorageDataContext = createContext<IStorageDataProps>(defaultStorageData);
 
-export const useStorageData = () => useContext(StorageDataContext);
+export const useStorageData = () => {
+	return useContext(StorageDataContext);
+};
 
 export const StorageDataProvider = ({
 	dataObject,
@@ -136,15 +137,17 @@ export const StorageDataProvider = ({
 		dispatch({ type: 'setSelectedKeys', data: { selectedKeys: newKeys } });
 	};
 
-	const handleSelectAllKeys = () => dispatch({ type: 'selectAll', data: {} });
-	const handleUnselectAllKeys = () =>
-		dispatch({ type: 'unselectAll', data: {} });
+	const handleSelectAllKeys = () => {
+		return dispatch({ type: 'selectAll', data: {} });
+	};
+	const handleUnselectAllKeys = () => {
+		return dispatch({ type: 'unselectAll', data: {} });
+	};
 
 	useEffect(() => {
 		if (dataObject) {
 			dispatch({ type: 'setData', data: { data: dataObject } });
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dataObject]);
 
 	return (
@@ -159,8 +162,7 @@ export const StorageDataProvider = ({
 				setSelectedKeys: handleSetSelectedKeys,
 				selectAll: handleSelectAllKeys,
 				unselectAll: handleUnselectAllKeys,
-			}}
-		>
+			}}>
 			{children}
 		</StorageDataContext.Provider>
 	);

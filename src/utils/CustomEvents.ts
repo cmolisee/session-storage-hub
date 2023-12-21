@@ -10,7 +10,7 @@ export const unsubscribe = (event: string, listener: () => void) => {
 	}
 };
 
-export const publishEvent = (event: string, data: Object) => {
+export const publishEvent = (event: string, data: object) => {
 	if (event) {
 		const e = new CustomEvent(event, data);
 		document.dispatchEvent(e);

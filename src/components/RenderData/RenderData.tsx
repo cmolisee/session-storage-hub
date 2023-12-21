@@ -1,5 +1,5 @@
 import { getDataType } from '../../utils/JsonUtils';
-import DataItem from '../DataItem';
+import DataItem from '../DataItem/DataItem';
 
 interface IRenderDataProps {
 	data: any;
@@ -15,9 +15,9 @@ const renderObject = (data: object, isOpen: boolean = false) => {
 				{dataEntries.map((entry, i) => {
 					return (
 						<DataItem
+							key={'dataitem_' + i}
 							dataKey={entry[0]}
-							isOpen={isOpen}
-						>
+							isOpen={isOpen}>
 							<RenderData
 								key={i}
 								data={entry[1]}
@@ -32,8 +32,7 @@ const renderObject = (data: object, isOpen: boolean = false) => {
 	return (
 		<DataItem
 			dataId={'emptyObject'}
-			isOpen={true}
-		>
+			isOpen={true}>
 			{'Empty Object'}
 		</DataItem>
 	);
@@ -58,14 +57,15 @@ const renderArray = (data: any[], isOpen: boolean = false) => {
 		return (
 			<DataItem
 				dataKey={buildKeyString(data)}
-				isOpen={isOpen}
-			>
-				{data.map((arrayData, i) => (
-					<RenderData
-						key={i}
-						data={arrayData}
-					/>
-				))}
+				isOpen={isOpen}>
+				{data.map((arrayData, i) => {
+					return (
+						<RenderData
+							key={i}
+							data={arrayData}
+						/>
+					);
+				})}
 			</DataItem>
 		);
 	}
@@ -73,8 +73,7 @@ const renderArray = (data: any[], isOpen: boolean = false) => {
 	return (
 		<DataItem
 			dataId={'emptyArray'}
-			isOpen={true}
-		>
+			isOpen={true}>
 			{'Empty Array'}
 		</DataItem>
 	);
