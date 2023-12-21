@@ -10,7 +10,7 @@
                     { "tag": "update", "release": "minor" },
                     { "tag": "new", "release": "minor" },
                     { "tag": "docs", "release": "patch" },
-                    { "scope": "no-release", "release": false }
+                    { "scope": "chore", "release": false }
                   ],
                   "parserOpts": {
                     "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
