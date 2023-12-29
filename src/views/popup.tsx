@@ -150,27 +150,8 @@ const Popup = () => {
 
 	return (
 		<>
-			<Header
-				versionNumber={VERSION as string}
-				viewLink={'options'}
-			/>
+			<Header viewLink={'options'} />
 			<div className={'flex text-[var(--borderColor)]'}>
-				<Control
-					className={'font-bold'}
-					onClickCallback={() => {
-						return publishEvent('copyEvent', {});
-					}}>
-					Copy
-				</Control>
-				<Control
-					className={'font-bold'}
-					onClickCallback={() => {
-						return publishEvent('pasteEvent', {});
-					}}>
-					Paste
-				</Control>
-			</div>
-			<div className={'mt-2 text-[var(--borderColor)]'}>
 				<Control
 					onClickCallback={() => {
 						return publishEvent('selectAllEvent', {});
@@ -183,14 +164,33 @@ const Popup = () => {
 					}}>
 					Unselect All
 				</Control>
+				<div className={'ml-8'}>
+					<Control
+						className={'font-bold'}
+						onClickCallback={() => {
+							return publishEvent('copyEvent', {});
+						}}>
+						Copy
+					</Control>
+					<Control
+						className={'font-bold'}
+						onClickCallback={() => {
+							return publishEvent('pasteEvent', {});
+						}}>
+						Paste
+					</Control>
+				</div>
 			</div>
 			<StorageDataProvider dataObject={data}>
 				<ViewGrid />
 			</StorageDataProvider>
-			{versionData &&
-				!versionData.isUpToDate &&
-				versionData.releaseUrl && (
-					<div className={'flex m-1 justify-end'}>
+			<div className={'flex m-1 justify-end text-[var(--borderColor)]'}>
+				<div className={'cursor-default mr-4'}>
+					version {(VERSION as string) ?? 'UNKNOWN'}
+				</div>
+				{versionData &&
+					!versionData.isUpToDate &&
+					versionData.releaseUrl && (
 						<Control
 							onClickCallback={() => {
 								if (versionData.releaseUrl) {
@@ -200,8 +200,8 @@ const Popup = () => {
 							}}>
 							New version available
 						</Control>
-					</div>
-				)}
+					)}
+			</div>
 		</>
 	);
 };

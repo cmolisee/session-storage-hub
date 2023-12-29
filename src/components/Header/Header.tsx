@@ -2,11 +2,10 @@ import { Link } from 'react-router-dom';
 import Control from '../Control/Control';
 
 interface IHeaderProps {
-	versionNumber?: string;
 	viewLink: 'home' | 'options';
 }
 
-const Header = ({ versionNumber, viewLink }: IHeaderProps) => {
+const Header = ({ viewLink }: IHeaderProps) => {
 	const containerStyles =
 		'flex items-center text-[var(--specialTextColor)] mb-4 px-1';
 
@@ -15,10 +14,7 @@ const Header = ({ versionNumber, viewLink }: IHeaderProps) => {
 			<div className={'grow-[1] cursor-default text-lg'}>
 				Session Storage Hub
 			</div>
-			<div className={'grow-[1] cursor-default'}>
-				version {versionNumber ?? 'UNKNOWN'}
-			</div>
-			<Control className={'grow-[3] text-right'}>
+			<Control className={'grow-[1] text-right'}>
 				{viewLink === 'home' ? (
 					<Link to={'/'}>Close</Link>
 				) : (

@@ -32,10 +32,7 @@ const Options = () => {
 
 	return (
 		<div>
-			<Header
-				versionNumber={VERSION as string}
-				viewLink={'home'}
-			/>
+			<Header viewLink={'home'} />
 			<div className={'flex flex-wrap justify-center content-center m-8'}>
 				<SelectDropdown
 					label={'Select a Theme'}

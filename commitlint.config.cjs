@@ -17,14 +17,7 @@ module.exports = {
 		'type-enum': [
 			2,
 			'always',
-			[
-                'breaking',
-                'fix',
-                'update',
-                'new',
-                'docs',
-                'chore'
-			],
+			['breaking', 'fix', 'update', 'new', 'docs', 'chore'],
 		],
 	},
 	prompt: {
@@ -35,7 +28,7 @@ module.exports = {
 			min: '%d chars at least',
 			emptyWarning: 'can not be empty',
 			upperLimitWarning: 'over limit',
-			lowerLimitWarning: 'below limit'
+			lowerLimitWarning: 'below limit',
 		},
 		questions: {
 			type: {
@@ -58,7 +51,7 @@ module.exports = {
 					},
 					breaking: {
 						description: 'A Major change',
-                        title: 'breaking',
+						title: 'breaking',
 						emoji: '🚨',
 					},
 					new: {
@@ -67,7 +60,8 @@ module.exports = {
 						emoji: '📦',
 					},
 					chore: {
-						description: "Other changes that don't modify src or test files",
+						description:
+							"Other changes that don't modify src or test files",
 						title: 'Chores',
 						emoji: '♻️',
 					},
@@ -102,7 +96,8 @@ module.exports = {
 					'If issues are closed, the commit requires a body. Please enter a longer description of the commit itself',
 			},
 			issues: {
-				description: 'Add issue references (e.g. "fix #123", "re #123".)',
+				description:
+					'Add issue references (e.g. "fix #123", "re #123".)',
 			},
 		},
 	},
