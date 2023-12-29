@@ -1,10 +1,10 @@
 module.exports = {
 	rules: {
-		'body-leading-blank': [1, 'always'],
-		'body-max-line-length': [2, 'always', 5000],
+		'body-leading-blank': [0, 'always'],
+		'body-max-line-length': [0, 'always'],
 		'footer-leading-blank': [0, 'always'],
-		'footer-max-line-length': [2, 'always', 1000],
-		'header-max-length': [2, 'always', 1000],
+		'footer-max-line-length': [0, 'always'],
+		'header-max-length': [0, 'always'],
 		'subject-case': [
 			2,
 			'never',
