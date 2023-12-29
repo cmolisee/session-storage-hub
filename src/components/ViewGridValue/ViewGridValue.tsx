@@ -1,8 +1,8 @@
 import { useStorageData } from '../../providers/useStorageData';
 import { getDataAsFormattedJson } from '../../utils/JsonUtils';
-import DataItem from '../DataItem';
+import DataItem from '../DataItem/DataItem';
 import RenderData from '../RenderData';
-import './ViewGridValue.scss';
+import './ViewGridValue.css';
 
 interface IViewGridValueProps {}
 
@@ -12,11 +12,11 @@ const ViewGridValue = ({}: IViewGridValueProps) => {
 	const data = getDataAsFormattedJson(dataValue);
 
 	if (!keys.length) {
-		return <div className={`ViewGridValue`} />;
+		return <div className={'ViewGridValue'} />;
 	}
 
 	return (
-		<div className={`ViewGridValue`}>
+		<div className={'ViewGridValue'}>
 			{typeof data !== 'undefined' ? (
 				<RenderData data={data} />
 			) : (

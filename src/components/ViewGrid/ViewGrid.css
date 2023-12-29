@@ -1,0 +1,31 @@
+.ViewGrid {
+	display: grid;
+	grid-template-columns: 3fr 7fr;
+	grid-template-areas: 'key value';
+	border: 0.0625rem solid var(--borderColor);
+	padding: 0.325rem;
+	max-height: 21rem;
+	height: 100%;
+	overflow: hidden;
+}
+
+.ViewGrid__30,
+.ViewGrid__70 {
+	display: flex;
+	width: 100%;
+	overflow-wrap: break-word;
+	overflow-y: auto;
+}
+
+.ViewGrid__30 {
+	border-right: 0.0125rem solid var(--borderColor);
+	grid-area: key;
+	flex-direction: column;
+	word-wrap: break-word;
+	word-break: break-all;
+	overflow-x: clip;
+}
+
+.ViewGrid__70 {
+	grid-area: value;
+}

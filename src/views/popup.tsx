@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import Button from '../components/Button/Button';
 import Header from '../components/Header/Header';
-import ViewGrid from '../components/ViewGrid';
 import { StorageDataProvider } from '../providers/useStorageData';
 import { publishEvent } from '../utils/CustomEvents';
 import {
@@ -13,12 +11,13 @@ import {
 } from '../types/types';
 import { getCurrentTabUId } from '../utils/ChromeUtils';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
 import { useTheme } from '../providers/useTheme';
+import Control from '../components/Control/Control';
+import ViewGrid from '../components/ViewGrid/ViewGrid';
 
 const Popup = () => {
 	const { styles } = useTheme();
-	const [data, setData] = useState<Object>({});
+	const [data, setData] = useState<object>({});
 	const [versionData, setVersionData] = useState<TVersionData>({});
 
 	const handleNotification = (
@@ -28,16 +27,6 @@ const Popup = () => {
 		toast.dismiss();
 		toast(message, { type: type });
 	};
-
-	const optionsLink = (
-		<Link
-			style={{ textDecoration: 'none' }}
-			className={'Button Button__link'}
-			to={'/options'}
-		>
-			Options
-		</Link>
-	);
 
 	useEffect(() => {
 		getCurrentTabUId((id) => {
@@ -66,7 +55,7 @@ const Popup = () => {
 						return;
 					}
 
-					if (res && res.data) {
+					if (res && res.data && chrome?.storage) {
 						await chrome.storage.local.set({ data: res.data });
 						setData(res.data);
 					} else {
@@ -104,7 +93,7 @@ const Popup = () => {
 						return;
 					}
 
-					if (res && res.data) {
+					if (res && res.data && chrome?.storage) {
 						await chrome.storage.sync.set({
 							versionData: res.data,
 						});
@@ -120,17 +109,21 @@ const Popup = () => {
 				}
 			);
 		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
+		if (!chrome?.storage) {
+			handleNotification('Chrome api is not available.', 'error');
+			return;
+		}
+
 		chrome.storage.onChanged.addListener(function (changes, areaName) {
 			if (
 				areaName === 'local' &&
 				!changes.clipboard &&
 				!changes.settings
 			) {
-				let updated = Object.assign({}, data);
+				const updated = Object.assign({}, data);
 
 				Object.keys(changes).forEach((key) => {
 					if (key !== 'clipboard') {
@@ -146,60 +139,69 @@ const Popup = () => {
 				// placeholder in case we need an update on sync storage change for options
 			}
 		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
 		const html = document.documentElement;
-		Object.entries(styles).forEach((s) =>
-			html.style.setProperty(s[0], s[1])
-		);
+		Object.entries(styles).forEach((s) => {
+			return html.style.setProperty(s[0], s[1]);
+		});
 	}, [styles]);
 
 	return (
 		<>
-			<Header
-				title={'Session Storage Hub'}
-				link={optionsLink}
-				versionNumber={process.env.VERSION as string}
-			/>
-			<Button onClickCallback={() => publishEvent('copyEvent', {})}>
-				Copy
-			</Button>
-			<Button onClickCallback={() => publishEvent('pasteEvent', {})}>
-				Paste
-			</Button>
-			<div className={'mt-2'}>
-				<Button
-					version={'link'}
-					onClickCallback={() => publishEvent('selectAllEvent', {})}
-				>
+			<Header viewLink={'options'} />
+			<div className={'flex text-[var(--borderColor)]'}>
+				<Control
+					onClickCallback={() => {
+						return publishEvent('selectAllEvent', {});
+					}}>
 					Select All
-				</Button>
-				<Button
-					version={'link'}
-					onClickCallback={() => publishEvent('unselectAllEvent', {})}
-				>
+				</Control>
+				<Control
+					onClickCallback={() => {
+						return publishEvent('unselectAllEvent', {});
+					}}>
 					Unselect All
-				</Button>
+				</Control>
+				<div className={'ml-8'}>
+					<Control
+						className={'font-bold'}
+						onClickCallback={() => {
+							return publishEvent('copyEvent', {});
+						}}>
+						Copy
+					</Control>
+					<Control
+						className={'font-bold'}
+						onClickCallback={() => {
+							return publishEvent('pasteEvent', {});
+						}}>
+						Paste
+					</Control>
+				</div>
 			</div>
 			<StorageDataProvider dataObject={data}>
 				<ViewGrid />
 			</StorageDataProvider>
-			{versionData &&
-				!versionData.isUpToDate &&
-				versionData.releaseUrl && (
-					<div className={'d-flex m-h justify-end'}>
-						<a
-							className={'updateVersion'}
-							href={versionData.releaseUrl}
-							target={'_blank'}
-							rel="noreferrer"
-						>
+			<div className={'flex m-1 justify-end text-[var(--borderColor)]'}>
+				<div className={'cursor-default mr-4'}>
+					version {(VERSION as string) ?? 'UNKNOWN'}
+				</div>
+				{versionData &&
+					!versionData.isUpToDate &&
+					versionData.releaseUrl && (
+						<Control
+							onClickCallback={() => {
+								if (versionData.releaseUrl) {
+									window.location.href =
+										versionData.releaseUrl as string;
+								}
+							}}>
 							New version available
-						</a>
-					</div>
-				)}
+						</Control>
+					)}
+			</div>
 		</>
 	);
 };

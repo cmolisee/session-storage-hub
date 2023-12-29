@@ -1,7 +1,7 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { getDataType } from '../../utils/JsonUtils';
 import { CaretDownFilled, CaretRightFilled } from '@ant-design/icons';
-import './DataItem.scss';
+import './DataItem.css';
 
 interface IDataItemProps {
 	dataId?: string;
@@ -36,31 +36,22 @@ const DataItem = ({
 
 	return (
 		<div
-			className={`DataItem`}
-			id={dataId as string}
-		>
+			className={'DataItem flex flex-col'}
+			id={dataId as string}>
 			{dataKey && (
 				<div
-					className={`DataItem__key`}
-					onClick={() => setShowData(!showData)}
-					show-data={showData}
-				>
-					<span
-						style={{
-							fontSize: '0.725rem',
-							paddingRight: '0.125rem',
-						}}
-					>
+					className={'cursor-pointer text-[var(--objectColor)]'}
+					onClick={() => {
+						return setShowData(!showData);
+					}}
+					show-data={showData}>
+					<span className={'text-xs pr-0.5'}>
 						{showData ? <CaretDownFilled /> : <CaretRightFilled />}
 					</span>
 					{dataKey}
 				</div>
 			)}
-			{showData && (
-				<div className={`DataItem__value DataItem__${dataType}`}>
-					{value}
-				</div>
-			)}
+			{showData && <div className={`DataItem__${dataType}`}>{value}</div>}
 		</div>
 	);
 };
