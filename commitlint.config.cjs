@@ -1,11 +1,15 @@
 module.exports = {
 	extends: ['eslint'],
 	rules: {
-		'body-leading-blank': [0, 'always'],
-		'body-max-line-length': [0, 'always', 100],
+		'body-max-length': [0, 'always'],
+        'body-max-line-length': [0, 'always'],
+        'footer-max-length': [0, 'always'],
+        'footer-max-line-length': [0, 'always'],
+        'header-max-length': [0, 'always'],
+        'scope-max-length': [0, 'always'],
+        'subject-max-length': [0, 'always'],
+        'type-max-length': [0, 'always'],
 		'footer-leading-blank': [0, 'always'],
-		'footer-max-line-length': [0, 'always', 100],
-		'header-max-length': [0, 'always', 100],
 		'subject-case': [
 			2,
 			'never',
