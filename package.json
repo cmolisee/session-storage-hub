@@ -1,7 +1,7 @@
 {
 	"name": "vite-project",
 	"private": false,
-	"version": "4.2.1",
+	"version": "4.3.0",
 	"description": "Browser extension for session storage utilities.",
 	"repository": "https://github.com/cmolisee/session-storage-hub.git",
 	"author": "codymolisee <molisee.cody@gmail.com>",
