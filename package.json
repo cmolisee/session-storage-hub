@@ -15,12 +15,7 @@
 		"lint:fix": "npm run lint -- --fix",
 		"format": "prettier --write .",
 		"prepare": "husky install",
-		"cm": "git-cz"
-	},
-	"config": {
-		"commitizen": {
-			"path": "@commitlint/cz-commitlint"
-		}
+		"cm": "cz"
 	},
 	"dependencies": {
 		"@ant-design/icons": "^5.2.6",
@@ -31,7 +26,6 @@
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^18.4.3",
-		"@commitlint/cz-commitlint": "^18.4.3",
 		"@crxjs/vite-plugin": "^2.0.0-beta.21",
 		"@semantic-release/changelog": "^6.0.3",
 		"@semantic-release/commit-analyzer": "^11.1.0",
@@ -49,17 +43,25 @@
 		"@vitejs/plugin-react": "^4.2.1",
 		"autoprefixer": "^10.4.16",
 		"commitizen": "^4.3.0",
-		"conventional-changelog-eslint": "^5.0.0",
+		"commitlint-config-eslint": "^1.0.0",
+		"cz-customizable": "^7.0.0",
 		"eslint": "^8.55.0",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-react-refresh": "^0.4.5",
-		"husky": "^8.0.3",
-		"inquirer": "^8.2.6",
+		"husky": "^8.0.0",
 		"postcss": "^8.4.32",
 		"prettier": "^3.1.1",
 		"semantic-release": "^22.0.12",
 		"tailwindcss": "^3.4.0",
 		"typescript": "^5.2.2",
 		"vite": "4.5.0"
+	},
+	"config": {
+		"commitizen": {
+			"path": "node_modules/cz-customizable"
+		},
+		"cz-customizable": {
+			"config": ".cz-config.cjs"
+		}
 	}
 }
