@@ -28,15 +28,6 @@ export interface IMessageResponse {
 	data: any;
 }
 
-export type TOptionType = { value: string; label: string };
-
-export interface ISelectDropdownProps {
-	label: string;
-	initial?: TOptionType;
-	options: TOptionType[];
-	changeCallback?: (option: any) => void;
-}
-
 export type TVersionData = {
 	isUpToDate?: boolean;
 	timestamp?: number;

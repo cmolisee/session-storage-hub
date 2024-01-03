@@ -14,6 +14,7 @@ import { toast } from 'react-toastify';
 import { useTheme } from '../providers/useTheme';
 import Control from '../components/Control/Control';
 import ViewGrid from '../components/ViewGrid/ViewGrid';
+import DropdownMenu from '../components/DropdownMenu/DropdownMenu';
 
 const Popup = () => {
 	const { styles } = useTheme();
@@ -151,20 +152,22 @@ const Popup = () => {
 	return (
 		<>
 			<Header viewLink={'options'} />
-			<div className={'flex text-[var(--borderColor)]'}>
-				<Control
-					onClickCallback={() => {
-						return publishEvent('selectAllEvent', {});
-					}}>
-					Select All
-				</Control>
-				<Control
-					onClickCallback={() => {
-						return publishEvent('unselectAllEvent', {});
-					}}>
-					Unselect All
-				</Control>
-				<div className={'ml-8'}>
+			<div className={'flex justify-between text-[var(--borderColor)]'}>
+				<div>
+					<Control
+						onClickCallback={() => {
+							return publishEvent('selectAllEvent', {});
+						}}>
+						Select All
+					</Control>
+					<Control
+						onClickCallback={() => {
+							return publishEvent('unselectAllEvent', {});
+						}}>
+						Unselect All
+					</Control>
+				</div>
+				<div>
 					<Control
 						className={'font-bold'}
 						onClickCallback={() => {
@@ -179,6 +182,49 @@ const Popup = () => {
 						}}>
 						Paste
 					</Control>
+				</div>
+				<div>
+					{/* <Control
+						className={'font-bold'}
+						onClickCallback={() => {
+							console.log('this should show a popup to confirm...');
+							console.log('fill storage...');
+						}}>
+						Fill Storage
+					</Control>
+					<Control
+						className={'font-bold'}
+						onClickCallback={() => {
+							console.log('this should show a popup to confirm...');
+							console.log('empty storage...');
+						}}>
+						Clear Storage
+					</Control> */}
+					<DropdownMenu 
+						label={'Utitlies'}
+						options={[
+							{
+								label: 'Fill Storage',
+								onClickCallback: () => {
+									console.log('should show popup to confirm...');
+									console.log('fill storage...');
+								}
+							},
+							{
+								label: 'Clear Storage',
+								onClickCallback: () => {
+									console.log('should show popup to confirm...');
+									console.log('empty storage...');
+								}
+							},
+							{
+								label: 'Clean Storage',
+								onClickCallback: () => {
+									console.log('should show popup to confirm...');
+									console.log('cleaning utility objects from storage...');
+								}
+							}
+						]} />			
 				</div>
 			</div>
 			<StorageDataProvider dataObject={data}>

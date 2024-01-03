@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import './SelectDropdown.css';
-import { ISelectDropdownProps } from '../../types/types';
+
+type TOptionType = { value: string; label: string };
+
+interface ISelectDropdownProps {
+	label: string;
+	initial?: TOptionType;
+	options: TOptionType[];
+	changeCallback?: (option: any) => void;
+}
 
 const SelectDropdown = ({
 	label,
@@ -27,7 +35,7 @@ const SelectDropdown = ({
 	const handleClickOutside = (e: any) => {
 		if (
 			showDropdown &&
-			!/(selectDropdown-option|selectDropdown-options)/g.test(
+			!/(selectDropdown-option|selectDropdown-options|selectDropdown)/g.test(
 				e.target?.classList
 			)
 		) {
@@ -36,10 +44,10 @@ const SelectDropdown = ({
 	};
 
 	useEffect(() => {
-		document.addEventListener('mousedown', handleClickOutside);
+		document.body.addEventListener('mousedown', handleClickOutside);
 
 		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
+			document.body.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, []);
 
