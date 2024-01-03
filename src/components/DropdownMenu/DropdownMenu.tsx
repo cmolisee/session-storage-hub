@@ -15,7 +15,7 @@ const DropdownMenu = ({ className, label, options  }: IControlProps) => {
 	const svgClassNames = 'mt-0.5 h-5 w-5';
 	const menuListClassNames = 'dropdownMenuList absolute right-1 z-10  w-fit origin-top-right rounded-md bg-[var(--backgroundColor)] ring-1 ring-[var(--specialTextColor)] ring-opacity-5 focus:outline-none';
 	const optionClassnames = 'dropdownMenuItem block text-nowrap px-2 py-2 text-sm hover:no-underline hover:text-[var(--buttonHoverColor)] hover:border-[var(--buttonHoverColor)]';
-	
+
 	const handleClickOutside = (e: any) => {
 		if (
 			isOpen &&
