@@ -19,7 +19,18 @@
 			"booleanColor": "#007faa",
 			"nullColor": "#696969",
 			"undefinedColor": "#696969",
-			"emptyColor": "#696969"
+			"emptyColor": "#696969",
+			"toastify-info": "#007faa",
+			"toastify-success": "#00AA80",
+			"toastify-warning": "#A17928",
+			"toastify-error": "#AA2B00",
+			"toastify-background": "#fefefe",
+			"toastify-text-color-info": "#fff",
+			"toastify-text-color-success": "#fff",
+			"toastify-text-color-warning": "#fff",
+			"toastify-text-color-error": "#fff",
+			"toastify-text-color-light": "#808080",
+			"toastify-color-light": "#fefefe"
 		}
 	},
 	{
@@ -42,7 +53,18 @@
 			"booleanColor": "#ff7300",
 			"nullColor": "#d73a49",
 			"undefinedColor": "#d73a49",
-			"emptyColor": "#d73a49"
+			"emptyColor": "#d73a49",
+			"toastify-info": "#B9D6F2",
+			"toastify-success": "#06BA63",
+			"toastify-warning": "#E7E247",
+			"toastify-error": "#A31621",
+			"toastify-background": "#414D58",
+			"toastify-text-color-info": "#fff",
+			"toastify-text-color-success": "#fff",
+			"toastify-text-color-warning": "#fff",
+			"toastify-text-color-error": "#fff",
+			"toastify-text-color-light": "#fff",
+			"toastify-color-light": "#414D58"
 		}
 	},
 	{
@@ -65,7 +87,18 @@
 			"booleanColor": "#83AF9B",
 			"nullColor": "#F9CDAD",
 			"undefinedColor": "#F9CDAD",
-			"emptyColor": "#F9CDAD"
+			"emptyColor": "#F9CDAD",
+			"toastify-info": "#AEC5EB",
+			"toastify-success": "#B6D094",
+			"toastify-warning": "#FFBA08",
+			"toastify-error": "#92374D",
+			"toastify-background": "#1F3447",
+			"toastify-text-color-info": "#fff",
+			"toastify-text-color-success": "#fff",
+			"toastify-text-color-warning": "#fff",
+			"toastify-text-color-error": "#fff",
+			"toastify-text-color-light": "#fff",
+			"toastify-color-light": "#1F3447"
 		}
 	},
 	{
@@ -88,7 +121,18 @@
 			"booleanColor": "#50fa7b",
 			"nullColor": "#bd93f9",
 			"undefinedColor": "#bd93f9",
-			"emptyColor": "#bd93f9"
+			"emptyColor": "#bd93f9",
+			"toastify-info": "#648DE5",
+			"toastify-success": "#218380",
+			"toastify-warning": "#FF784F",
+			"toastify-error": "#AD2831",
+			"toastify-background": "#545978",
+			"toastify-text-color-info": "#fff",
+			"toastify-text-color-success": "#fff",
+			"toastify-text-color-warning": "#fff",
+			"toastify-text-color-error": "#fff",
+			"toastify-text-color-light": "#fff",
+			"toastify-color-light": "#545978"
 		}
 	}
 ]

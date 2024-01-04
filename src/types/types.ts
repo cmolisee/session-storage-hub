@@ -103,3 +103,18 @@ export interface IThemeStyles {
 	'--undefinedColor': string;
 	'--emptyColor': string;
 }
+
+export interface IReactToastifyStyles {
+	'--toastify-color-info': string;
+	'--toastify-color-success': string;
+	'--toastify-color-warning': string;
+	'--toastify-color-error': string;
+	'--toastify-toast-background': string;
+	'--toastify-text-color-info': string;
+	'--toastify-text-color-success': string;
+	'--toastify-text-color-warning': string;
+	'--toastify-text-color-error': string;
+	// default
+	'--toastify-text-color-light': string;
+	'--toastify-color-light': string;
+}
