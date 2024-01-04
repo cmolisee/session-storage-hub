@@ -9,7 +9,12 @@ import {
 } from 'react';
 import jsonThemes from '../assets/themes.json';
 import { requestData } from '../utils/ChromeUtils';
-import { Themes, IThemeStyles, ITheme, IReactToastifyStyles } from '../types/types';
+import {
+	Themes,
+	IThemeStyles,
+	ITheme,
+	IReactToastifyStyles,
+} from '../types/types';
 
 interface IThemeContextProps {
 	theme: Themes;
@@ -58,11 +63,15 @@ function getStylesFromTheme(name: Themes) {
 		'--toastify-color-error': theme.colors['toastify-error'],
 		'--toastify-toast-background': theme.colors['toastify-background'],
 		'--toastify-text-color-info': theme.colors['toastify-text-color-info'],
-		'--toastify-text-color-success': theme.colors['toastify-text-color-success'],
-		'--toastify-text-color-warning': theme.colors['toastify-text-color-warning'],
-		'--toastify-text-color-error': theme.colors['toastify-text-color-error'],
-		"--toastify-text-color-light": theme.colors['toastify-text-color-light'],
-		'--toastify-color-light': theme.colors['toastify-color-light']
+		'--toastify-text-color-success':
+			theme.colors['toastify-text-color-success'],
+		'--toastify-text-color-warning':
+			theme.colors['toastify-text-color-warning'],
+		'--toastify-text-color-error':
+			theme.colors['toastify-text-color-error'],
+		'--toastify-text-color-light':
+			theme.colors['toastify-text-color-light'],
+		'--toastify-color-light': theme.colors['toastify-color-light'],
 	} as IThemeStyles & IReactToastifyStyles;
 }
 

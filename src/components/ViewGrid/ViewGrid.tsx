@@ -11,7 +11,7 @@ import {
 import { getCurrentTabUId } from '../../utils/ChromeUtils';
 import ViewGridKey from '../ViewGridKey/ViewGridKey';
 import ViewGridValue from '../ViewGridValue/ViewGridValue';
-import { useToast } from '../../hooks/useToast';
+import { createToast } from '../../utils/Utils';
 
 interface IViewGridProps {
 	className?: string;
@@ -32,7 +32,7 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 		});
 
 		await chrome.storage.local.set({ clipboard: clipboard });
-		useToast({
+		createToast({
 			toastOps: {
 				toastId: 'SessionStorageCoppied',
 				type: 'info',
@@ -40,7 +40,7 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 				closeOnClick: true,
 				pauseOnHover: true,
 			},
-			message: 'Session Storage Coppied.'
+			message: 'Session Storage Coppied.',
 		});
 	}, [data, selectedKeys]);
 
@@ -59,36 +59,37 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 					message,
 					async (res: IMessageResponse) => {
 						if (chrome.runtime.lastError) {
-							useToast({
-							toastOps: {
-								toastId: '401',
-								type: 'error',
-								autoClose: 2000,
-								closeOnClick: true,
-								pauseOnHover: true,
-							},
-							message: 'Cannot establish connection on this page.'
-						});
+							createToast({
+								toastOps: {
+									toastId: '401',
+									type: 'error',
+									autoClose: 2000,
+									closeOnClick: true,
+									pauseOnHover: true,
+								},
+								message:
+									'Cannot establish connection on this page.',
+							});
 							return;
 						}
 
 						if (res.error) {
-							useToast({
-							toastOps: {
-								toastId: 'SessionStorageUpdateError',
-								type: 'error',
-								autoClose: 2000,
-								closeOnClick: true,
-								pauseOnHover: true,
-							},
-							message: res.error
-						});
+							createToast({
+								toastOps: {
+									toastId: 'SessionStorageUpdateError',
+									type: 'error',
+									autoClose: 2000,
+									closeOnClick: true,
+									pauseOnHover: true,
+								},
+								message: res.error,
+							});
 							return;
 						}
 
 						if (res.data) {
 							await chrome.storage.local.set({ data: res.data });
-							useToast({
+							createToast({
 								toastOps: {
 									toastId: 'SessionStoragePasted',
 									type: 'success',
@@ -96,7 +97,7 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 									closeOnClick: true,
 									pauseOnHover: true,
 								},
-								message: 'Session Storage Pasted.'
+								message: 'Session Storage Pasted.',
 							});
 							return;
 						}

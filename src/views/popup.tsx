@@ -14,18 +14,15 @@ import { useTheme } from '../providers/useTheme';
 import Control from '../components/Control/Control';
 import ViewGrid from '../components/ViewGrid/ViewGrid';
 import DropdownMenu from '../components/DropdownMenu/DropdownMenu';
-import { useToast } from '../hooks/useToast';
+import { createToast } from '../utils/Utils';
 
 const Popup = () => {
 	const { styles } = useTheme();
 	const [data, setData] = useState<object>({});
 	const [versionData, setVersionData] = useState<TVersionData>({});
 
-	const utilityPopupCallback = (
-		msg: string,
-		cb: () => void
-	) => {
-		useToast({
+	function utilityPopupCallback(msg: string, cb: () => void) {
+		createToast({
 			toastOps: {
 				toastId: 'utility',
 				type: 'default',
@@ -41,38 +38,32 @@ const Popup = () => {
 	}
 
 	const fillSessionStorageCallback = () => {
-		console.log('fillSessionStorageCallback')
-		// prompt the user
-		// if yes run fill
-		// let x = 8; 
-		// console.debug('=== Filling Session Storage ==='); 
-		// console.debug('x: ', x); 
-		
-		// while (x > 0) { 
-		// 	try { 
-		// 		window.sessionStorage.setItem(
-		// 			'@utility-fill-' + window.sessionStorage.length.toString(), 
-		// 			'@'.repeat(2 ** x)
-		// 		);
-		// 	} catch (e) { 
-		// 		x-=1; 
-		// 		console.debug('x: ', x); 
-		// 	} 
-		// } 
-		
-		// console.debug('Session Storage Fill Completed. Max Length: ', window.sessionStorage.length);
-	}
+		let x = 8;
+		console.debug('=== Filling Session Storage ===');
+		console.debug('x: ', x);
+
+		while (x > 0) {
+			try {
+				window.sessionStorage.setItem(
+					'@utility-fill-' + window.sessionStorage.length.toString(),
+					'@'.repeat(2 ** x)
+				);
+			} catch (e) {
+				x -= 1;
+				console.debug('x: ', x);
+			}
+		}
+		return;
+	};
 
 	const cleanSessionStorageCallback = () => {
-		console.log('cleanSessionStorageCallback')
-		// prompt the user
-		// on response yes clear session storage of all items with @utility-fill-
-		// for (let key of Object.keys(window.sessionStorage)) {
-		// 	if (key.startsWith("@utility-fill-")) {
-		// 		sessionStorage.removeItem(key);
-		// 	}
-		// }
-	}
+		for (const key of Object.keys(window.sessionStorage)) {
+			if (key.startsWith('@utility-fill-')) {
+				sessionStorage.removeItem(key);
+			}
+		}
+		return;
+	};
 
 	useEffect(() => {
 		getCurrentTabUId((id) => {
@@ -89,7 +80,7 @@ const Popup = () => {
 				} as IChromeMessage,
 				async (res: IMessageResponse) => {
 					if (chrome.runtime.lastError) {
-						useToast({
+						createToast({
 							toastOps: {
 								toastId: '401',
 								type: 'error',
@@ -97,13 +88,14 @@ const Popup = () => {
 								closeOnClick: true,
 								pauseOnHover: true,
 							},
-							message: 'Cannot establish connection on this page.'
+							message:
+								'Cannot establish connection on this page.',
 						});
 						return;
 					}
 
 					if (res && res.error) {
-						useToast({
+						createToast({
 							toastOps: {
 								toastId: 'SessionStorageComError',
 								type: 'error',
@@ -111,7 +103,7 @@ const Popup = () => {
 								closeOnClick: true,
 								pauseOnHover: true,
 							},
-							message: res.error
+							message: res.error,
 						});
 						return;
 					}
@@ -120,7 +112,7 @@ const Popup = () => {
 						await chrome.storage.local.set({ data: res.data });
 						setData(res.data);
 					} else {
-						useToast({
+						createToast({
 							toastOps: {
 								toastId: 'SessionStorageApiError',
 								type: 'error',
@@ -128,7 +120,8 @@ const Popup = () => {
 								closeOnClick: true,
 								pauseOnHover: true,
 							},
-							message: 'There was an error requesting Session Storage Data.'
+							message:
+								'There was an error requesting Session Storage Data.',
 						});
 					}
 
@@ -148,7 +141,7 @@ const Popup = () => {
 				} as IChromeMessage,
 				async (res: IMessageResponse) => {
 					if (chrome.runtime.lastError) {
-						useToast({
+						createToast({
 							toastOps: {
 								toastId: '401',
 								type: 'error',
@@ -156,13 +149,14 @@ const Popup = () => {
 								closeOnClick: true,
 								pauseOnHover: true,
 							},
-							message: 'Cannot establish connection on this page.'
+							message:
+								'Cannot establish connection on this page.',
 						});
 						return;
 					}
 
 					if (res && res.error) {
-						useToast({
+						createToast({
 							toastOps: {
 								toastId: 'LatestVersionComError',
 								type: 'error',
@@ -170,7 +164,7 @@ const Popup = () => {
 								closeOnClick: true,
 								pauseOnHover: true,
 							},
-							message: res.error
+							message: res.error,
 						});
 						return;
 					}
@@ -181,7 +175,7 @@ const Popup = () => {
 						});
 						setVersionData(res.data as TVersionData);
 					} else {
-						useToast({
+						createToast({
 							toastOps: {
 								toastId: 'LatestVersionResError',
 								type: 'error',
@@ -189,7 +183,8 @@ const Popup = () => {
 								closeOnClick: true,
 								pauseOnHover: true,
 							},
-							message: 'There was an error retrieving the latest release information.'
+							message:
+								'There was an error retrieving the latest release information.',
 						});
 					}
 
@@ -201,7 +196,7 @@ const Popup = () => {
 
 	useEffect(() => {
 		if (!chrome?.storage) {
-			useToast({
+			createToast({
 				toastOps: {
 					toastId: 'ChromeStorageApiError',
 					type: 'error',
@@ -209,7 +204,7 @@ const Popup = () => {
 					closeOnClick: true,
 					pauseOnHover: true,
 				},
-				message: 'Chrome api is not available.'
+				message: 'Chrome api is not available.',
 			});
 			return;
 		}
@@ -280,31 +275,40 @@ const Popup = () => {
 					</Control>
 				</div>
 				<div>
-					<DropdownMenu 
+					<DropdownMenu
 						label={'Utitlies'}
 						options={[
 							{
 								label: 'Fill Storage',
-								onClickCallback: () => utilityPopupCallback(
-									'Are you sure you want to fill all session storage memory?',
-									fillSessionStorageCallback
-								)
+								onClickCallback: () => {
+									utilityPopupCallback(
+										'Are you sure you want to fill all session storage memory?',
+										fillSessionStorageCallback
+									);
+								},
 							},
 							{
 								label: 'Clear Storage',
-								onClickCallback: () => utilityPopupCallback(
-									'Are you sure you want to clear all session storage memory?',
-									() => window.sessionStorage.clear()
-								)
+								onClickCallback: () => {
+									utilityPopupCallback(
+										'Are you sure you want to clear all session storage memory?',
+										() => {
+											window.sessionStorage.clear();
+										}
+									);
+								},
 							},
 							{
 								label: 'Clean Storage',
-								onClickCallback: () => utilityPopupCallback(
-									'Are you sure you want to clean all session storage memory?',
-									cleanSessionStorageCallback
-								)
-							}
-						]} />			
+								onClickCallback: () => {
+									utilityPopupCallback(
+										'Are you sure you want to clean all session storage memory?',
+										cleanSessionStorageCallback
+									);
+								},
+							},
+						]}
+					/>
 				</div>
 			</div>
 			<StorageDataProvider dataObject={data}>

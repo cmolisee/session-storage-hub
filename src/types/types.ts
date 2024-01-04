@@ -1,3 +1,5 @@
+import { ToastOptions } from 'react-toastify';
+
 export enum Sender {
 	Webpage,
 	Extension,
@@ -33,6 +35,20 @@ export type TVersionData = {
 	timestamp?: number;
 	releaseUrl?: string;
 };
+
+export interface IUseToastProps {
+	toastOps?: ToastOptions;
+	message: React.ReactNode;
+	acceptText?: string;
+	declineText?: string;
+	acceptCallback?: () => void;
+	declineCallback?: () => void;
+}
+
+export interface IMsgProps {
+	closeToast?: () => void;
+	content: IUseToastProps;
+}
 
 export type TFontWeight =
 	| 'thin'

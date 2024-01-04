@@ -63,6 +63,7 @@ a.updateVersion:hover {
 	margin: 1rem;
 }
 
-.Toastify__toast-theme--colored.Toastify__toast--default .Toastify__close-button {
+.Toastify__toast-theme--colored.Toastify__toast--default
+	.Toastify__close-button {
 	color: var(--toastify-text-color-light);
 }
