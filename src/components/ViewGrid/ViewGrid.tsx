@@ -8,10 +8,10 @@ import {
 	IMessageResponse,
 	Sender,
 } from '../../types/types';
-import { getCurrentTabUId } from '../../utils/ChromeUtils';
+import { chromeApi } from '../../utils/ChromeUtils';
 import ViewGridKey from '../ViewGridKey/ViewGridKey';
 import ViewGridValue from '../ViewGridValue/ViewGridValue';
-import { createToast } from '../../utils/Utils';
+import { errorToast, infoToast, successToast } from '../../utils/Utils';
 
 interface IViewGridProps {
 	className?: string;
@@ -32,78 +32,28 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 		});
 
 		await chrome.storage.local.set({ clipboard: clipboard });
-		createToast({
-			toastOps: {
-				toastId: 'SessionStorageCoppied',
-				type: 'info',
-				autoClose: 2000,
-				closeOnClick: true,
-				pauseOnHover: true,
-			},
-			message: 'Session Storage Coppied.',
-		});
+		infoToast(null, 'Sessiopn Storage Data Coppied.');
 	}, [data, selectedKeys]);
 
 	const handlePaste = useCallback(async () => {
 		const clipboard = await chrome.storage.local.get(['clipboard']);
-		const message: IChromeMessage = {
-			from: Sender.Extension,
-			action: Action.Update,
-			message: clipboard,
-		};
 
-		getCurrentTabUId((id) => {
-			id &&
-				chrome.tabs.sendMessage(
-					id,
-					message,
-					async (res: IMessageResponse) => {
-						if (chrome.runtime.lastError) {
-							createToast({
-								toastOps: {
-									toastId: '401',
-									type: 'error',
-									autoClose: 2000,
-									closeOnClick: true,
-									pauseOnHover: true,
-								},
-								message:
-									'Cannot establish connection on this page.',
-							});
-							return;
-						}
+		chromeApi(
+			{
+				from: Sender.Extension,
+				action: Action.Update,
+				message: clipboard,
+			} as IChromeMessage,
+			async (res: IMessageResponse) => {
+				if (!chrome?.storage) {
+					errorToast('503', 'Chrome Storage API is not available.');
+					return;
+				}
 
-						if (res.error) {
-							createToast({
-								toastOps: {
-									toastId: 'SessionStorageUpdateError',
-									type: 'error',
-									autoClose: 2000,
-									closeOnClick: true,
-									pauseOnHover: true,
-								},
-								message: res.error,
-							});
-							return;
-						}
-
-						if (res.data) {
-							await chrome.storage.local.set({ data: res.data });
-							createToast({
-								toastOps: {
-									toastId: 'SessionStoragePasted',
-									type: 'success',
-									autoClose: 2000,
-									closeOnClick: true,
-									pauseOnHover: true,
-								},
-								message: 'Session Storage Pasted.',
-							});
-							return;
-						}
-					}
-				);
-		});
+				await chrome.storage.local.set({ data: res.data });
+				successToast(null, 'Session Storage Data Pasted.');
+			}
+		);
 	}, [data, selectedKeys]);
 
 	useEffect(() => {

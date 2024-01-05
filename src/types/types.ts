@@ -10,6 +10,7 @@ export enum Action {
 	Update,
 	Post,
 	Check,
+	FillStorage,
 }
 
 export enum Themes {

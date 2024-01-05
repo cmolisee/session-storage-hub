@@ -36,6 +36,76 @@ const Msg = ({ closeToast, content }: IMsgProps) => {
 	);
 };
 
-export const createToast = (props: IUseToastProps) => {
+export function createToast(props: IUseToastProps) {
 	toast(<Msg content={props} />, { ...props.toastOps });
+}
+
+const toastOptions = {
+	autoClose: 2000,
+	closeOnClick: true,
+	pauseOnHover: true,
 };
+
+export function errorToast(id: string | null, msg: string) {
+	createToast({
+		toastOps: {
+			toastId: id ?? undefined,
+			type: 'error',
+			...toastOptions,
+		},
+		message: msg,
+	});
+}
+
+export function infoToast(id: string | null, msg: string) {
+	createToast({
+		toastOps: {
+			toastId: id ?? undefined,
+			type: 'info',
+			...toastOptions,
+		},
+		message: msg,
+	});
+}
+
+export function warningToast(id: string | null, msg: string) {
+	createToast({
+		toastOps: {
+			toastId: id ?? undefined,
+			type: 'warning',
+			...toastOptions,
+		},
+		message: msg,
+	});
+}
+
+export function successToast(id: string | null, msg: string) {
+	createToast({
+		toastOps: {
+			toastId: id ?? undefined,
+			type: 'success',
+			...toastOptions,
+		},
+		message: msg,
+	});
+}
+
+export function promptToast(
+	id: string | null,
+	msg: string,
+	callback: () => void
+) {
+	createToast({
+		toastOps: {
+			toastId: id ?? undefined,
+			type: 'default',
+			autoClose: false,
+			closeOnClick: false,
+			pauseOnHover: true,
+		},
+		message: msg,
+		acceptText: 'Continue',
+		declineText: 'Cancel',
+		acceptCallback: callback,
+	});
+}

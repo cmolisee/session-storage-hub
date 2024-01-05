@@ -62,6 +62,40 @@ const updateMessageListener = (
 	return false; // do not expect a response
 };
 
+const fillStorageMessageListener = (
+	message: IChromeMessage,
+	sender: chrome.runtime.MessageSender,
+	response: TResponse
+) => {
+	if (validateSender(Sender.Extension, Action.FillStorage, message, sender)) {
+		try {
+			let x = 8;
+
+			while (x > 0) {
+				try {
+					window.sessionStorage.setItem(
+						'@utility-fill-' +
+							window.sessionStorage.length.toString(),
+						'@'.repeat(2 ** x)
+					);
+				} catch (e) {
+					x -= 1;
+				}
+			}
+
+			const data = Object.assign({}, sessionStorage);
+			response({ error: null, data: data });
+		} catch {
+			response({
+				error: 'Error filling session storage.',
+				data: null,
+			});
+		}
+		return true; // we will eventually return a response
+	}
+	return false; // do not expect a response
+};
+
 function convertMsToHr(ms: number) {
 	return ms / 2777777;
 }
@@ -130,6 +164,7 @@ const main = () => {
 	// Fired when a message is sent from either an extension process or a content script.
 	chrome.runtime.onMessage.addListener(requestMessageListener);
 	chrome.runtime.onMessage.addListener(updateMessageListener);
+	chrome.runtime.onMessage.addListener(fillStorageMessageListener);
 	chrome.runtime.onMessage.addListener(checkReleaseListener);
 };
 

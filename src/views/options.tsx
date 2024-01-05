@@ -1,6 +1,6 @@
 import Header from '../components/Header/Header';
 import { useEffect } from 'react';
-import { saveOptions } from '../utils/ChromeUtils';
+import { saveOptionData } from '../utils/ChromeUtils';
 import SelectDropdown from '../components/SelectDropdown/SelectDropdown';
 import { useTheme } from '../providers/useTheme';
 import { Themes } from '../types/types';
@@ -10,7 +10,7 @@ const Options = () => {
 
 	const handleUpdateTheme = (theme: Themes) => {
 		setTheme!(theme);
-		saveOptions({ name: theme }, () => {
+		saveOptionData({ name: theme }, () => {
 			return console.log('[Theme saved]');
 		});
 	};

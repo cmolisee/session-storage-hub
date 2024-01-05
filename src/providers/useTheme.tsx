@@ -8,7 +8,7 @@ import {
 	useEffect,
 } from 'react';
 import jsonThemes from '../assets/themes.json';
-import { requestData } from '../utils/ChromeUtils';
+import { requestOptionData } from '../utils/ChromeUtils';
 import {
 	Themes,
 	IThemeStyles,
@@ -82,7 +82,7 @@ export const ThemeProvider = ({
 	const [theme, setTheme] = useState<Themes>(defaultThemeName);
 
 	useEffect(() => {
-		requestData('options', (items) => {
+		requestOptionData('options', (items) => {
 			if (Object.values(Themes).includes(items.options?.name)) {
 				setTheme(items.options?.name);
 			}
