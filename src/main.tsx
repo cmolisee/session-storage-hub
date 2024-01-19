@@ -1,16 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createHashRouter } from 'react-router-dom';
-import Popup from './views/popup';
+// import Popup from './views/popup';
 import Options from './views/options';
 import { ToastContainer, Zoom } from 'react-toastify';
 import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ThemeProvider } from './providers/useTheme';
 import { Themes } from './types/types';
+import Test from './views/test';
 
 const router = createHashRouter([
-	{ path: '/', element: <Popup /> },
+	// { path: '/', element: <Popup /> },
+	{path: '/', element: <Test />},
 	{ path: '/options', element: <Options /> },
 ]);
 

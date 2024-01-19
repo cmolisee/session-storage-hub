@@ -14,6 +14,10 @@ const validateSender = (
 	message: IChromeMessage,
 	sender: chrome.runtime.MessageSender
 ) => {
+	console.log('sender: ', sender);
+	console.log('exp sender: ', expectedSender);
+	console.log('message: ', message);
+	console.log('exp action: ', expectedAction);
 	return (
 		sender.id === chrome.runtime.id &&
 		message.from === expectedSender &&
@@ -67,11 +71,15 @@ const fillStorageMessageListener = (
 	sender: chrome.runtime.MessageSender,
 	response: TResponse
 ) => {
+	console.log('received fill ss message');
+	console.log('running logic...');
 	if (validateSender(Sender.Extension, Action.FillStorage, message, sender)) {
 		try {
 			let x = 8;
 
 			while (x > 0) {
+				console.log('x: ', x);
+				console.log('ss length: ', window.sessionStorage.length);
 				try {
 					window.sessionStorage.setItem(
 						'@utility-fill-' +
@@ -80,10 +88,12 @@ const fillStorageMessageListener = (
 					);
 				} catch (e) {
 					x -= 1;
+					console.log('updating x: ', x);
 				}
 			}
 
 			const data = Object.assign({}, sessionStorage);
+			console.log('result: ', data);
 			response({ error: null, data: data });
 		} catch {
 			response({
@@ -161,6 +171,12 @@ const checkReleaseListener = (
 };
 
 const main = () => {
+	// prevent duplicate listeners
+	chrome.runtime.onMessage.removeListener(requestMessageListener);
+	chrome.runtime.onMessage.removeListener(updateMessageListener);
+	chrome.runtime.onMessage.removeListener(fillStorageMessageListener);
+	chrome.runtime.onMessage.removeListener(checkReleaseListener);
+
 	// Fired when a message is sent from either an extension process or a content script.
 	chrome.runtime.onMessage.addListener(requestMessageListener);
 	chrome.runtime.onMessage.addListener(updateMessageListener);

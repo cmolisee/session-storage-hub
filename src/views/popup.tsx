@@ -22,6 +22,7 @@ const Popup = () => {
 	const [versionData, setVersionData] = useState<TVersionData>({});
 
 	const fillSessionStorageCallback = () => {
+		console.log('sending fill session storage message...');
 		chromeApi(
 			{
 				from: Sender.Extension,

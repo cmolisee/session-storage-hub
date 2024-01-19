@@ -1,0 +1,7 @@
+#edit:focus {
+    outline: none !important;
+}
+
+.LineNumber:hover .toggleIcon {
+    opacity: 1;
+}
