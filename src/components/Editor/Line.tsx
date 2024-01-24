@@ -17,7 +17,7 @@ const Line = ({ children, isEdit, dataType }: ILineProps) => {
     };
 
     return (
-        <div className={`data-${dataType}`}>
+        <div className={`data-${dataType} w-full`}>
             {isEdit ? (
                 <EditField value={value} callback={handleChange} />
             ) : (
