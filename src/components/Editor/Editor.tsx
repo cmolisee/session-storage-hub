@@ -46,7 +46,7 @@ const Editor = ({ children }: IEditorProps) => {
 				indent: indent, 
 				content: ']',
 				isCollapsed: false,
-				dataType: dataType
+				dataType: 'none'
 			});
 		} else if (dataType === 'object') {
 			Object.keys(data).forEach((key) => {
@@ -63,7 +63,7 @@ const Editor = ({ children }: IEditorProps) => {
 					indent: indent,
 					content: '}',
 					isCollapsed: false,
-					dataType: dataType
+					dataType: 'none'
 				});
 			});
 		} else { // string, number, boolean
