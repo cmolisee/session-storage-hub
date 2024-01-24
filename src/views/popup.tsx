@@ -246,7 +246,7 @@ const Popup = () => {
 			<StorageDataProvider dataObject={data}>
 				<ViewGrid />
 			</StorageDataProvider>
-			<div className={'flex m-1 justify-end text-[var(--borderColor)]'}>
+			<div className={'flex m-1 justify-start text-[var(--borderColor)]'}>
 				<div className={'cursor-default mr-4'}>
 					version {(VERSION as string) ?? 'UNKNOWN'}
 				</div>
