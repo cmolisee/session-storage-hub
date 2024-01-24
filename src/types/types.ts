@@ -20,6 +20,8 @@ export enum Themes {
 	mfDracula = 'mf-dracula',
 }
 
+export type TDataTypes = 'string' | 'number' | 'boolean' | 'array' | 'object' | 'none';
+
 export interface IChromeMessage {
 	from: Sender;
 	action: Action;

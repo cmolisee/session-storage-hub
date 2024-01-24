@@ -1,37 +1,30 @@
-import { ReactNode, useRef, useState } from "react";
-import useAutosizeTextArea from "../../providers/useAutosizeTextArea";
+import { useState } from "react";
+import EditField from "./EditField";
+import { TDataTypes } from "../../types/types";
 
 interface ILineProps {
-    children?: string
-    isEdit?: boolean
-}
+    children?: string;
+    isEdit?: boolean;
+    dataType: TDataTypes;
+};
 
-const Line = ({ children, isEdit }: ILineProps) => {
-    const textAreaRef = useRef<HTMLTextAreaElement>(null);
-    const [value, setValue] = useState<string>(children as string)
-
-    useAutosizeTextArea({ textAreaRef: textAreaRef.current, value});
+const Line = ({ children, isEdit, dataType }: ILineProps) => {
+    const [value, setValue] = useState<string>(children as string);
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const val = e.target?.value;
-
-    setValue(val);
-  };
-
-    if (isEdit) {
-        return (
-            <textarea ref={textAreaRef}
-                id={'edit'}
-                style={{backgroundColor: 'transparent', resize: 'none', width: '100%'}}
-                value={value}
-                rows={1}
-                onChange={handleChange} />
-        );
-    }
+        const val = e.target?.value;
+        setValue(val);
+    };
 
     return (
-        <p>{value}</p>
-    );
+        <div className={`data-${dataType}`}>
+            {isEdit ? (
+                <EditField value={value} callback={handleChange} />
+            ) : (
+                <p>{value}</p>
+            )}
+        </div>
+    )
 }
 
 export default Line;

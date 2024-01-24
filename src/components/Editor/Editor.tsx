@@ -2,56 +2,80 @@ import React, { ReactNode, useEffect, useState } from "react";
 import "./styles.css";
 import Line from "./Line";
 import ToggleIcon from "./ToggleIcon";
+import { getDataType } from "../../utils/Utils";
+import { TDataTypes } from "../../types/types";
+import EditorControls from "./EditorControls";
 
 interface IEditorProps {
 	children?: ReactNode
 }
 
-type TParsedLineType = { indent: number, content: string, isCollapsed: boolean };
+type TParsedLineType = { indent: number, content: string, isCollapsed: boolean, dataType: TDataTypes };
 type TCollapsedRange = { start: number, end: number };
-
-const TEST_OBJ = {
-	item: {
-		thing: "someting",
-		this: false,
-	},
-	anotherItem: {
-		nested: {
-			again: {
-				number: 12345,
-				obj: {
-					str: "string"
-				}
-			}
-		}
-	}
-};
 
 const Editor = ({ children }: IEditorProps) => {
 	const [lines, setLines] = useState<TParsedLineType[]>([]);
 	const [lineInEdit, setLineInEdit] = useState<number>(-1);
 
 	useEffect(() => {
-		const parsedLines = parseLines(TEST_OBJ);
+		const parsedLines = parseDataToEditorLines(children);
 		setLines(parsedLines);
 	}, [children]);
 
-	const parseLines = (obj: any, lines: TParsedLineType[] = [], indent: number = 1) => {
-		if (obj === null || obj === undefined) {
-			throw new Error('parseLines: \'obj\' cannot be null or undefined...');
+	const parseDataToEditorLines = (data: any, Editorlines: TParsedLineType[] = [], indent: number = 1) => {
+		const dataType: TDataTypes = getDataType(data);
+
+		if (dataType === 'none') {
+			Editorlines.push({
+				indent: indent, 
+				content: 'null',
+				isCollapsed: false,
+				dataType: dataType
+			});
+		} else if (dataType === 'array') {
+			Editorlines.push({ 
+				indent: indent, 
+				content: '[',
+				isCollapsed: false,
+				dataType: dataType
+			});
+
+			(data as any[]).forEach((child) => { parseDataToEditorLines(child, Editorlines, indent + 2) });
+			
+			Editorlines.push({ 
+				indent: indent, 
+				content: ']',
+				isCollapsed: false,
+				dataType: dataType
+			});
+		} else if (dataType === 'object') {
+			Object.keys(data).forEach((key) => {
+				Editorlines.push({
+					indent: indent,
+					content: `${key}: {`,
+					isCollapsed: false,
+					dataType: dataType
+				});
+
+				parseDataToEditorLines(data[key], Editorlines, indent + 2);
+
+				Editorlines.push({
+					indent: indent,
+					content: '}',
+					isCollapsed: false,
+					dataType: dataType
+				});
+			});
+		} else { // string, number, boolean
+			Editorlines.push({ 
+				indent: indent, 
+				content: data, 
+				isCollapsed: false, 
+				dataType: dataType 
+			});
 		}
 
-		Object.keys(obj).forEach((key) => {
-			if (typeof obj[key] === 'object') {
-				lines.push({ indent: indent, content: `${key}: {`, isCollapsed: false});
-				parseLines(obj[key], lines, indent + 2);
-				lines.push({ indent: indent, content: `},`, isCollapsed: false});
-			} else {
-				lines.push({ indent: indent, content: `${key}: ${JSON.stringify(obj[key])}`, isCollapsed: false});
-			}
-		});
-
-		return lines;
+		return Editorlines;
 	};
 
 	const isIndexCollapsed = (i: number) => {
@@ -139,7 +163,7 @@ const Editor = ({ children }: IEditorProps) => {
 		<div id={'Editor'}>
 			<div className={'grid grid-cols-12 gapx-4'}>
 				{lines.map((line: TParsedLineType, i) => {
-					const isCollapsable = /\{|\[/.exec(getBracketFromIndex(i) as string);
+					const isCollapsable = ['object', 'array'].includes(line.dataType);
 					const isLastIndex = i === lines.length - 1
 					const isStartOfCollapsedBlock = !isLastIndex && isIndexCollapsed(i + 1);
 					const isMemberOfCollapsedBlock = isStartOfCollapsedBlock || isIndexCollapsed(i);
@@ -162,15 +186,17 @@ const Editor = ({ children }: IEditorProps) => {
 									</div>
 								</div>
 							</div>
-							<div className={`col-span-11 flex items-center bg-slate-100 min-h-[30px]`} 
+							<div className={`col-span-11 flex items-center bg-slate-100 min-h-[30px]`}
+								data-is-block-collapsed={isStartOfCollapsedBlock}
 								style={{paddingLeft: `${line.indent}em`}}
 								onClick={() => !isMemberOfCollapsedBlock && setLineInEdit(i)}>
-									<Line isEdit={lineInEdit === i}>{`${line.content}${isStartOfCollapsedBlock ? '...' : ''}`}</Line>
+									<Line isEdit={lineInEdit === i} dataType={line.dataType}>{`${line.content}${isStartOfCollapsedBlock ? '...' : ''}`}</Line>
 							</div>
 						</React.Fragment>
 					);
 				})}
 			</div>
+			{lineInEdit > -1 && (<EditorControls saveCallback={() => console.log('save')}  cancelCallback={() => console.log('cancel')}/>)}
 		</div>
 	);
 };

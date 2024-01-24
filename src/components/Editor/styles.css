@@ -1,7 +1,19 @@
-#edit:focus {
+#editField:focus {
     outline: none !important;
 }
 
 .LineNumber:hover .toggleIcon {
     opacity: 1;
+}
+
+[data-is-block-collapsed=true]::after {
+    content: '. . .';
+    opacity: 0.3;
+    margin-left: 0.5rem;
+}
+
+div.data-string p::before,
+div.data-string p::after {
+    content: '"';
+    margin: 0 0.125rem;
 }

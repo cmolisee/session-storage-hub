@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import Control from '../components/Control/Control';
-import { IMsgProps, IUseToastProps } from '../types/types';
+import { IMsgProps, IUseToastProps, TDataTypes } from '../types/types';
 
 const Msg = ({ closeToast, content }: IMsgProps) => {
 	return (
@@ -108,4 +108,22 @@ export function promptToast(
 		declineText: 'Cancel',
 		acceptCallback: callback,
 	});
+}
+
+export function getDataAsFormattedJson(object: any) {
+	try {
+		return JSON.parse(object);
+	} catch {
+		return object;
+	}
+}
+
+export function getDataType(data: any): TDataTypes {
+	if (typeof data === 'string' || typeof data === 'number' || typeof data === 'boolean') {
+		return typeof data as 'string' | 'number' | 'boolean';
+	} else if (typeof data === 'object') {
+		return Array.isArray(data) ? 'array' : 'object';
+	} else {
+		return 'none';
+	}
 }

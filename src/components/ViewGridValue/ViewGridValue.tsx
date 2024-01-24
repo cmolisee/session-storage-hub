@@ -1,7 +1,6 @@
 import { useStorageData } from '../../providers/useStorageData';
 import { getDataAsFormattedJson } from '../../utils/JsonUtils';
-import DataItem from '../DataItem/DataItem';
-import RenderData from '../RenderData';
+import Editor from '../Editor/Editor';
 import './ViewGridValue.css';
 
 interface IViewGridValueProps {}
@@ -16,12 +15,8 @@ const ViewGridValue = ({}: IViewGridValueProps) => {
 	}
 
 	return (
-		<div className={'ViewGridValue'}>
-			{typeof data !== 'undefined' ? (
-				<RenderData data={data} />
-			) : (
-				<DataItem isOpen={true} />
-			)}
+		<div className={'ViewGridValue relative'}>
+			<Editor>{data}</Editor>
 		</div>
 	);
 };
