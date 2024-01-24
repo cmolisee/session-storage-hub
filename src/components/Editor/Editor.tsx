@@ -174,7 +174,7 @@ const Editor = ({ children }: IEditorProps) => {
 
 					return (
 						<React.Fragment key={i}>
-							<div className={'LineNumber col-span-1 border-r-4 bg-slate-100'}>
+							<div className={'LineNumber col-span-1 border-r-2 bg-slate-100'}>
 								<div className={'grid grid-cols-3'}>
 									<div className={'validationCol col-span-1'}></div>
 									<div className={'col-span-1'}>{i}</div>
