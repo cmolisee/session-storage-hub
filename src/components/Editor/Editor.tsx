@@ -186,7 +186,7 @@ const Editor = ({ children }: IEditorProps) => {
 									</div>
 								</div>
 							</div>
-							<div className={`col-span-11 flex items-center bg-slate-100 min-h-[30px]`}
+							<div className={`col-span-11 flex items-center bg-slate-100`}
 								data-is-block-collapsed={isStartOfCollapsedBlock}
 								style={{paddingLeft: `${line.indent}em`}}
 								onClick={() => !isMemberOfCollapsedBlock && setLineInEdit(i)}>
