@@ -138,9 +138,16 @@ export const StorageDataProvider = ({
 	const handleSelectAllKeys = () => {
 		return dispatch({ type: 'selectAll', data: {} });
 	};
+
 	const handleUnselectAllKeys = () => {
 		return dispatch({ type: 'unselectAll', data: {} });
 	};
+
+	const handleUpdateData = (data: object) => {
+		return dispatch({ type: 'updateData', data: data });
+	};
+
+	// todo: handle the toggling on/off of the controls for editing
 
 	useEffect(() => {
 		if (dataObject) {
