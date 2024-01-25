@@ -4,6 +4,7 @@ import { TDataTypes } from "../../types/types";
 
 interface ILineProps {
     children?: string;
+    className?: string;
     isEdit?: boolean;
     dataType: TDataTypes;
 };

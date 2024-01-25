@@ -1,4 +1,4 @@
-import { useStorageData } from '../../providers/useStorageData';
+import { useStorageData } from '../../providers/StorageDataProvider';
 import { getDataAsFormattedJson } from '../../utils/JsonUtils';
 import Editor from '../Editor/Editor';
 import './ViewGridValue.css';

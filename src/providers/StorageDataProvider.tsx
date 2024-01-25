@@ -25,18 +25,6 @@ interface IStorageDataProps extends IStorageData {
 	unselectAll: () => void;
 }
 
-const defaultStorageData: IStorageDataProps = {
-	data: {},
-	keys: [],
-	selectedKeys: [],
-	dataKey: '',
-	dataValue: null,
-	setDataKey: () => {},
-	setSelectedKeys: () => {},
-	selectAll: () => {},
-	unselectAll: () => {},
-};
-
 function reducer(state: any, action: { type: string; data: any }) {
 	switch (action.type) {
 		case 'setData': {
@@ -107,7 +95,17 @@ function reducer(state: any, action: { type: string; data: any }) {
 	}
 }
 
-const StorageDataContext = createContext<IStorageDataProps>(defaultStorageData);
+const StorageDataContext = createContext<IStorageDataProps>({
+	data: {},
+	keys: [],
+	selectedKeys: [],
+	dataKey: '',
+	dataValue: null,
+	setDataKey: () => {},
+	setSelectedKeys: () => {},
+	selectAll: () => {},
+	unselectAll: () => {},
+});
 
 export const useStorageData = () => {
 	return useContext(StorageDataContext);

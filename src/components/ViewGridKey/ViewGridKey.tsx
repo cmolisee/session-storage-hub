@@ -1,5 +1,5 @@
 import './ViewGridKey.css';
-import { useStorageData } from '../../providers/useStorageData';
+import { useStorageData } from '../../providers/StorageDataProvider';
 
 interface IViewGridKeyProps {
 	keyName: string;

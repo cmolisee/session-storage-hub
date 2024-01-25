@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Header from '../components/Header/Header';
-import { StorageDataProvider } from '../providers/useStorageData';
+import { StorageDataProvider } from '../providers/StorageDataProvider';
 import { publishEvent } from '../utils/CustomEvents';
 import {
 	Action,

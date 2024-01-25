@@ -161,41 +161,37 @@ const Editor = ({ children }: IEditorProps) => {
 	
 	return (
 		<div id={'Editor'}>
-			<div className={'grid grid-cols-12 gapx-4'}>
-				{lines.map((line: TParsedLineType, i) => {
-					const isCollapsable = ['object', 'array'].includes(line.dataType);
-					const isLastIndex = i === lines.length - 1
-					const isStartOfCollapsedBlock = !isLastIndex && isIndexCollapsed(i + 1);
-					const isMemberOfCollapsedBlock = isStartOfCollapsedBlock || isIndexCollapsed(i);
+			{lines.map((line: TParsedLineType, i) => {
+				const isCollapsable = ['object', 'array'].includes(line.dataType);
+				const isLastIndex = i === lines.length - 1
+				const isStartOfCollapsedBlock = !isLastIndex && isIndexCollapsed(i + 1);
+				const isMemberOfCollapsedBlock = isStartOfCollapsedBlock || isIndexCollapsed(i);
 
-					if (isIndexCollapsed(i)) {
-						return <></>;
-					}
+				if (isIndexCollapsed(i)) {
+					return <></>;
+				}
 
-					return (
-						<React.Fragment key={i}>
-							<div className={'LineNumber col-span-1 border-r-2 bg-slate-100'}>
-								<div className={'grid grid-cols-3'}>
-									<div className={'validationCol col-span-1'}></div>
-									<div className={'col-span-1'}>{i}</div>
-									<div className={'validationCol col-span-1 flex items-center'}>
-										{isCollapsable && (
-											<ToggleIcon isCollapsed={isMemberOfCollapsedBlock} 
-												callback={() => handleBlockToggle(i, !isMemberOfCollapsedBlock)} />
-										)}
-									</div>
-								</div>
+				return (
+					<div key={i} className={'row'}>
+						<div className={'col-1 border-r-2 bg-slate-100'}>
+							<div className={'validation'}></div>
+							<div className={'lineNumber'}>{i}</div>
+							<div className={'toggle flex items-center'}>
+								{isCollapsable && (
+									<ToggleIcon isCollapsed={isMemberOfCollapsedBlock} 
+										callback={() => handleBlockToggle(i, !isMemberOfCollapsedBlock)} />
+								)}
 							</div>
-							<div className={`col-span-11 flex items-center bg-slate-100`}
-								data-is-block-collapsed={isStartOfCollapsedBlock}
-								style={{paddingLeft: `${line.indent}em`}}
-								onClick={() => !isMemberOfCollapsedBlock && setLineInEdit(i)}>
-									<Line isEdit={lineInEdit === i} dataType={line.dataType}>{`${line.content}${isStartOfCollapsedBlock ? '...' : ''}`}</Line>
-							</div>
-						</React.Fragment>
-					);
-				})}
-			</div>
+						</div>
+						<div className={`flex items-center bg-slate-100`}
+							data-is-block-collapsed={isStartOfCollapsedBlock}
+							style={{paddingLeft: `${line.indent}em`}}
+							onClick={() => !isMemberOfCollapsedBlock && setLineInEdit(i)}>
+								<Line isEdit={lineInEdit === i} dataType={line.dataType}>{`${line.content}${isStartOfCollapsedBlock ? '...' : ''}`}</Line>
+						</div>
+					</div>
+				);
+			})}
 			{lineInEdit > -1 && (<EditorControls saveCallback={() => console.log('save')}  cancelCallback={() => console.log('cancel')}/>)}
 		</div>
 	);
