@@ -1,7 +1,7 @@
 import './ViewGrid.css';
 import { useStorageData } from '../../providers/StorageDataProvider';
 import { useCallback, useEffect } from 'react';
-import { subscribe, unsubscribe } from '../../utils/CustomEvents';
+import { publishEvent, subscribe, unsubscribe } from '../../utils/CustomEvents';
 import {
 	Action,
 	IChromeMessage,
@@ -12,13 +12,14 @@ import { chromeApi } from '../../utils/ChromeUtils';
 import ViewGridKey from '../ViewGridKey/ViewGridKey';
 import ViewGridValue from '../ViewGridValue/ViewGridValue';
 import { errorToast, infoToast, successToast } from '../../utils/Utils';
+import EditorControls from '../Editor/EditorControls';
 
 interface IViewGridProps {
 	className?: string;
 }
 
 const ViewGrid = ({ className }: IViewGridProps) => {
-	const { data, keys, selectedKeys, setDataKey, selectAll, unselectAll } =
+	const { data, isEditing, keys, selectedKeys, setDataKey, selectAll, unselectAll } =
 		useStorageData();
 
 	const handleCopy = useCallback(async () => {
@@ -56,6 +57,14 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 		);
 	}, [data, selectedKeys]);
 
+	const handleSaveCallback = () => {
+		publishEvent('SaveEdits', {});
+	};
+
+	const handleCancelCallback = () => {
+		publishEvent('CancelEdits', {});
+	};
+
 	useEffect(() => {
 		subscribe('selectAllEvent', selectAll);
 		subscribe('unselectAllEvent', unselectAll);
@@ -68,28 +77,29 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 			unsubscribe('copyEvent', handleCopy);
 			unsubscribe('pasteEvent', handlePaste);
 		};
-	}, [data, selectedKeys]);
+	}, []);
 
 	return (
-		<div className={`ViewGrid ${className ?? ''}`}>
-			<div className={'ViewGrid__30'}>
-				{keys &&
-					keys.map((key, i) => {
-						return (
-							<ViewGridKey
-								key={i}
-								keyName={key}
-								callback={() => {
-									return setDataKey && setDataKey(key);
-								}}
-							/>
-						);
-					})}
+		<>
+			<div className={`ViewGrid ${className ?? ''}`}>
+				<div className={'ViewGrid__30'}>
+					{keys &&
+						keys.map((key, i) => {
+							return (
+								<ViewGridKey
+									key={i}
+									keyName={key}
+									callback={() =>  setDataKey(key)}
+								/>
+							);
+						})}
+				</div>
+				<div className={'ViewGrid__70'}>
+					<ViewGridValue />
+				</div>
 			</div>
-			<div className={'ViewGrid__70'}>
-				<ViewGridValue />
-			</div>
-		</div>
+			{isEditing && (<EditorControls saveCallback={handleSaveCallback}  cancelCallback={handleCancelCallback}/>)}
+		</>
 	);
 };
 

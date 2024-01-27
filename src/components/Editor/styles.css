@@ -25,7 +25,7 @@ div.data-string p::after {
 
 #Editor .row {
     display: grid;
-    grid-template-columns: 20% 80%;
+    grid-template-columns: 10% 90%;
 }
 
 #Editor .col-1 {

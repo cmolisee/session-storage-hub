@@ -17,7 +17,7 @@ const router = createHashRouter([
 ReactDOM.createRoot(document.getElementById('sessionStorageHub')!).render(
 	<React.StrictMode>
 		<ThemeProvider defaultThemeName={Themes.a11yLight}>
-			<RouterProvider router={router} />
+				<RouterProvider router={router} />
 		</ThemeProvider>
 		<ToastContainer
 			position="bottom-center"

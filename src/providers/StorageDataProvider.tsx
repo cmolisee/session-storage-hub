@@ -4,14 +4,17 @@ import {
 	useContext,
 	useEffect,
 	useReducer,
+	useState,
 } from 'react';
+import { areDeeplyEqual } from '../utils/Utils';
 
-interface IDataObject {
+interface IStorageDataProviderProps {
 	dataObject?: object;
 }
 
 interface IStorageData {
 	data: object;
+	isEditing: boolean;
 	keys: string[];
 	selectedKeys: string[];
 	dataKey: string;
@@ -19,10 +22,12 @@ interface IStorageData {
 }
 
 interface IStorageDataProps extends IStorageData {
+	setIsEditing: (bool: boolean) => void;
 	setDataKey: (newKey: string) => void;
 	setSelectedKeys: (newKeys: string[]) => void;
 	selectAll: () => void;
 	unselectAll: () => void;
+	saveDataEdits: (key: string, edits: object) => void;
 }
 
 function reducer(state: any, action: { type: string; data: any }) {
@@ -97,14 +102,17 @@ function reducer(state: any, action: { type: string; data: any }) {
 
 const StorageDataContext = createContext<IStorageDataProps>({
 	data: {},
+	isEditing: false,
 	keys: [],
 	selectedKeys: [],
 	dataKey: '',
 	dataValue: null,
+	setIsEditing: () => {},
 	setDataKey: () => {},
 	setSelectedKeys: () => {},
 	selectAll: () => {},
 	unselectAll: () => {},
+	saveDataEdits: () => {}
 });
 
 export const useStorageData = () => {
@@ -114,7 +122,8 @@ export const useStorageData = () => {
 export const StorageDataProvider = ({
 	dataObject,
 	children,
-}: PropsWithChildren<IDataObject>) => {
+}: PropsWithChildren<IStorageDataProviderProps>) => {
+	const [isEditing, setIsEditing] = useState<boolean>(false);
 	const [dataState, dispatch] = useReducer(reducer, {
 		data: {},
 		keys: [],
@@ -124,49 +133,68 @@ export const StorageDataProvider = ({
 	});
 
 	const handleSetKey = (newKey: string) => {
-		if (!newKey || dataState.keys.indexOf(newKey) < 0) {
+		if (!newKey || dataState.keys.indexOf(newKey) < 0 || Object.is(newKey, dataState.dataKey)) {
 			return;
 		}
 
-		dispatch({ type: 'setDataKey', data: { dataKey: newKey } });
+		dispatch({ type: 'setDataKey', data: { dataKey: newKey }});
 	};
 
 	const handleSetSelectedKeys = (newKeys: string[]) => {
-		dispatch({ type: 'setSelectedKeys', data: { selectedKeys: newKeys } });
+		if (!areDeeplyEqual(newKeys, dataState.keys)) {
+			dispatch({ type: 'setSelectedKeys', data: { selectedKeys: newKeys }});
+		}
 	};
 
 	const handleSelectAllKeys = () => {
-		return dispatch({ type: 'selectAll', data: {} });
+		return dispatch({ type: 'selectAll', data: { selectedKeys: dataState.keys }});
 	};
 
 	const handleUnselectAllKeys = () => {
-		return dispatch({ type: 'unselectAll', data: {} });
+		return dispatch({ type: 'unselectAll', data: { selectedKeys: [] }});
 	};
 
-	const handleUpdateData = (data: object) => {
-		return dispatch({ type: 'updateData', data: data });
+	const handleSetIsEditing = (bool: boolean) => {
+		if (isEditing !== bool) {
+			setIsEditing(bool);
+		}
 	};
 
-	// todo: handle the toggling on/off of the controls for editing
+	const handleSaveDataEdits = (key: string, edits: object) => {
+		if (!key || !edits.hasOwnProperty(key)) {
+			return;
+		}
+
+		const updatedDeepCopy = JSON.parse(JSON.stringify(dataState.data));
+		updatedDeepCopy[key] = edits;
+
+		if (areDeeplyEqual(updatedDeepCopy, dataState.data)) {
+			return dispatch({ type: 'setData', data: { data: updatedDeepCopy }});
+		}
+	};
 
 	useEffect(() => {
-		if (dataObject) {
-			dispatch({ type: 'setData', data: { data: dataObject } });
-		}
+		dispatch({ type: 'setData', data: { data: dataObject } });
+		// if (dataObject && !areDeeplyEqual(dataObject, dataState.data)) {
+		// 	dispatch({ type: 'setData', data: { data: dataObject } });
+		// }
 	}, [dataObject]);
 
 	return (
 		<StorageDataContext.Provider
 			value={{
 				data: dataState.data,
+				isEditing: isEditing,
 				keys: dataState.keys,
 				selectedKeys: dataState.selectedKeys,
 				dataKey: dataState.dataKey,
 				dataValue: dataState.dataValue,
+				setIsEditing: handleSetIsEditing,
 				setDataKey: handleSetKey,
 				setSelectedKeys: handleSetSelectedKeys,
 				selectAll: handleSelectAllKeys,
 				unselectAll: handleUnselectAllKeys,
+				saveDataEdits: handleSaveDataEdits,
 			}}>
 			{children}
 		</StorageDataContext.Provider>

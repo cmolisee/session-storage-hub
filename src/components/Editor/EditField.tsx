@@ -16,7 +16,7 @@ const EditField = ({className, value, callback}: IEditFieldProps) => {
                 id={'editField'}
                 className={className}
                 style={{backgroundColor: 'transparent', resize: 'none', width: '100%', boxSizing: 'border-box'}}
-                value={value.replace('"', '')}
+                value={value}
                 rows={1}
                 onChange={callback} />
     );

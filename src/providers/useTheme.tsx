@@ -6,6 +6,8 @@ import {
 	SetStateAction,
 	useState,
 	useEffect,
+	useMemo,
+	useCallback,
 } from 'react';
 import jsonThemes from '../assets/themes.json';
 import { requestOptionData } from '../utils/ChromeUtils';
@@ -82,7 +84,7 @@ export const ThemeProvider = ({
 	const [theme, setTheme] = useState<Themes>(defaultThemeName);
 
 	useEffect(() => {
-		requestOptionData('options', (items) => {
+		requestOptionData('options', (items: any) => {
 			if (Object.values(Themes).includes(items.options?.name)) {
 				setTheme(items.options?.name);
 			}

@@ -1,29 +1,14 @@
-import { useState } from "react";
-import EditField from "./EditField";
-import { TDataTypes } from "../../types/types";
+import { ReactNode } from "react";
 
 interface ILineProps {
-    children?: string;
-    className?: string;
-    isEdit?: boolean;
-    dataType: TDataTypes;
+    children: ReactNode;
 };
 
-const Line = ({ children, isEdit, dataType }: ILineProps) => {
-    const [value, setValue] = useState<string>(children as string);
-
-    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const val = e.target?.value;
-        setValue(val);
-    };
+const Line = ({ children }: ILineProps) => {
 
     return (
-        <div className={`data-${dataType} w-full`}>
-            {isEdit ? (
-                <EditField value={value} callback={handleChange} />
-            ) : (
-                <p>{value}</p>
-            )}
+        <div className={'w-[90%] pl-[1em]'} >
+            <pre className={'text-pretty'}>{children}</pre>
         </div>
     )
 }
