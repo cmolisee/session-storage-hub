@@ -12,7 +12,7 @@ import { chromeApi } from '../../utils/ChromeUtils';
 import ViewGridKey from '../ViewGridKey/ViewGridKey';
 import ViewGridValue from '../ViewGridValue/ViewGridValue';
 import { errorToast, infoToast, successToast } from '../../utils/Utils';
-import EditorControls from '../Editor/EditorControls';
+import Control from '../Control/Control';
 
 interface IViewGridProps {
 	className?: string;
@@ -98,7 +98,18 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 					<ViewGridValue />
 				</div>
 			</div>
-			{isEditing && (<EditorControls saveCallback={handleSaveCallback}  cancelCallback={handleCancelCallback}/>)}
+			{isEditing && (
+				<div className={'absolute right-0 font-bold text-[var(--borderColor)]'}>
+					<Control className={'hover:text-green-300'}
+						onClickCallback={handleSaveCallback}>
+						Submit Edits
+					</Control>
+					<Control className={'hover:text-red-300'}
+						onClickCallback={handleCancelCallback}>
+						Cancel Edits
+					</Control>
+				</div>
+			)}
 		</>
 	);
 };

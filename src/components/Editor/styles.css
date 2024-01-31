@@ -1,34 +1,3 @@
-#editField:focus {
-    outline: none !important;
-}
-
-.col-1:hover .toggleIcon {
-    opacity: 1;
-}
-
-[data-is-block-collapsed=true] div p::after {
-    content: '. . .';
-    opacity: 0.3;
-    margin-left: 0.5rem;
-}
-
-div.data-string p::before,
-div.data-string p::after {
-    content: '"';
-    margin: 0 0.125rem;
-}
-
-#Editor {
-    display: grid;
-    grid-auto-rows: minmax(20px, auto);
-}
-
-#Editor .row {
-    display: grid;
-    grid-template-columns: 10% 90%;
-}
-
-#Editor .col-1 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+.error-marker {
+    position: absolute;
 }
