@@ -26,7 +26,7 @@ const Popup = () => {
 		chromeApi(
 			{
 				from: Sender.Extension,
-				action: Action.Update,
+				action: Action.FillStorage,
 				message: null,
 			} as IChromeMessage,
 			async (res: IMessageResponse) => {
@@ -57,7 +57,7 @@ const Popup = () => {
 			{
 				from: Sender.Extension,
 				action: Action.Update,
-				message: cleanedData,
+				message: { updatedData: cleanedData },
 			} as IChromeMessage,
 			async (res: IMessageResponse) => {
 				if (!chrome?.storage) {
@@ -78,7 +78,7 @@ const Popup = () => {
 			{
 				from: Sender.Extension,
 				action: Action.Update,
-				message: {},
+				message: { updatedData: {} },
 			} as IChromeMessage,
 			async (res: IMessageResponse) => {
 				if (!chrome?.storage) {
@@ -105,7 +105,6 @@ const Popup = () => {
 					errorToast('503', 'Chrome Storage API is not available.');
 					return;
 				}
-
 				await chrome.storage.local.set({ data: res.data });
 				setData(res.data);
 			}
@@ -146,16 +145,21 @@ const Popup = () => {
 				!changes.clipboard &&
 				!changes.settings
 			) {
+				console.log('running onChange for local...');
 				const updated = Object.assign({}, data);
 
 				Object.keys(changes).forEach((key) => {
 					if (key !== 'clipboard') {
+						console.log('not clipboard on change...');
 						const updateObject = changes[key].newValue;
 						Object.assign(updated, updateObject);
 					}
 				});
 
 				setData(updated);
+			} else {
+				console.log(areaName);
+				console.log(changes);
 			}
 
 			if (areaName === 'sync' && changes.options?.newValue) {
@@ -243,7 +247,7 @@ const Popup = () => {
 					/>
 				</div>
 			</div>
-			<StorageDataProvider dataObject={data}>
+			<StorageDataProvider dataObject={data!}>
 				<ViewGrid />
 			</StorageDataProvider>
 			<div className={'flex m-1 justify-start text-[var(--borderColor)]'}>

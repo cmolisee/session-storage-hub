@@ -119,7 +119,11 @@ export function getDataAsFormattedJson(object: any) {
 }
 
 export function getDataType(data: any): TDataTypes {
-	if (typeof data === 'string' || typeof data === 'number' || typeof data === 'boolean') {
+	if (
+		typeof data === 'string' ||
+		typeof data === 'number' ||
+		typeof data === 'boolean'
+	) {
 		return typeof data as 'string' | 'number' | 'boolean';
 	} else if (typeof data === 'object') {
 		if (data === null) {
@@ -133,9 +137,9 @@ export function getDataType(data: any): TDataTypes {
 }
 
 export function areDeeplyEqual(obj1: any, obj2: any) {
-  	if (obj1 === obj2) {
+	if (obj1 === obj2) {
 		return true;
-  	}
+	}
 
 	const type1 = Array.isArray(obj1) ? 'array' : 'object';
 	const type2 = Array.isArray(obj2) ? 'array' : 'object';
@@ -153,17 +157,22 @@ export function areDeeplyEqual(obj1: any, obj2: any) {
 			return true;
 		}
 
-		const keys1 = Object.keys(obj1)
-		const keys2 = Object.keys(obj2)
+		const keys1 = Object.keys(obj1);
+		const keys2 = Object.keys(obj2);
 
-		if (keys1.length !== keys2.length || !keys1.every(key => keys2.includes(key))) {
+		if (
+			keys1.length !== keys2.length ||
+			!keys1.every((key) => {
+				return keys2.includes(key);
+			})
+		) {
 			return false;
 		}
-		
-		for(let key in obj1) {
-			let isEqual = areDeeplyEqual(obj1[key], obj2[key])
-			if (!isEqual) { 
-				return false; 
+
+		for (const key in obj1) {
+			const isEqual = areDeeplyEqual(obj1[key], obj2[key]);
+			if (!isEqual) {
+				return false;
 			}
 		}
 

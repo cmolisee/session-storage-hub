@@ -1,23 +1,70 @@
 import AceEditor, { IAceEditorProps } from 'react-ace';
 import { useStorageData } from '../../providers/StorageDataProvider';
-import { getDataAsFormattedJson } from '../../utils/Utils';
+import {
+	errorToast,
+	getDataAsFormattedJson,
+	successToast,
+} from '../../utils/Utils';
 import 'ace-builds/src-noconflict/mode-json';
 import './styles.css';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Ace } from 'ace-builds';
+import { subscribe, unsubscribe } from '../../utils/CustomEvents';
+import {
+	Sender,
+	Action,
+	IChromeMessage,
+	IMessageResponse,
+} from '../../types/types';
+import { chromeApi } from '../../utils/ChromeUtils';
 // import 'ace-builds/src-noconflict/theme-github';
 
 const Editor = () => {
 	const aceRef = useRef<Ace.Editor>();
-	const { dataValue, setIsEditing } = useStorageData();
-	const [value, setValue] = useState<string>();
+	const { data, dataKey, dataValue, setIsEditing } = useStorageData();
+
+	const submitEditedData = useCallback(async () => {
+		setIsEditing(false);
+
+		const editorValue = aceRef?.current?.session?.getValue() as string;
+		const dataDeepCopy = JSON.parse(JSON.stringify(data));
+		dataDeepCopy[dataKey] = editorValue;
+
+		chromeApi(
+			{
+				from: Sender.Extension,
+				action: Action.Update,
+				message: { updatedData: dataDeepCopy },
+			} as IChromeMessage,
+			async (res: IMessageResponse) => {
+				if (!chrome?.storage) {
+					errorToast('503', 'Chrome Storage API is not available.');
+					return;
+				}
+
+				await chrome.storage.local.set({ data: res.data });
+				successToast(null, 'Session Storage Data Pasted.');
+			}
+		);
+	}, [data, dataKey, dataValue]);
+
+	const cancelEdits = () => {
+		aceRef?.current?.session?.setValue(dataValue);
+		setIsEditing(false);
+	};
 
 	useEffect(() => {
-		console.log('render...');
 		aceRef?.current?.session?.getUndoManager().reset();
-		setValue(JSON.stringify(getDataAsFormattedJson(dataValue), null, '\t'));
+
+		subscribe('SaveEdits', submitEditedData);
+		subscribe('CancelEdits', cancelEdits);
+
+		return () => {
+			unsubscribe('SaveEdits', submitEditedData);
+			unsubscribe('CancelEdits', cancelEdits);
+		};
 	}, [dataValue]);
-	
+
 	const props: IAceEditorProps = {
 		name: 'editor',
 		mode: 'json',
@@ -34,7 +81,7 @@ const Editor = () => {
 		// enableBasicAutocompletion?: boolean | string[];
 		// enableLiveAutocompletion?: boolean | string[];
 		// tabSize?: number;
-		value: value,
+		value: JSON.stringify(getDataAsFormattedJson(dataValue), null, '\t'),
 		// placeholder?: string;
 		// defaultValue?: string;
 		// scrollMargin?: number[];
@@ -48,10 +95,7 @@ const Editor = () => {
 		// onValidate?: (annotations: Ace.Annotation[]) => void;
 		// onBeforeLoad?: (ace: typeof AceBuilds) => void;
 		onChange: (changeValue: string) => {
-			if (changeValue !== value) {
-				setIsEditing(true);
-				setValue(changeValue);
-			}
+			setIsEditing(changeValue !== dataValue);
 		},
 		// onSelection?: (selectedText: string, event?: any) => void;
 		// onCopy?: (value: string) => void;
@@ -74,11 +118,9 @@ const Editor = () => {
 		// commands?: ICommand[];
 		// annotations: [{ row: 0, column: 0, type: 'error', text: 'Some error.'}],
 		// markers: [{ startRow: 0, startCol: 0, endRow: 1, endCol: 20, className: 'error-marker', type: 'fullLine' }],
-	}
-	
-	return (
-		<AceEditor {...props} />
-	);
+	};
+
+	return <AceEditor {...props} />;
 };
 
 export default Editor;

@@ -1,17 +1,10 @@
 import './ViewGrid.css';
 import { useStorageData } from '../../providers/StorageDataProvider';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { publishEvent, subscribe, unsubscribe } from '../../utils/CustomEvents';
-import {
-	Action,
-	IChromeMessage,
-	IMessageResponse,
-	Sender,
-} from '../../types/types';
-import { chromeApi } from '../../utils/ChromeUtils';
 import ViewGridKey from '../ViewGridKey/ViewGridKey';
 import ViewGridValue from '../ViewGridValue/ViewGridValue';
-import { errorToast, infoToast, successToast } from '../../utils/Utils';
+import { errorToast, infoToast } from '../../utils/Utils';
 import Control from '../Control/Control';
 
 interface IViewGridProps {
@@ -19,43 +12,70 @@ interface IViewGridProps {
 }
 
 const ViewGrid = ({ className }: IViewGridProps) => {
-	const { data, isEditing, keys, selectedKeys, setDataKey, selectAll, unselectAll } =
-		useStorageData();
+	const {
+		data,
+		isEditing,
+		keys,
+		selectedKeys,
+		setDataKey,
+		selectAll,
+		unselectAll,
+	} = useStorageData();
 
-	const handleCopy = useCallback(async () => {
-		const clipboard = {};
+	const handleCopy = async () => {
+		console.log('calling handle copy...')
+		if (!chrome?.storage) {
+			console.log('chrome error...')
+			errorToast('503', 'Chrome Storage API is not available.');
+			return;
+		}
+
+		const dataToCopy = {};
 		Object.entries(data).forEach((e) => {
 			if (selectedKeys.indexOf(e[0]) >= 0) {
-				Object.defineProperty(clipboard, e[0] as keyof typeof data, {
+				Object.defineProperty(dataToCopy, e[0] as keyof typeof data, {
 					value: e[1],
 				});
 			}
 		});
 
-		await chrome.storage.local.set({ clipboard: clipboard });
-		infoToast(null, 'Sessiopn Storage Data Coppied.');
-	}, [data, selectedKeys]);
-
-	const handlePaste = useCallback(async () => {
-		const clipboard = await chrome.storage.local.get(['clipboard']);
-
-		chromeApi(
-			{
-				from: Sender.Extension,
-				action: Action.Update,
-				message: clipboard,
-			} as IChromeMessage,
-			async (res: IMessageResponse) => {
-				if (!chrome?.storage) {
-					errorToast('503', 'Chrome Storage API is not available.');
-					return;
-				}
-
-				await chrome.storage.local.set({ data: res.data });
-				successToast(null, 'Session Storage Data Pasted.');
+		await chrome.storage.local.set({ clipboard: dataToCopy }, () => {
+			if (chrome.runtime.lastError) {
+				errorToast('runtime.lastError', 'error setting clipboard data...');
 			}
-		);
-	}, [data, selectedKeys]);
+		});
+
+		infoToast(null, 'Session Storage Data Coppied.');
+	};
+
+	const handlePaste = async () => {
+		if (!chrome?.storage) {
+			errorToast('runtime.lastError', 'Chrome Storage API is not available.');
+			return;
+		}
+
+		console.log(chrome.storage.local);
+
+		chrome.storage.local.get(['clipboard', 'MarketingAttributes'], (res) => {
+			console.log(res);
+			// chromeApi(
+			// 	{
+			// 		from: Sender.Extension,
+			// 		action: Action.Update,
+			// 		message: { updateData: res. },
+			// 	} as IChromeMessage,
+			// 	async (res: IMessageResponse) => {
+			// 		if (!chrome?.storage) {
+			// 			errorToast('503', 'Chrome Storage API is not available.');
+			// 			return;
+			// 		}
+
+			// 		await chrome.storage.local.set({ data: res.data });
+			// 		successToast(null, 'Session Storage Data Pasted.');
+			// 	}
+			// );
+		});	
+	};
 
 	const handleSaveCallback = () => {
 		publishEvent('SaveEdits', {});
@@ -77,7 +97,7 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 			unsubscribe('copyEvent', handleCopy);
 			unsubscribe('pasteEvent', handlePaste);
 		};
-	}, []);
+	}, [data]);
 
 	return (
 		<>
@@ -89,7 +109,9 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 								<ViewGridKey
 									key={i}
 									keyName={key}
-									callback={() =>  setDataKey(key)}
+									callback={() => {
+										setDataKey(key);
+									}}
 								/>
 							);
 						})}
@@ -99,12 +121,17 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 				</div>
 			</div>
 			{isEditing && (
-				<div className={'absolute right-0 font-bold text-[var(--borderColor)]'}>
-					<Control className={'hover:text-green-300'}
+				<div
+					className={
+						'absolute right-0 font-bold text-[var(--borderColor)]'
+					}>
+					<Control
+						className={'hover:text-green-300'}
 						onClickCallback={handleSaveCallback}>
 						Submit Edits
 					</Control>
-					<Control className={'hover:text-red-300'}
+					<Control
+						className={'hover:text-red-300 bold'}
 						onClickCallback={handleCancelCallback}>
 						Cancel Edits
 					</Control>

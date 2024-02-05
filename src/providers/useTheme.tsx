@@ -6,8 +6,6 @@ import {
 	SetStateAction,
 	useState,
 	useEffect,
-	useMemo,
-	useCallback,
 } from 'react';
 import jsonThemes from '../assets/themes.json';
 import { requestOptionData } from '../utils/ChromeUtils';

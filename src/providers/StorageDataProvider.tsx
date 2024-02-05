@@ -3,6 +3,7 @@ import {
 	createContext,
 	useContext,
 	useEffect,
+	useMemo,
 	useReducer,
 	useState,
 } from 'react';
@@ -27,18 +28,18 @@ interface IStorageDataProps extends IStorageData {
 	setSelectedKeys: (newKeys: string[]) => void;
 	selectAll: () => void;
 	unselectAll: () => void;
-	saveDataEdits: (key: string, edits: object) => void;
 }
 
 function reducer(state: any, action: { type: string; data: any }) {
 	switch (action.type) {
 		case 'setData': {
-			const d = action.data.data ?? state.data;
+			const d = action.data.data ?? state.data
 			const k = Object.keys(d);
 			const dk = k[0];
 			const dv = d[dk];
 
 			return {
+				...state.data,
 				data: d,
 				keys: k,
 				selectedKeys: k,
@@ -48,32 +49,23 @@ function reducer(state: any, action: { type: string; data: any }) {
 		}
 		case 'setKeys': {
 			return {
-				data: state.data,
+				...state.data,
 				keys: action.data.keys ? action.data.keys : state.keys,
-				selectedKeys: state.keys,
-				dataKey: state.dataKey,
-				dataValue: state.dataValue,
 			};
 		}
 		case 'setSelectedKeys': {
 			return {
-				data: state.data,
-				keys: state.keys,
+				...state.data,
 				selectedKeys: action.data.selectedKeys
 					? action.data.selectedKeys
 					: state.selectedKeys,
-				dataKey: state.dataKey,
-				dataValue: state.dataValue,
 			};
 		}
 		case 'selectAll':
 		case 'unselectAll': {
 			return {
-				data: state.data,
-				keys: state.keys,
+				...state.data,
 				selectedKeys: action.type === 'selectAll' ? state.keys : [],
-				dataKey: state.dataKey,
-				dataValue: state.dataValue,
 			};
 		}
 		case 'setDataKey':
@@ -86,9 +78,7 @@ function reducer(state: any, action: { type: string; data: any }) {
 				: state.data[dk as keyof typeof state.data];
 
 			return {
-				data: state.data,
-				keys: state.keys,
-				selectedKeys: state.selectedKeys,
+				...state.data,
 				dataKey: dk,
 				dataValue: dv,
 			};
@@ -112,7 +102,6 @@ const StorageDataContext = createContext<IStorageDataProps>({
 	setSelectedKeys: () => {},
 	selectAll: () => {},
 	unselectAll: () => {},
-	saveDataEdits: () => {}
 });
 
 export const useStorageData = () => {
@@ -123,7 +112,7 @@ export const StorageDataProvider = ({
 	dataObject,
 	children,
 }: PropsWithChildren<IStorageDataProviderProps>) => {
-	const [isEditing, setIsEditing] = useState<boolean>(false);
+	const [isEditing, setIsEditing] = useState<boolean>();
 	const [dataState, dispatch] = useReducer(reducer, {
 		data: {},
 		keys: [],
@@ -132,70 +121,58 @@ export const StorageDataProvider = ({
 		dataValue: null,
 	});
 
+	const handleSetIsEditing = (bool: boolean) => {
+		setIsEditing(bool);
+	};
+
 	const handleSetKey = (newKey: string) => {
-		if (!newKey || dataState.keys.indexOf(newKey) < 0 || Object.is(newKey, dataState.dataKey)) {
+		if (
+			!newKey ||
+			dataState.keys.indexOf(newKey) < 0 ||
+			Object.is(newKey, dataState.dataKey)
+		) {
 			return;
 		}
 
-		dispatch({ type: 'setDataKey', data: { dataKey: newKey }});
+		dispatch({ type: 'setDataKey', data: { dataKey: newKey } });
 	};
 
 	const handleSetSelectedKeys = (newKeys: string[]) => {
 		if (!areDeeplyEqual(newKeys, dataState.keys)) {
-			dispatch({ type: 'setSelectedKeys', data: { selectedKeys: newKeys }});
+			dispatch({
+				type: 'setSelectedKeys',
+				data: { selectedKeys: newKeys },
+			});
 		}
 	};
 
 	const handleSelectAllKeys = () => {
-		return dispatch({ type: 'selectAll', data: { selectedKeys: dataState.keys }});
+		return dispatch({
+			type: 'selectAll',
+			data: { selectedKeys: dataState.keys },
+		});
 	};
 
 	const handleUnselectAllKeys = () => {
-		return dispatch({ type: 'unselectAll', data: { selectedKeys: [] }});
-	};
-
-	const handleSetIsEditing = (bool: boolean) => {
-		if (isEditing !== bool) {
-			setIsEditing(bool);
-		}
-	};
-
-	const handleSaveDataEdits = (key: string, edits: object) => {
-		if (!key || !edits.hasOwnProperty(key)) {
-			return;
-		}
-
-		const updatedDeepCopy = JSON.parse(JSON.stringify(dataState.data));
-		updatedDeepCopy[key] = edits;
-
-		if (areDeeplyEqual(updatedDeepCopy, dataState.data)) {
-			return dispatch({ type: 'setData', data: { data: updatedDeepCopy }});
-		}
+		return dispatch({ type: 'unselectAll', data: { selectedKeys: [] } });
 	};
 
 	useEffect(() => {
 		dispatch({ type: 'setData', data: { data: dataObject } });
-		// if (dataObject && !areDeeplyEqual(dataObject, dataState.data)) {
-		// 	dispatch({ type: 'setData', data: { data: dataObject } });
-		// }
+		setIsEditing(false);
 	}, [dataObject]);
 
 	return (
 		<StorageDataContext.Provider
-			value={{
-				data: dataState.data,
-				isEditing: isEditing,
-				keys: dataState.keys,
-				selectedKeys: dataState.selectedKeys,
-				dataKey: dataState.dataKey,
-				dataValue: dataState.dataValue,
+			value={useMemo(() => ({
+				...dataState,
+				isEditing: isEditing ?? false,
 				setIsEditing: handleSetIsEditing,
 				setDataKey: handleSetKey,
 				setSelectedKeys: handleSetSelectedKeys,
 				selectAll: handleSelectAllKeys,
 				unselectAll: handleUnselectAllKeys,
-				saveDataEdits: handleSaveDataEdits,
-			}}>
+			}), [dataObject, isEditing])}>
 			{children}
 		</StorageDataContext.Provider>
 	);
