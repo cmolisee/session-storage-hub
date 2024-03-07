@@ -105,6 +105,7 @@ const Popup = () => {
 					return;
 				}
 				await chrome.storage.local.set({ data: res.data });
+				setSessionStorageData(JSON.parse(JSON.stringify(res.data)));
 			}
 		);
 	}, []);
@@ -141,7 +142,8 @@ const Popup = () => {
 			if (
 				areaName === 'local' &&
 				!changes.clipboard &&
-				!changes.settings
+				!changes.settings &&
+				changes.data
 			) {
 				setSessionStorageData(JSON.parse(JSON.stringify(changes.data.newValue)));
 			}

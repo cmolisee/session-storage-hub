@@ -169,8 +169,8 @@ export const StorageDataProvider = ({ children, data }: PropsWithChildren<{ data
 				setIsEditing: handleSetIsEditing,
 				setActiveKey: handleSetActiveKey,
 				setSelectedKeys: handleSetSelectedKeys,
-				selectAll: handleSelectAllKeys,
-				unselectAll: handleUnselectAllKeys,
+				selectAllKeys: handleSelectAllKeys,
+				unselectAllKeys: handleUnselectAllKeys,
 			}}>
 			{children}
 		</dataContext.Provider>
