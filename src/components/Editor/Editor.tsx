@@ -1,5 +1,5 @@
 import AceEditor, { IAceEditorProps } from 'react-ace';
-import { useStorageData } from '../../providers/StorageDataProvider';
+import { useData } from '../../providers/dataProvider';
 import {
 	errorToast,
 	getDataAsFormattedJson,
@@ -21,14 +21,14 @@ import { chromeApi } from '../../utils/ChromeUtils';
 
 const Editor = () => {
 	const aceRef = useRef<Ace.Editor>();
-	const { data, dataKey, dataValue, setIsEditing } = useStorageData();
+	const { sessionStorageData, activeKey, activeValue, setIsEditing } = useData();
 
 	const submitEditedData = useCallback(async () => {
 		setIsEditing(false);
 
 		const editorValue = aceRef?.current?.session?.getValue() as string;
-		const dataDeepCopy = JSON.parse(JSON.stringify(data));
-		dataDeepCopy[dataKey] = editorValue;
+		const dataDeepCopy = JSON.parse(JSON.stringify(sessionStorageData));
+		dataDeepCopy[activeKey] = editorValue;
 
 		chromeApi(
 			{
@@ -46,12 +46,12 @@ const Editor = () => {
 				successToast(null, 'Session Storage Data Pasted.');
 			}
 		);
-	}, [data, dataKey, dataValue]);
+	}, [sessionStorageData, activeKey]);
 
-	const cancelEdits = () => {
-		aceRef?.current?.session?.setValue(dataValue);
+	const cancelEdits = useCallback(() => {
+		aceRef?.current?.session?.setValue(activeValue);
 		setIsEditing(false);
-	};
+	}, [activeValue]);
 
 	useEffect(() => {
 		aceRef?.current?.session?.getUndoManager().reset();
@@ -63,7 +63,7 @@ const Editor = () => {
 			unsubscribe('SaveEdits', submitEditedData);
 			unsubscribe('CancelEdits', cancelEdits);
 		};
-	}, [dataValue]);
+	}, [sessionStorageData]);
 
 	const props: IAceEditorProps = {
 		name: 'editor',
@@ -81,7 +81,7 @@ const Editor = () => {
 		// enableBasicAutocompletion?: boolean | string[];
 		// enableLiveAutocompletion?: boolean | string[];
 		// tabSize?: number;
-		value: JSON.stringify(getDataAsFormattedJson(dataValue), null, '\t'),
+		value: JSON.stringify(getDataAsFormattedJson(activeValue), null, '\t'),
 		// placeholder?: string;
 		// defaultValue?: string;
 		// scrollMargin?: number[];
@@ -95,7 +95,7 @@ const Editor = () => {
 		// onValidate?: (annotations: Ace.Annotation[]) => void;
 		// onBeforeLoad?: (ace: typeof AceBuilds) => void;
 		onChange: (changeValue: string) => {
-			setIsEditing(changeValue !== dataValue);
+			setIsEditing(changeValue !== activeValue);
 		},
 		// onSelection?: (selectedText: string, event?: any) => void;
 		// onCopy?: (value: string) => void;

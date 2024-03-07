@@ -63,9 +63,8 @@ const SelectDropdown = ({
 			ref={dropdownRef}>
 			<div className={`selectDropdown-label ${labelStyles}`}>{label}</div>
 			<div
-				className={`selectDropdown-text ${textStyles} ${
-					showDropdown ? 'active' : ''
-				}`}
+				className={`selectDropdown-text ${textStyles} ${showDropdown ? 'active' : ''
+					}`}
 				onClick={() => {
 					return setShowDropdown(true);
 				}}>

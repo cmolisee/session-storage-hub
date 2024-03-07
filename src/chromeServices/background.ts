@@ -1,4 +1,4 @@
-export {};
+export { };
 
 // install, extension update, or chrome update
 chrome.runtime.onInstalled.addListener((details) => {

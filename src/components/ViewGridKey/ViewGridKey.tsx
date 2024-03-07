@@ -1,5 +1,6 @@
 import './ViewGridKey.css';
-import { useStorageData } from '../../providers/StorageDataProvider';
+import { useData } from '../../providers/dataProvider';
+import { useCallback } from 'react';
 
 interface IViewGridKeyProps {
 	keyName: string;
@@ -7,13 +8,13 @@ interface IViewGridKeyProps {
 }
 
 const ViewGridKey = ({ keyName, callback }: IViewGridKeyProps) => {
-	const { selectedKeys, setSelectedKeys, dataKey } = useStorageData();
+	const { selectedKeys, setSelectedKeys, activeKey } = useData();
 
-	const handleIsChecked = () => {
+	const handleIsChecked = useCallback(() => {
 		return selectedKeys?.includes(keyName) ?? false;
-	};
+	}, [selectedKeys]);
 
-	const handleOnChange = () => {
+	const handleOnChange = useCallback(() => {
 		if (selectedKeys?.includes(keyName)) {
 			setSelectedKeys(
 				selectedKeys.filter((k) => {
@@ -23,12 +24,12 @@ const ViewGridKey = ({ keyName, callback }: IViewGridKeyProps) => {
 		} else {
 			setSelectedKeys([...(selectedKeys as string[]), keyName]);
 		}
-	};
+	}, [selectedKeys]);
 
 	return (
 		<div
 			className={'ViewGridKey'}
-			aria-selected={dataKey === keyName}>
+			aria-selected={activeKey === keyName}>
 			<input
 				type={'checkbox'}
 				checked={handleIsChecked()}

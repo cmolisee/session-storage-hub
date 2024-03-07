@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Header from '../components/Header/Header';
-import { StorageDataProvider } from '../providers/StorageDataProvider';
+import { StorageDataProvider } from '../providers/dataProvider';
 import { publishEvent } from '../utils/CustomEvents';
 import {
 	Action,
@@ -18,11 +18,10 @@ import { errorToast, promptToast, successToast } from '../utils/Utils';
 
 const Popup = () => {
 	const { styles } = useTheme();
-	const [data, setData] = useState<object>({});
-	const [versionData, setVersionData] = useState<TVersionData>({});
+	const [versionData, setVersionData] = useState<TVersionData>();
+	const [sessionStorageData, setSessionStorageData] = useState({});
 
 	const fillSessionStorageCallback = () => {
-		console.log('sending fill session storage message...');
 		chromeApi(
 			{
 				from: Sender.Extension,
@@ -43,13 +42,13 @@ const Popup = () => {
 		return;
 	};
 
-	const cleanSessionStorageCallback = () => {
-		const filteredKeys = Object.keys(data).filter((key) => {
+	const cleanSessionStorageCallback = useCallback(() => {
+		const filteredKeys = Object.keys(sessionStorageData).filter((key) => {
 			return !key.startsWith('@utility-fill-');
 		});
 
 		const cleanedData = filteredKeys.reduce((acc: any, key: string) => {
-			acc[key] = (data as any)[key];
+			acc[key] = (sessionStorageData as any)[key];
 			return acc;
 		}, {});
 
@@ -71,7 +70,7 @@ const Popup = () => {
 		);
 
 		return;
-	};
+	}, [sessionStorageData]);
 
 	const clearSessionStorageCallback = () => {
 		chromeApi(
@@ -92,8 +91,8 @@ const Popup = () => {
 		);
 	};
 
+	// request session storage from browser
 	useEffect(() => {
-		// get session storage data
 		chromeApi(
 			{
 				from: Sender.Extension,
@@ -106,11 +105,12 @@ const Popup = () => {
 					return;
 				}
 				await chrome.storage.local.set({ data: res.data });
-				setData(res.data);
 			}
 		);
+	}, []);
 
-		// check release version
+	// request latest version from repo
+	useEffect(() => {
 		chromeApi(
 			{
 				from: Sender.Extension,
@@ -125,48 +125,42 @@ const Popup = () => {
 					return;
 				}
 
-				await chrome.storage.sync.set({
-					versionData: res.data,
-				});
-				setVersionData(res.data as TVersionData);
+				await chrome.storage.sync.set({ versionData: res.data });
 			}
 		);
 	}, []);
 
+	// setup change listener for chrome storage
 	useEffect(() => {
 		if (!chrome?.storage) {
 			errorToast('503', 'Chrome Storage API is not available.');
 			return;
 		}
 
-		chrome.storage.onChanged.addListener(function (changes, areaName) {
+		function localStorageChangeListener(changes: any, areaName: any) {
 			if (
 				areaName === 'local' &&
 				!changes.clipboard &&
 				!changes.settings
 			) {
-				console.log('running onChange for local...');
-				const updated = Object.assign({}, data);
-
-				Object.keys(changes).forEach((key) => {
-					if (key !== 'clipboard') {
-						console.log('not clipboard on change...');
-						const updateObject = changes[key].newValue;
-						Object.assign(updated, updateObject);
-					}
-				});
-
-				setData(updated);
-			} else {
-				console.log(areaName);
-				console.log(changes);
+				setSessionStorageData(JSON.parse(JSON.stringify(changes.data.newValue)));
 			}
+		}
 
-			if (areaName === 'sync' && changes.options?.newValue) {
-				// placeholder in case we need an update on sync storage change for options
+		function syncStorageChangeListener(changes: any, areaName: any) {
+			if (areaName === 'sync' && changes.versionData) {
+				setVersionData(changes.versionData);
 			}
-		});
-	}, []);
+		}
+
+		chrome.storage.onChanged.addListener(localStorageChangeListener);
+		chrome.storage.onChanged.addListener(syncStorageChangeListener);
+
+		return () => {
+			chrome.storage.onChanged.removeListener(localStorageChangeListener);
+			chrome.storage.onChanged.removeListener(syncStorageChangeListener);
+		};
+	}, [setSessionStorageData]);
 
 	useEffect(() => {
 		const html = document.documentElement;
@@ -247,7 +241,7 @@ const Popup = () => {
 					/>
 				</div>
 			</div>
-			<StorageDataProvider dataObject={data!}>
+			<StorageDataProvider data={sessionStorageData}>
 				<ViewGrid />
 			</StorageDataProvider>
 			<div className={'flex m-1 justify-start text-[var(--borderColor)]'}>

@@ -11,7 +11,7 @@ const Options = () => {
 	const handleUpdateTheme = (theme: Themes) => {
 		setTheme!(theme);
 		saveOptionData({ name: theme }, () => {
-			return console.log('[Theme saved]');
+			return console.debug('[Theme saved]');
 		});
 	};
 

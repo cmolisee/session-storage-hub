@@ -1,11 +1,13 @@
 import './ViewGrid.css';
-import { useStorageData } from '../../providers/StorageDataProvider';
+import { useData } from '../../providers/dataProvider';
 import { useEffect } from 'react';
 import { publishEvent, subscribe, unsubscribe } from '../../utils/CustomEvents';
 import ViewGridKey from '../ViewGridKey/ViewGridKey';
 import ViewGridValue from '../ViewGridValue/ViewGridValue';
-import { errorToast, infoToast } from '../../utils/Utils';
+import { errorToast, infoToast, successToast } from '../../utils/Utils';
 import Control from '../Control/Control';
+import { chromeApi } from '../../utils/ChromeUtils';
+import { Action, IChromeMessage, IMessageResponse, Sender } from '../../types/types';
 
 interface IViewGridProps {
 	className?: string;
@@ -13,27 +15,25 @@ interface IViewGridProps {
 
 const ViewGrid = ({ className }: IViewGridProps) => {
 	const {
-		data,
+		sessionStorageData,
 		isEditing,
 		keys,
 		selectedKeys,
-		setDataKey,
-		selectAll,
-		unselectAll,
-	} = useStorageData();
+		setActiveKey,
+		selectAllKeys,
+		unselectAllKeys,
+	} = useData();
 
 	const handleCopy = async () => {
-		console.log('calling handle copy...')
 		if (!chrome?.storage) {
-			console.log('chrome error...')
 			errorToast('503', 'Chrome Storage API is not available.');
 			return;
 		}
 
 		const dataToCopy = {};
-		Object.entries(data).forEach((e) => {
+		Object.entries(sessionStorageData).forEach((e) => {
 			if (selectedKeys.indexOf(e[0]) >= 0) {
-				Object.defineProperty(dataToCopy, e[0] as keyof typeof data, {
+				Object.defineProperty(dataToCopy, e[0], {
 					value: e[1],
 				});
 			}
@@ -41,7 +41,10 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 
 		await chrome.storage.local.set({ clipboard: dataToCopy }, () => {
 			if (chrome.runtime.lastError) {
-				errorToast('runtime.lastError', 'error setting clipboard data...');
+				errorToast(
+					'runtime.lastError',
+					'error setting clipboard data...'
+				);
 			}
 		});
 
@@ -50,31 +53,34 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 
 	const handlePaste = async () => {
 		if (!chrome?.storage) {
-			errorToast('runtime.lastError', 'Chrome Storage API is not available.');
+			errorToast(
+				'runtime.lastError',
+				'Chrome Storage API is not available.'
+			);
 			return;
 		}
 
-		console.log(chrome.storage.local);
+		chrome.storage.local.get(
+			['clipboard', 'MarketingAttributes'],
+			(res) => {
+				chromeApi(
+					{
+						from: Sender.Extension,
+						action: Action.Update,
+						message: { updateData: res.data },
+					} as IChromeMessage,
+					async (res: IMessageResponse) => {
+						if (!chrome?.storage) {
+							errorToast('503', 'Chrome Storage API is not available.');
+							return;
+						}
 
-		chrome.storage.local.get(['clipboard', 'MarketingAttributes'], (res) => {
-			console.log(res);
-			// chromeApi(
-			// 	{
-			// 		from: Sender.Extension,
-			// 		action: Action.Update,
-			// 		message: { updateData: res. },
-			// 	} as IChromeMessage,
-			// 	async (res: IMessageResponse) => {
-			// 		if (!chrome?.storage) {
-			// 			errorToast('503', 'Chrome Storage API is not available.');
-			// 			return;
-			// 		}
-
-			// 		await chrome.storage.local.set({ data: res.data });
-			// 		successToast(null, 'Session Storage Data Pasted.');
-			// 	}
-			// );
-		});	
+						await chrome.storage.local.set({ data: res.data });
+						successToast(null, 'Session Storage Data Pasted.');
+					}
+				);
+			}
+		);
 	};
 
 	const handleSaveCallback = () => {
@@ -86,18 +92,18 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 	};
 
 	useEffect(() => {
-		subscribe('selectAllEvent', selectAll);
-		subscribe('unselectAllEvent', unselectAll);
+		subscribe('selectAllEvent', selectAllKeys);
+		subscribe('unselectAllEvent', unselectAllKeys);
 		subscribe('copyEvent', handleCopy);
 		subscribe('pasteEvent', handlePaste);
 
 		return () => {
-			unsubscribe('selectAllEvent', selectAll);
-			unsubscribe('unselectAllEvent', unselectAll);
+			unsubscribe('selectAllEvent', selectAllKeys);
+			unsubscribe('unselectAllEvent', unselectAllKeys);
 			unsubscribe('copyEvent', handleCopy);
 			unsubscribe('pasteEvent', handlePaste);
 		};
-	}, [data]);
+	}, [sessionStorageData]);
 
 	return (
 		<>
@@ -110,7 +116,7 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 									key={i}
 									keyName={key}
 									callback={() => {
-										setDataKey(key);
+										setActiveKey(key);
 									}}
 								/>
 							);

@@ -44,7 +44,6 @@ const updateMessageListener = (
 	response: TResponse
 ) => {
 	if (validateSender(Sender.Extension, Action.Update, message, sender)) {
-		console.log('called update: ', message);
 		try {
 			Object.entries(message.message?.updatedData ?? {}).forEach((e) => {
 				sessionStorage.setItem(e[0], e[1] as string);
@@ -76,7 +75,7 @@ const fillStorageMessageListener = (
 				try {
 					window.sessionStorage.setItem(
 						'@utility-fill-' +
-							window.sessionStorage.length.toString(),
+						window.sessionStorage.length.toString(),
 						'@'.repeat(2 ** x)
 					);
 				} catch (e) {
@@ -120,7 +119,7 @@ const checkReleaseListener = (
 					!data ||
 					!data.timestamp ||
 					convertMsToHr(message.message.timestamp - data.timestamp) >
-						5
+					5
 				) {
 					fetch(
 						'https://api.github.com/repos/cmolisee/session-storage-hub/releases/latest'
@@ -142,7 +141,7 @@ const checkReleaseListener = (
 							response({ error: null, data: resData });
 						})
 						.catch((err) => {
-							return console.log(err);
+							return console.error('Session Storage Hub:', err);
 						});
 				} else {
 					// otherwise data exists, is up to date
