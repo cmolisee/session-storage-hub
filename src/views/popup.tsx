@@ -56,7 +56,7 @@ const Popup = () => {
 					}
 
 					await chrome.storage.local.set({ 'data': res.data });
-					infoToast(null, 'Session Storage Data Coppied.');
+					infoToast(null, 'Session Storage Data Pasted.');
 				}
 			);
 		});
