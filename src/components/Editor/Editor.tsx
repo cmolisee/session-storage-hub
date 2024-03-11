@@ -6,7 +6,7 @@ import {
 } from '../../utils/Utils';
 import 'ace-builds/src-noconflict/mode-json';
 import './styles.css';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Ace } from 'ace-builds';
 import { subscribe, unsubscribe } from '../../utils/CustomEvents';
 import {
@@ -20,7 +20,8 @@ import { useStorageData } from '../../providers/useStorageData';
 
 const Editor = () => {
 	const aceRef = useRef<Ace.Editor>();
-	const { sessionStorageData, setIsEditing, activeKey, activeValue } = useStorageData();
+	const { sessionStorageData, isEditing, setIsEditing, activeKey, activeValue } = useStorageData();
+	const [data, setData] = useState<string>();
 
 	const handleSubmitEditedData = useCallback(async () => {
 		setIsEditing(false);
@@ -54,6 +55,7 @@ const Editor = () => {
 
 	useEffect(() => {
 		aceRef?.current?.session?.getUndoManager().reset();
+		setData(JSON.stringify(getDataAsFormattedJson(activeValue), null, '\t'));
 
 		subscribe('SaveEdits', handleSubmitEditedData);
 		subscribe('CancelEdits', handleCancelEdits);
@@ -80,7 +82,7 @@ const Editor = () => {
 		// enableBasicAutocompletion?: boolean | string[];
 		// enableLiveAutocompletion?: boolean | string[];
 		// tabSize?: number;
-		value: JSON.stringify(getDataAsFormattedJson(activeValue), null, '\t'),
+		value: data,
 		// placeholder?: string;
 		// defaultValue?: string;
 		// scrollMargin?: number[];
@@ -93,8 +95,12 @@ const Editor = () => {
 		},
 		// onValidate?: (annotations: Ace.Annotation[]) => void;
 		// onBeforeLoad?: (ace: typeof AceBuilds) => void;
-		onChange: () => {
-			setIsEditing(true);
+		onChange: (value) => {
+			if (!isEditing) {
+				setIsEditing(true);
+			}
+
+			setData(value);
 		},
 		// onSelection?: (selectedText: string, event?: any) => void;
 		// onCopy?: (value: string) => void;
