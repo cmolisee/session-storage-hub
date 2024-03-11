@@ -12,7 +12,7 @@ import { useTheme } from '../providers/useTheme';
 import Control from '../components/Control/Control';
 import ViewGrid from '../components/ViewGrid/ViewGrid';
 import DropdownMenu from '../components/DropdownMenu/DropdownMenu';
-import { errorToast, infoToast, promptToast, successToast } from '../utils/Utils';
+import { errorToast, infoToast, promptToast, sortObjectByKeys, successToast } from '../utils/Utils';
 import { useStorageData } from '../providers/useStorageData';
 
 const Popup = () => {
@@ -147,8 +147,8 @@ const Popup = () => {
 					errorToast('503', 'Chrome Storage API is not available.');
 					return;
 				}
-				await chrome.storage.local.set({ data: res.data });
-				setSessionStorageData(JSON.parse(JSON.stringify(res.data)));
+				await chrome.storage.local.set({ data: sortObjectByKeys(res.data) });
+				setSessionStorageData(sortObjectByKeys(res.data));
 			}
 		);
 	}, []);
@@ -182,14 +182,13 @@ const Popup = () => {
 		}
 
 		function localStorageChangeListener(changes: any, areaName: any) {
-			console.log('local storage change: ', areaName, changes);
 			if (
 				areaName === 'local' &&
 				!changes.clipboard &&
 				!changes.settings &&
 				changes.data
 			) {
-				setSessionStorageData(JSON.parse(JSON.stringify(changes.data.newValue)));
+				setSessionStorageData(sortObjectByKeys(changes.data.newValue));
 			}
 		}
 

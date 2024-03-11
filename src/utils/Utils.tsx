@@ -135,3 +135,10 @@ export function getDataType(data: any): TDataTypes {
 		return 'none';
 	}
 }
+
+export function sortObjectByKeys(obj: any) {
+	return Object.keys(obj).sort().reduce((ordered: any, key: string) => {
+		ordered[key] = obj[key];
+		return ordered;
+	}, {});
+}

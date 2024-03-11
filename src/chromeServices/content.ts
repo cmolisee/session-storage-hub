@@ -27,7 +27,7 @@ const requestMessageListener = (
 	response: TResponse
 ) => {
 	if (validateSender(Sender.Extension, Action.Request, message, sender)) {
-		const data = Object.assign({}, sessionStorage);
+		const data = JSON.parse(JSON.stringify(sessionStorage));
 
 		response({
 			error: !data ? 'Error retrieving session storage' : null,

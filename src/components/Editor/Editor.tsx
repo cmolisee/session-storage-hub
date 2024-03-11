@@ -46,10 +46,10 @@ const Editor = () => {
 				successToast(null, 'Session Storage Data Pasted.');
 			}
 		);
-	}, [sessionStorageData, activeKey, activeValue]);
+	}, [sessionStorageData, activeKey, data]);
 
 	const handleCancelEdits = useCallback(() => {
-		aceRef?.current?.session?.setValue(activeValue);
+		setData(activeValue);
 		setIsEditing(false);
 	}, [sessionStorageData, activeKey, activeValue]);
 
@@ -64,7 +64,7 @@ const Editor = () => {
 			unsubscribe('SaveEdits', handleSubmitEditedData);
 			unsubscribe('CancelEdits', handleCancelEdits);
 		};
-	}, [sessionStorageData, activeKey]);
+	}, [sessionStorageData, activeKey, activeValue]);
 
 	const props: IAceEditorProps = {
 		name: 'editor',
