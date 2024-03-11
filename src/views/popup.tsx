@@ -47,7 +47,7 @@ const Popup = () => {
 				{
 					from: Sender.Extension,
 					action: Action.Update,
-					message: { updatedData: res },
+					message: { updatedData: res.clipboard },
 				} as IChromeMessage,
 				async (res: IMessageResponse) => {
 					if (!chrome?.storage) {
