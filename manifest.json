@@ -13,15 +13,26 @@
 	"icons": {
 		"32": "icon-32.png"
 	},
-	"background": {
-		"service_worker": "src/chromeServices/background.ts"
+	"content_security_policy": {
+		"extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
 	},
 	"content_scripts": [
 		{
-			"matches": ["<all_urls>"],
-			"js": ["src/chromeServices/content.ts"]
+			"matches": [
+				"<all_urls>"
+			],
+			"js": [
+				"src/chromeServices/content.ts"
+			]
 		}
 	],
 	"devtools_page": "index.html",
-	"permissions": ["tabs", "activeTab", "storage"]
+	"host_permissions": [
+		"<all_urls>"
+	],
+	"permissions": [
+		"tabs",
+		"activeTab",
+		"storage"
+	]
 }

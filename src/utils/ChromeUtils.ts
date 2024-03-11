@@ -38,7 +38,7 @@ export function chromeApi(
 	}
 
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-		const id = tabs[0].id as number;
+		const id = tabs[0]?.id as number;
 		if (!id) {
 			errorToast('503', 'Could not retrieve active tab id.');
 		}

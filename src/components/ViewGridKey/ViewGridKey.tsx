@@ -1,30 +1,24 @@
 import './ViewGridKey.css';
-import { useData } from '../../providers/dataProvider';
-import { useCallback } from 'react';
+import { useStorageData } from '../../providers/useStorageData';
 
 interface IViewGridKeyProps {
 	keyName: string;
-	callback: () => void;
 }
 
-const ViewGridKey = ({ keyName, callback }: IViewGridKeyProps) => {
-	const { selectedKeys, setSelectedKeys, activeKey } = useData();
+const ViewGridKey = ({ keyName }: IViewGridKeyProps) => {
+	const { activeKey, setActiveKey, selectedKeys, setSelectedKeys } = useStorageData();
 
-	const handleIsChecked = useCallback(() => {
-		return selectedKeys?.includes(keyName) ?? false;
-	}, [selectedKeys]);
-
-	const handleOnChange = useCallback(() => {
-		if (selectedKeys?.includes(keyName)) {
-			setSelectedKeys(
-				selectedKeys.filter((k) => {
-					return k !== keyName;
-				})
-			);
+	const handleOnChange = () => {
+		if (!selectedKeys.includes(keyName)) {
+			setSelectedKeys([...selectedKeys, keyName]);
 		} else {
-			setSelectedKeys([...(selectedKeys as string[]), keyName]);
+			setSelectedKeys(selectedKeys.filter((k) => { return k !== keyName }));
 		}
-	}, [selectedKeys]);
+	}
+
+	const handleSetActiveKey = () => {
+		setActiveKey(keyName);
+	}
 
 	return (
 		<div
@@ -32,10 +26,10 @@ const ViewGridKey = ({ keyName, callback }: IViewGridKeyProps) => {
 			aria-selected={activeKey === keyName}>
 			<input
 				type={'checkbox'}
-				checked={handleIsChecked()}
+				checked={selectedKeys.includes(keyName)}
 				onChange={handleOnChange}
 			/>
-			<p onClick={callback}>{keyName}</p>
+			<p onClick={handleSetActiveKey}>{keyName}</p>
 		</div>
 	);
 };

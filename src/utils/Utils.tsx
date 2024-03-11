@@ -36,15 +36,15 @@ const Msg = ({ closeToast, content }: IMsgProps) => {
 	);
 };
 
-export function createToast(props: IUseToastProps) {
-	toast(<Msg content={props} />, { ...props.toastOps });
-}
-
 const toastOptions = {
 	autoClose: 2000,
 	closeOnClick: true,
 	pauseOnHover: true,
 };
+
+export function createToast(props: IUseToastProps) {
+	toast(<Msg content={props} />, { ...props.toastOps });
+}
 
 export function errorToast(id: string | null, msg: string) {
 	createToast({
@@ -134,50 +134,4 @@ export function getDataType(data: any): TDataTypes {
 	} else {
 		return 'none';
 	}
-}
-
-export function areDeeplyEqual(obj1: any, obj2: any) {
-	if (obj1 === obj2) {
-		return true;
-	}
-
-	const type1 = Array.isArray(obj1) ? 'array' : 'object';
-	const type2 = Array.isArray(obj2) ? 'array' : 'object';
-
-	if (type1 === 'array' && type2 === 'array') {
-		if (obj1.length !== obj2.length) {
-			return false;
-		}
-
-		return obj1.every((elem: any, index: number) => {
-			return areDeeplyEqual(elem, obj2[index]);
-		});
-	} else if (type1 === 'object' && type2 === 'object') {
-		if (obj1 === null && obj2 === null) {
-			return true;
-		}
-
-		const keys1 = Object.keys(obj1);
-		const keys2 = Object.keys(obj2);
-
-		if (
-			keys1.length !== keys2.length ||
-			!keys1.every((key) => {
-				return keys2.includes(key);
-			})
-		) {
-			return false;
-		}
-
-		for (const key in obj1) {
-			const isEqual = areDeeplyEqual(obj1[key], obj2[key]);
-			if (!isEqual) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	return false;
 }

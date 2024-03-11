@@ -7,10 +7,9 @@ import { ToastContainer, Zoom } from 'react-toastify';
 import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ThemeProvider } from './providers/useTheme';
+import { StorageDataProvider } from './providers/useStorageData'
 import { Themes } from './types/types';
 
-// there is an issue with react router causing error when trying to switch data keys...
-// there is also an issue with shit not updating until the second click... fuuuuck.
 const router = createHashRouter([
 	{ path: '/', element: <Popup /> },
 	{ path: '/options', element: <Options /> },
@@ -19,7 +18,9 @@ const router = createHashRouter([
 ReactDOM.createRoot(document.getElementById('sessionStorageHub')!).render(
 	<React.StrictMode>
 		<ThemeProvider defaultThemeName={Themes.a11yLight}>
-			<RouterProvider router={router} />
+			<StorageDataProvider>
+				<RouterProvider router={router} />
+			</StorageDataProvider>
 		</ThemeProvider>
 		<ToastContainer
 			position="bottom-center"

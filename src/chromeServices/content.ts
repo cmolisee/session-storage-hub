@@ -160,18 +160,43 @@ const checkReleaseListener = (
 	return false; // do not expect a response
 };
 
+export const copyStorageToClipboard = (
+	message: IChromeMessage,
+	sender: chrome.runtime.MessageSender,
+	response: TResponse
+) => {
+	if (validateSender(Sender.Extension, Action.Copy, message, sender)) {
+		const keys = message.message.keys;
+		const dataToCopy: any = {};
+		Object.entries(sessionStorage).forEach(([key, value]: [string, any]) => {
+			if (keys.includes(key)) {
+				dataToCopy[key] = value;
+			}
+		});
+
+		response({
+			error: null,
+			data: dataToCopy,
+		});
+		return true; // we will eventually return a response
+	}
+	return false; // do not expect a response
+}
+
 const main = () => {
 	// prevent duplicate listeners
 	chrome.runtime.onMessage.removeListener(requestMessageListener);
 	chrome.runtime.onMessage.removeListener(updateMessageListener);
 	chrome.runtime.onMessage.removeListener(fillStorageMessageListener);
 	chrome.runtime.onMessage.removeListener(checkReleaseListener);
+	chrome.runtime.onMessage.removeListener(copyStorageToClipboard);
 
 	// Fired when a message is sent from either an extension process or a content script.
 	chrome.runtime.onMessage.addListener(requestMessageListener);
 	chrome.runtime.onMessage.addListener(updateMessageListener);
 	chrome.runtime.onMessage.addListener(fillStorageMessageListener);
 	chrome.runtime.onMessage.addListener(checkReleaseListener);
+	chrome.runtime.onMessage.addListener(copyStorageToClipboard);
 };
 
 main();

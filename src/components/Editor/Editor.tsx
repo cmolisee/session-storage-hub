@@ -1,5 +1,4 @@
 import AceEditor, { IAceEditorProps } from 'react-ace';
-import { useData } from '../../providers/dataProvider';
 import {
 	errorToast,
 	getDataAsFormattedJson,
@@ -17,13 +16,13 @@ import {
 	IMessageResponse,
 } from '../../types/types';
 import { chromeApi } from '../../utils/ChromeUtils';
-// import 'ace-builds/src-noconflict/theme-github';
+import { useStorageData } from '../../providers/useStorageData';
 
 const Editor = () => {
 	const aceRef = useRef<Ace.Editor>();
-	const { sessionStorageData, activeKey, activeValue, setIsEditing } = useData();
+	const { sessionStorageData, setIsEditing, activeKey, activeValue } = useStorageData();
 
-	const submitEditedData = useCallback(async () => {
+	const handleSubmitEditedData = useCallback(async () => {
 		setIsEditing(false);
 
 		const editorValue = aceRef?.current?.session?.getValue() as string;
@@ -46,24 +45,24 @@ const Editor = () => {
 				successToast(null, 'Session Storage Data Pasted.');
 			}
 		);
-	}, [sessionStorageData, activeKey]);
+	}, [sessionStorageData, activeKey, activeValue]);
 
-	const cancelEdits = useCallback(() => {
+	const handleCancelEdits = useCallback(() => {
 		aceRef?.current?.session?.setValue(activeValue);
 		setIsEditing(false);
-	}, [activeValue]);
+	}, [sessionStorageData, activeKey, activeValue]);
 
 	useEffect(() => {
 		aceRef?.current?.session?.getUndoManager().reset();
 
-		subscribe('SaveEdits', submitEditedData);
-		subscribe('CancelEdits', cancelEdits);
+		subscribe('SaveEdits', handleSubmitEditedData);
+		subscribe('CancelEdits', handleCancelEdits);
 
 		return () => {
-			unsubscribe('SaveEdits', submitEditedData);
-			unsubscribe('CancelEdits', cancelEdits);
+			unsubscribe('SaveEdits', handleSubmitEditedData);
+			unsubscribe('CancelEdits', handleCancelEdits);
 		};
-	}, [sessionStorageData]);
+	}, [sessionStorageData, activeKey]);
 
 	const props: IAceEditorProps = {
 		name: 'editor',
@@ -94,8 +93,8 @@ const Editor = () => {
 		},
 		// onValidate?: (annotations: Ace.Annotation[]) => void;
 		// onBeforeLoad?: (ace: typeof AceBuilds) => void;
-		onChange: (changeValue: string) => {
-			setIsEditing(changeValue !== activeValue);
+		onChange: () => {
+			setIsEditing(true);
 		},
 		// onSelection?: (selectedText: string, event?: any) => void;
 		// onCopy?: (value: string) => void;

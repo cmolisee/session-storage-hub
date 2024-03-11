@@ -11,6 +11,8 @@ export enum Action {
 	Post,
 	Check,
 	FillStorage,
+	Copy,
+	Paste
 }
 
 export enum Themes {

@@ -5,8 +5,10 @@ interface IViewGridValueProps { }
 
 // eslint-disable-next-line no-empty-pattern
 const ViewGridValue = ({ }: IViewGridValueProps) => {
+	const viewGridStyles = 'ViewGridValue relative overflow-x-hidden';
+
 	return (
-		<div className={'ViewGridValue relative overflow-x-hidden'}>
+		<div className={viewGridStyles}>
 			<Editor />
 		</div>
 	);

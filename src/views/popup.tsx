@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import Header from '../components/Header/Header';
-import { StorageDataProvider } from '../providers/dataProvider';
-import { publishEvent } from '../utils/CustomEvents';
 import {
 	Action,
 	IChromeMessage,
@@ -14,14 +12,59 @@ import { useTheme } from '../providers/useTheme';
 import Control from '../components/Control/Control';
 import ViewGrid from '../components/ViewGrid/ViewGrid';
 import DropdownMenu from '../components/DropdownMenu/DropdownMenu';
-import { errorToast, promptToast, successToast } from '../utils/Utils';
+import { errorToast, infoToast, promptToast, successToast } from '../utils/Utils';
+import { useStorageData } from '../providers/useStorageData';
 
 const Popup = () => {
 	const { styles } = useTheme();
 	const [versionData, setVersionData] = useState<TVersionData>();
-	const [sessionStorageData, setSessionStorageData] = useState({});
+	const { sessionStorageData, setSessionStorageData, selectAllKeys, unselectAllKeys, selectedKeys } = useStorageData();
 
-	const fillSessionStorageCallback = () => {
+	const handleCopy = useCallback(() => {
+		chromeApi(
+			{
+				from: Sender.Extension,
+				action: Action.Copy,
+				message: { keys: selectedKeys },
+			} as IChromeMessage,
+			async (res: IMessageResponse) => {
+				if (!chrome?.storage) {
+					errorToast('503', 'Chrome Storage API is not available.');
+					return;
+				}
+
+				await chrome.storage.local.set({ 'clipboard': res.data });
+				infoToast(null, 'Session Storage Data Coppied.');
+			}
+		);
+
+		return;
+	}, [selectedKeys]);
+
+	const handlePaste = async () => {
+		await chrome.storage.local.get(['clipboard'], (res) => {
+			chromeApi(
+				{
+					from: Sender.Extension,
+					action: Action.Update,
+					message: { updatedData: res },
+				} as IChromeMessage,
+				async (res: IMessageResponse) => {
+					if (!chrome?.storage) {
+						errorToast('503', 'Chrome Storage API is not available.');
+						return;
+					}
+
+					await chrome.storage.local.set({ 'data': res.data });
+					infoToast(null, 'Session Storage Data Coppied.');
+				}
+			);
+		});
+
+		return;
+	}
+
+	const handleFillSessionStorageUtility = () => {
 		chromeApi(
 			{
 				from: Sender.Extension,
@@ -42,7 +85,7 @@ const Popup = () => {
 		return;
 	};
 
-	const cleanSessionStorageCallback = useCallback(() => {
+	const handleCleanSessionStorageUtility = useCallback(() => {
 		const filteredKeys = Object.keys(sessionStorageData).filter((key) => {
 			return !key.startsWith('@utility-fill-');
 		});
@@ -72,7 +115,7 @@ const Popup = () => {
 		return;
 	}, [sessionStorageData]);
 
-	const clearSessionStorageCallback = () => {
+	const handleClearSessionStorageUtility = () => {
 		chromeApi(
 			{
 				from: Sender.Extension,
@@ -139,6 +182,7 @@ const Popup = () => {
 		}
 
 		function localStorageChangeListener(changes: any, areaName: any) {
+			console.log('local storage change: ', areaName, changes);
 			if (
 				areaName === 'local' &&
 				!changes.clipboard &&
@@ -177,31 +221,23 @@ const Popup = () => {
 			<div className={'flex justify-between text-[var(--borderColor)]'}>
 				<div>
 					<Control
-						onClickCallback={() => {
-							return publishEvent('selectAllEvent', {});
-						}}>
+						onClickCallback={selectAllKeys}>
 						Select All
 					</Control>
 					<Control
-						onClickCallback={() => {
-							return publishEvent('unselectAllEvent', {});
-						}}>
+						onClickCallback={unselectAllKeys}>
 						Unselect All
 					</Control>
 				</div>
 				<div>
 					<Control
 						className={'font-bold'}
-						onClickCallback={() => {
-							return publishEvent('copyEvent', {});
-						}}>
+						onClickCallback={handleCopy}>
 						Copy
 					</Control>
 					<Control
 						className={'font-bold'}
-						onClickCallback={() => {
-							return publishEvent('pasteEvent', {});
-						}}>
+						onClickCallback={handlePaste}>
 						Paste
 					</Control>
 				</div>
@@ -215,7 +251,7 @@ const Popup = () => {
 									promptToast(
 										'utility',
 										'Are you sure you want to fill all session storage memory?',
-										fillSessionStorageCallback
+										handleFillSessionStorageUtility
 									);
 								},
 							},
@@ -225,7 +261,7 @@ const Popup = () => {
 									promptToast(
 										'utility',
 										'Are you sure you want to clear all session storage memory?',
-										clearSessionStorageCallback
+										handleClearSessionStorageUtility
 									);
 								},
 							},
@@ -235,7 +271,7 @@ const Popup = () => {
 									promptToast(
 										'utility',
 										'Are you sure you want to clean all session storage memory?',
-										cleanSessionStorageCallback
+										handleCleanSessionStorageUtility
 									);
 								},
 							},
@@ -243,9 +279,7 @@ const Popup = () => {
 					/>
 				</div>
 			</div>
-			<StorageDataProvider data={sessionStorageData}>
-				<ViewGrid />
-			</StorageDataProvider>
+			<ViewGrid />
 			<div className={'flex m-1 justify-start text-[var(--borderColor)]'}>
 				<div className={'cursor-default mr-4'}>
 					version {(VERSION as string) ?? 'UNKNOWN'}

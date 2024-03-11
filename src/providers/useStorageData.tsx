@@ -2,10 +2,9 @@ import {
 	PropsWithChildren,
 	createContext,
 	useContext,
-	useEffect,
+	useMemo,
 	useReducer,
 } from 'react';
-import { areDeeplyEqual } from '../utils/Utils';
 
 interface IDataProps {
 	sessionStorageData: object;
@@ -17,17 +16,17 @@ interface IDataProps {
 }
 
 interface IExtendedDataProps extends IDataProps {
+	setSessionStorageData: (obj: object) => void;
 	setIsEditing: (bool: boolean) => void;
-	setSelectedKeys: (selectedKeys: string[]) => void;
-	setActiveKey: (activeKey: string) => void;
-	setActiveValue: (activeValue: string) => void;
+	setSelectedKeys: (keys: string[]) => void;
+	setActiveKey: (key: string) => void;
 	selectAllKeys: () => void;
 	unselectAllKeys: () => void;
 }
 
 function reducer(state: any, action: { type: string; data: any }) {
 	switch (action.type) {
-		case 'setData': {
+		case 'setSessionStorageData': {
 			const d = action.data.sessionStorageData;
 			const k = Object.keys(d);
 			const ak = k[0];
@@ -52,19 +51,16 @@ function reducer(state: any, action: { type: string; data: any }) {
 		case 'setKeys': {
 			return {
 				...state,
-				keys: action.data.keys ? action.data.keys : state.keys,
+				keys: action.data.keys,
 			};
 		}
 		case 'setSelectedKeys': {
 			return {
 				...state,
-				selectedKeys: action.data.selectedKeys
-					? action.data.selectedKeys
-					: state.selectedKeys,
+				selectedKeys: [...action.data.selectedKeys],
 			};
 		}
-		case 'setActiveKey':
-		case 'setActiveValue': {
+		case 'setActiveKey': {
 			const ak = action?.data?.activeKey
 				? action.data.activeKey
 				: state.activeKey;
@@ -99,21 +95,22 @@ const dataContext = createContext<IExtendedDataProps>({
 	selectedKeys: [],
 	activeKey: '',
 	activeValue: undefined,
+	setSessionStorageData: function (): void { },
 	setIsEditing: function (): void { },
 	setSelectedKeys: function (): void { },
 	setActiveKey: function (): void { },
-	setActiveValue: function (): void { },
 	selectAllKeys: function (): void { },
 	unselectAllKeys: function (): void { },
 });
 
-export const useData = () => {
+export const useStorageData = () => {
 	return useContext(dataContext);
 };
 
-export const StorageDataProvider = ({ children, data }: PropsWithChildren<{ data: object }>) => {
+export const StorageDataProvider = ({ children }: PropsWithChildren) => {
 	const [dataState, dispatch] = useReducer(reducer, {
 		sessionStorageData: {},
+		dataToCopy: {},
 		isEditing: false,
 		keys: [],
 		selectedKeys: [],
@@ -122,56 +119,51 @@ export const StorageDataProvider = ({ children, data }: PropsWithChildren<{ data
 		version: '',
 	});
 
+	const handleSetSessionStorageData = (obj: object) => {
+		dispatch({ type: 'setSessionStorageData', data: { sessionStorageData: obj } });
+	}
+
 	const handleSetIsEditing = (bool: boolean) => {
 		dispatch({ type: 'setIsEditing', data: { isEditing: bool } });
 	};
 
-	const handleSetActiveKey = (newKey: string) => {
+	const handleSetSelectedKeys = (keys: string[]) => {
+		dispatch({ type: 'setSelectedKeys', data: { selectedKeys: keys } });
+	};
+
+	const handleSetActiveKey = (key: string) => {
 		if (
-			!newKey ||
-			dataState.keys.indexOf(newKey) < 0 ||
-			Object.is(newKey, dataState.activeKey)
+			!key ||
+			dataState.keys.indexOf(key) < 0 ||
+			Object.is(key, dataState.activeKey)
 		) {
 			return;
 		}
 
-		dispatch({ type: 'setActiveKey', data: { activeKey: newKey } });
-	};
-
-	const handleSetSelectedKeys = (newKeys: string[]) => {
-		if (!areDeeplyEqual(newKeys, dataState.keys)) {
-			dispatch({
-				type: 'setSelectedKeys',
-				data: { selectedKeys: newKeys },
-			});
-		}
+		dispatch({ type: 'setActiveKey', data: { activeKey: key } });
 	};
 
 	const handleSelectAllKeys = () => {
-		return dispatch({
-			type: 'selectAllKeys',
-			data: { selectedKeys: dataState.keys },
-		});
+		return dispatch({ type: 'selectAllKeys', data: { selectedKeys: dataState.keys } });
 	};
 
 	const handleUnselectAllKeys = () => {
 		return dispatch({ type: 'unselectAllKeys', data: { selectedKeys: [] } });
 	};
 
-	useEffect(() => {
-		dispatch({ type: 'setData', data: { sessionStorageData: data } });
-	}, [data]);
-
 	return (
 		<dataContext.Provider
-			value={{
-				...dataState,
-				setIsEditing: handleSetIsEditing,
-				setActiveKey: handleSetActiveKey,
-				setSelectedKeys: handleSetSelectedKeys,
-				selectAllKeys: handleSelectAllKeys,
-				unselectAllKeys: handleUnselectAllKeys,
-			}}>
+			value={useMemo(() => {
+				return {
+					...dataState,
+					setSessionStorageData: handleSetSessionStorageData,
+					setIsEditing: handleSetIsEditing,
+					setSelectedKeys: handleSetSelectedKeys,
+					setActiveKey: handleSetActiveKey,
+					selectAllKeys: handleSelectAllKeys,
+					unselectAllKeys: handleUnselectAllKeys,
+				};
+			}, [dataState])}>
 			{children}
 		</dataContext.Provider>
 	);
