@@ -18,7 +18,7 @@ import { useStorageData } from '../providers/useStorageData';
 const Popup = () => {
 	const { styles } = useTheme();
 	const [versionData, setVersionData] = useState<TVersionData>();
-	const { sessionStorageData, setSessionStorageData, selectAllKeys, unselectAllKeys, selectedKeys } = useStorageData();
+	const { sessionStorageData, setSessionStorageData, selectAllKeys, unselectAllKeys, selectedKeys, keys } = useStorageData();
 
 	const handleCopy = useCallback(() => {
 		chromeApi(
@@ -86,20 +86,19 @@ const Popup = () => {
 	};
 
 	const handleCleanSessionStorageUtility = useCallback(() => {
-		const filteredKeys = Object.keys(sessionStorageData).filter((key) => {
+		const cleanedKeys = keys.filter((key) => {
 			return !key.startsWith('@utility-fill-');
 		});
-
-		const cleanedData = filteredKeys.reduce((acc: any, key: string) => {
-			acc[key] = (sessionStorageData as any)[key];
-			return acc;
+		const cleanedData = cleanedKeys.reduce((obj: any, key: string) => {
+			obj[key] = (sessionStorageData as any)[key];
+			return obj;
 		}, {});
 
 		chromeApi(
 			{
 				from: Sender.Extension,
-				action: Action.Update,
-				message: { updatedData: cleanedData },
+				action: Action.Clean,
+				message: { data: cleanedData },
 			} as IChromeMessage,
 			async (res: IMessageResponse) => {
 				if (!chrome?.storage) {
@@ -113,14 +112,14 @@ const Popup = () => {
 		);
 
 		return;
-	}, [sessionStorageData]);
+	}, [keys]);
 
 	const handleClearSessionStorageUtility = () => {
 		chromeApi(
 			{
 				from: Sender.Extension,
-				action: Action.Update,
-				message: { updatedData: {} },
+				action: Action.Clear,
+				message: null,
 			} as IChromeMessage,
 			async (res: IMessageResponse) => {
 				if (!chrome?.storage) {
@@ -249,6 +248,7 @@ const Popup = () => {
 								onClickCallback: () => {
 									promptToast(
 										'utility',
+										'Caution: This will cause some slowness.\n' +
 										'Are you sure you want to fill all session storage memory?',
 										handleFillSessionStorageUtility
 									);

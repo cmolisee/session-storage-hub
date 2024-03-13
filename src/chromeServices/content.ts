@@ -62,6 +62,51 @@ const updateMessageListener = (
 	return false; // do not expect a response
 };
 
+const cleanMessageListener = (
+	message: IChromeMessage,
+	sender: chrome.runtime.MessageSender,
+	response: TResponse
+) => {
+	if (validateSender(Sender.Extension, Action.Clean, message, sender)) {
+		try {
+			sessionStorage.clear();
+			Object.entries(message.message.data).forEach((e) => {
+				sessionStorage.setItem(e[0], e[1] as string);
+			});
+
+			const data = Object.assign({}, sessionStorage);
+			response({ error: null, data: data });
+		} catch {
+			response({
+				error: 'Error cleaning session storage data',
+				data: null,
+			});
+		}
+		return true; // we will eventually return a response
+	}
+	return false; // do not expect a response
+};
+
+const clearMessageListener = (
+	message: IChromeMessage,
+	sender: chrome.runtime.MessageSender,
+	response: TResponse
+) => {
+	if (validateSender(Sender.Extension, Action.Clear, message, sender)) {
+		try {
+			sessionStorage.clear();
+			response({ error: null, data: {} });
+		} catch {
+			response({
+				error: 'Error clearing session storage data',
+				data: null,
+			});
+		}
+		return true; // we will eventually return a response
+	}
+	return false; // do not expect a response
+};
+
 const fillStorageMessageListener = (
 	message: IChromeMessage,
 	sender: chrome.runtime.MessageSender,
@@ -187,6 +232,8 @@ const main = () => {
 	// prevent duplicate listeners
 	chrome.runtime.onMessage.removeListener(requestMessageListener);
 	chrome.runtime.onMessage.removeListener(updateMessageListener);
+	chrome.runtime.onMessage.removeListener(cleanMessageListener);
+	chrome.runtime.onMessage.removeListener(clearMessageListener);
 	chrome.runtime.onMessage.removeListener(fillStorageMessageListener);
 	chrome.runtime.onMessage.removeListener(checkReleaseListener);
 	chrome.runtime.onMessage.removeListener(copyStorageToClipboard);
@@ -194,6 +241,8 @@ const main = () => {
 	// Fired when a message is sent from either an extension process or a content script.
 	chrome.runtime.onMessage.addListener(requestMessageListener);
 	chrome.runtime.onMessage.addListener(updateMessageListener);
+	chrome.runtime.onMessage.addListener(cleanMessageListener);
+	chrome.runtime.onMessage.addListener(clearMessageListener);
 	chrome.runtime.onMessage.addListener(fillStorageMessageListener);
 	chrome.runtime.onMessage.addListener(checkReleaseListener);
 	chrome.runtime.onMessage.addListener(copyStorageToClipboard);

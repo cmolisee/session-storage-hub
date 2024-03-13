@@ -8,11 +8,12 @@ export enum Sender {
 export enum Action {
 	Request,
 	Update,
+	Clean,
+	Clear,
 	Post,
 	Check,
 	FillStorage,
 	Copy,
-	Paste
 }
 
 export enum Themes {

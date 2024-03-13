@@ -66,26 +66,28 @@ const Editor = () => {
 
 
 
-	const customLinter = () => (view: EditorView): Diagnostic[] => {
-		try {
-			JSON.parse(view.state.doc.toString());
-		} catch (e) {
-			if (!(e instanceof SyntaxError)) {
-				throw e;
+	const customLinter = () => {
+		return (view: EditorView): Diagnostic[] => {
+			try {
+				JSON.parse(view.state.doc.toString());
+			} catch (e) {
+				if (!(e instanceof SyntaxError)) {
+					throw e;
+				}
+
+				const pos = getErrorPosition(e, view.state.doc);
+				const line = view.state.doc.lineAt(pos);
+
+				return [{
+					from: line.from,
+					message: e.message,
+					severity: 'error',
+					to: line.to
+				}];
 			}
 
-			const pos = getErrorPosition(e, view.state.doc);
-			const line = view.state.doc.lineAt(pos);
-
-			return [{
-				from: line.from,
-				message: e.message,
-				severity: 'error',
-				to: line.to
-			}];
+			return [];
 		}
-
-		return [];
 	};
 
 	const extensions = [EditorView.lineWrapping, json(), linter(customLinter()), lintGutter()];
@@ -125,8 +127,6 @@ const Editor = () => {
 	const handleSubmitEditedData = useCallback(() => {
 		setIsEditing(false);
 
-		console.log('code:', code)
-		console.log('parsed code:', getDataAsFormattedJson(code));
 		const newValue = code;
 		const dataDeepCopy = JSON.parse(JSON.stringify(sessionStorageData));
 		dataDeepCopy[activeKey] = JSON.stringify(getDataAsFormattedJson(newValue));
