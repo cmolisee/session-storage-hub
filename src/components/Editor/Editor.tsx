@@ -1,13 +1,13 @@
-import AceEditor, { IAceEditorProps } from 'react-ace';
+import CodeMirror, { BasicSetupOptions, EditorView, ReactCodeMirrorProps, ReactCodeMirrorRef, Text } from '@uiw/react-codemirror';
+import { json } from '@codemirror/lang-json';
+import { Diagnostic, linter, lintGutter } from '@codemirror/lint';
 import {
 	errorToast,
 	getDataAsFormattedJson,
 	successToast,
 } from '../../utils/Utils';
-import 'ace-builds/src-noconflict/mode-json';
 import './styles.css';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Ace } from 'ace-builds';
 import { subscribe, unsubscribe } from '../../utils/CustomEvents';
 import {
 	Sender,
@@ -18,17 +18,118 @@ import {
 import { chromeApi } from '../../utils/ChromeUtils';
 import { useStorageData } from '../../providers/useStorageData';
 
-const Editor = () => {
-	const aceRef = useRef<Ace.Editor>();
-	const { sessionStorageData, isEditing, setIsEditing, activeKey, activeValue } = useStorageData();
-	const [data, setData] = useState<string>();
+const BASIC_SETUP_OPTIONS: BasicSetupOptions = {
+	allowMultipleSelections: true,
+	autocompletion: true,
+	bracketMatching: true,
+	closeBrackets: true,
+	closeBracketsKeymap: true,
+	completionKeymap: true,
+	// crosshairCursor: true,
+	defaultKeymap: true,
+	drawSelection: true,
+	dropCursor: true,
+	foldGutter: true,
+	foldKeymap: true,
+	highlightActiveLine: true,
+	highlightActiveLineGutter: true,
+	highlightSelectionMatches: true,
+	highlightSpecialChars: true,
+	history: true,
+	historyKeymap: true,
+	indentOnInput: true,
+	lineNumbers: true,
+	lintKeymap: true,
+	rectangularSelection: true,
+	searchKeymap: true,
+	syntaxHighlighting: true,
+}
 
-	const handleSubmitEditedData = useCallback(async () => {
+// from jsonParseLinter
+function getErrorPosition(error: SyntaxError, doc: Text): number {
+	let m;
+	if (m = error.message.match(/at position (\d+)/)) {
+		return Math.min(+m[1], doc.length);
+	}
+
+	if (m = error.message.match(/at line (\d+) column (\d+)/)) {
+		return Math.min(doc.line(+m[1]).from + (+m[2]) - 1, doc.length);
+	}
+
+	return 0;
+}
+
+const Editor = () => {
+	const editorRef = useRef<ReactCodeMirrorRef>({});
+	const { sessionStorageData, isEditing, setIsEditing, activeKey, activeValue } = useStorageData();
+	const [code, setCode] = useState<string>('');
+
+
+
+	const customLinter = () => (view: EditorView): Diagnostic[] => {
+		try {
+			JSON.parse(view.state.doc.toString());
+		} catch (e) {
+			if (!(e instanceof SyntaxError)) {
+				throw e;
+			}
+
+			const pos = getErrorPosition(e, view.state.doc);
+			const line = view.state.doc.lineAt(pos);
+
+			return [{
+				from: line.from,
+				message: e.message,
+				severity: 'error',
+				to: line.to
+			}];
+		}
+
+		return [];
+	};
+
+	const extensions = [EditorView.lineWrapping, json(), linter(customLinter()), lintGutter()];
+	const handleOnChange = (val: string) => {
+		if (!isEditing) {
+			setIsEditing(true);
+		}
+
+		setCode(val);
+	}
+
+	const editorProps: ReactCodeMirrorProps = {
+		value: code,
+		height: '100%',
+		width: '100%',
+		theme: 'dark',
+		basicSetup: BASIC_SETUP_OPTIONS,
+		editable: true,
+		indentWithTab: true,
+		onChange: handleOnChange,
+		extensions: extensions,
+		// /** Some data on the statistics editor. */
+		// onStatistics?(data: Statistics): void;
+		// /** Fired whenever any state change occurs within the editor, including non-document changes like lint results. */
+		// onUpdate?(viewUpdate: ViewUpdate): void;
+		// /** The first time the editor executes the event. */
+		// onCreateEditor?(view: EditorView, state: EditorState): void;
+		// /**
+		//  * Create a state from its JSON representation serialized with [toJSON](https://codemirror.net/docs/ref/#state.EditorState.toJSON) function
+		//  */
+		// initialState?: {
+		// 	json: any;
+		// 	fields?: Record<string, StateField<any>>;
+		// };
+	}
+
+	const handleSubmitEditedData = useCallback(() => {
 		setIsEditing(false);
 
-		const editorValue = aceRef?.current?.session?.getValue() as string;
+		console.log('code:', code)
+		console.log('parsed code:', getDataAsFormattedJson(code));
+		const newValue = code;
 		const dataDeepCopy = JSON.parse(JSON.stringify(sessionStorageData));
-		dataDeepCopy[activeKey] = editorValue;
+		dataDeepCopy[activeKey] = JSON.stringify(getDataAsFormattedJson(newValue));
 
 		chromeApi(
 			{
@@ -46,17 +147,18 @@ const Editor = () => {
 				successToast(null, 'Session Storage Data Pasted.');
 			}
 		);
-	}, [sessionStorageData, activeKey, data]);
+	}, [code]);
 
 	const handleCancelEdits = useCallback(() => {
-		setData(activeValue);
 		setIsEditing(false);
+		setCode(activeValue);
 	}, [sessionStorageData, activeKey, activeValue]);
 
 	useEffect(() => {
-		aceRef?.current?.session?.getUndoManager().reset();
-		setData(JSON.stringify(getDataAsFormattedJson(activeValue), null, '\t'));
+		setCode(JSON.stringify(getDataAsFormattedJson(activeValue), null, 2));
+	}, [editorRef.current, activeKey, activeValue]);
 
+	useEffect(() => {
 		subscribe('SaveEdits', handleSubmitEditedData);
 		subscribe('CancelEdits', handleCancelEdits);
 
@@ -64,68 +166,13 @@ const Editor = () => {
 			unsubscribe('SaveEdits', handleSubmitEditedData);
 			unsubscribe('CancelEdits', handleCancelEdits);
 		};
-	}, [sessionStorageData, activeKey, activeValue]);
+	}, [editorRef.current, code]);
 
-	const props: IAceEditorProps = {
-		name: 'editor',
-		mode: 'json',
-		// theme: '',
-		height: '100%',
-		width: '100%',
-		// className: '',
-		wrapEnabled: true,
-		// readOnly?: boolean;
-		// minLines?: number;
-		// maxLines?: number;
-		// navigateToFileEnd?: boolean;
-		// debounceChangePeriod?: number;
-		// enableBasicAutocompletion?: boolean | string[];
-		// enableLiveAutocompletion?: boolean | string[];
-		// tabSize?: number;
-		value: data,
-		// placeholder?: string;
-		// defaultValue?: string;
-		// scrollMargin?: number[];
-		// enableSnippets?: boolean;
-		// onSelectionChange?: (value: any, event?: any) => void;
-		// onCursorChange?: (value: any, event?: any) => void;
-		// onInput?: (event?: any) => void;
-		onLoad: (editor: Ace.Editor) => {
-			aceRef.current = editor;
-		},
-		// onValidate?: (annotations: Ace.Annotation[]) => void;
-		// onBeforeLoad?: (ace: typeof AceBuilds) => void;
-		onChange: (value) => {
-			if (!isEditing) {
-				setIsEditing(true);
-			}
-
-			setData(value);
-		},
-		// onSelection?: (selectedText: string, event?: any) => void;
-		// onCopy?: (value: string) => void;
-		// onPaste?: (value: string) => void;
-		// onFocus?: (event: any, editor?: Ace.Editor) => void;
-		// onBlur?: (event: any, editor?: Ace.Editor) => void;
-		// onScroll?: (editor: IEditorProps) => void;
-		// editorProps: {
-		// 	blockScrolling: true,
-		// 	blockSelectEnabled: true,
-		// 	enableBlockSelect: true,
-		// 	enableMultiselect: true,
-		// 	highlightPending: true,
-		// 	highlightTagPending: true,
-		// }
-		setOptions: {
-			showFoldWidgets: true,
-		},
-		// keyboardHandler?: string;
-		// commands?: ICommand[];
-		// annotations: [{ row: 0, column: 0, type: 'error', text: 'Some error.'}],
-		// markers: [{ startRow: 0, startCol: 0, endRow: 1, endCol: 20, className: 'error-marker', type: 'fullLine' }],
-	};
-
-	return <AceEditor {...props} />;
-};
+	return (
+		<CodeMirror
+			ref={editorRef}
+			{...editorProps} />
+	)
+}
 
 export default Editor;

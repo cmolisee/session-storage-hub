@@ -19,9 +19,10 @@
 	},
 	"dependencies": {
 		"@ant-design/icons": "^5.2.6",
-		"ace-builds": "^1.32.3",
+		"@codemirror/lang-json": "^6.0.1",
+		"@codemirror/lint": "^6.5.0",
+		"@uiw/react-codemirror": "^4.21.24",
 		"react": "^18.2.0",
-		"react-ace": "^10.1.0",
 		"react-dom": "^18.2.0",
 		"react-router-dom": "^6.21.0",
 		"react-toastify": "^9.1.3"
