@@ -16,8 +16,10 @@ echo "Add release notes to release.txt... ✅"
 echo $NOTES >> release.txt
 
 # update manifest version
-echo "Bump the version in manifest.json... ✅"
-sed -i "s|\(\"version\": \)\(.*\),|\1\"$VERSION\",|g" ./manifest.json
+echo "Bump the version in manifest.json to $VERSION... ✅"
+head manifest.json
+sed -i "s|\(\"version\": \)\(.*\),|\1\"$VERSION\",|g" manifest.json
+head manifest.json
 
 # Just creating a folder to dump our release in.
 echo "Create tmp releases dir... ✅"
