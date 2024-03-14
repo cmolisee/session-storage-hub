@@ -17,8 +17,8 @@ export enum Action {
 }
 
 export enum Themes {
-	a11yLight = 'a11y-light',
-	darkOrange = 'dark-orange',
+	light = 'light',
+	tokyoNight = 'tokyo-night',
 	retroSunset = 'retro-sunset',
 	mfDracula = 'mf-dracula',
 }
@@ -101,14 +101,6 @@ export interface IColors {
 	unselectedIconColor: string;
 	keyColor: string;
 	keySelectedColor: string;
-	objectColor: string;
-	arrayColor: string;
-	stringColor: string;
-	numberColor: string;
-	booleanColor: string;
-	nullColor: string;
-	undefinedColor: string;
-	emptyColor: string;
 }
 
 export interface IThemeStyles {
@@ -122,14 +114,6 @@ export interface IThemeStyles {
 	'--unselectedIconColor': string;
 	'--keyColor': string;
 	'--keySelectedColor': string;
-	'--objectColor': string;
-	'--arrayColor': string;
-	'--stringColor': string;
-	'--numberColor': string;
-	'--booleanColor': string;
-	'--nullColor': string;
-	'--undefinedColor': string;
-	'--emptyColor': string;
 }
 
 export interface IReactToastifyStyles {

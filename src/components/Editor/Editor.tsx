@@ -17,6 +17,7 @@ import {
 } from '../../types/types';
 import { chromeApi } from '../../utils/ChromeUtils';
 import { useStorageData } from '../../providers/useStorageData';
+import { useTheme } from '../../providers/useTheme';
 
 const BASIC_SETUP_OPTIONS: BasicSetupOptions = {
 	allowMultipleSelections: true,
@@ -47,13 +48,14 @@ const BASIC_SETUP_OPTIONS: BasicSetupOptions = {
 
 // from jsonParseLinter
 function getErrorPosition(error: SyntaxError, doc: Text): number {
-	let m;
-	if (m = error.message.match(/at position (\d+)/)) {
-		return Math.min(+m[1], doc.length);
+	const pos = error.message.match(/at position (\d+)/);
+	if (pos) {
+		return Math.min(+pos[1], doc.length);
 	}
 
-	if (m = error.message.match(/at line (\d+) column (\d+)/)) {
-		return Math.min(doc.line(+m[1]).from + (+m[2]) - 1, doc.length);
+	const lineCol = error.message.match(/at line (\d+) column (\d+)/);
+	if (lineCol) {
+		return Math.min(doc.line(+lineCol[1]).from + (+lineCol[2]) - 1, doc.length);
 	}
 
 	return 0;
@@ -62,10 +64,11 @@ function getErrorPosition(error: SyntaxError, doc: Text): number {
 const Editor = () => {
 	const editorRef = useRef<ReactCodeMirrorRef>({});
 	const { sessionStorageData, isEditing, setIsEditing, activeKey, activeValue } = useStorageData();
+	const { editorTheme } = useTheme();
 	const [code, setCode] = useState<string>('');
 
 
-
+	console.log('theme', editorTheme);
 	const customLinter = () => {
 		return (view: EditorView): Diagnostic[] => {
 			try {
@@ -90,7 +93,8 @@ const Editor = () => {
 		}
 	};
 
-	const extensions = [EditorView.lineWrapping, json(), linter(customLinter()), lintGutter()];
+	// todo: debug editor theme.
+	const extensions = [EditorView.lineWrapping, editorTheme, json(), linter(customLinter()), lintGutter()];
 	const handleOnChange = (val: string) => {
 		if (!isEditing) {
 			setIsEditing(true);
@@ -103,7 +107,7 @@ const Editor = () => {
 		value: code,
 		height: '100%',
 		width: '100%',
-		theme: 'dark',
+		theme: editorTheme,
 		basicSetup: BASIC_SETUP_OPTIONS,
 		editable: true,
 		indentWithTab: true,

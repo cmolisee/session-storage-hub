@@ -6,6 +6,7 @@ import {
 	SetStateAction,
 	useState,
 	useEffect,
+	useMemo,
 } from 'react';
 import jsonThemes from '../assets/themes.json';
 import { requestOptionData } from '../utils/ChromeUtils';
@@ -15,16 +16,21 @@ import {
 	ITheme,
 	IReactToastifyStyles,
 } from '../types/types';
+import { githubLight } from '@uiw/codemirror-theme-github';
+import { tokyoNightStorm } from '@uiw/codemirror-theme-tokyo-night-storm'
+import { Extension } from '@uiw/react-codemirror';
 
 interface IThemeContextProps {
 	theme: Themes;
+	editorTheme: Extension;
 	styles: IThemeStyles & IReactToastifyStyles;
 	setTheme: Dispatch<SetStateAction<Themes>> | null;
 }
 
 const DefaultTheme = {
-	theme: Themes.a11yLight,
-	styles: getStylesFromTheme(Themes.a11yLight),
+	theme: Themes.light,
+	editorTheme: githubLight,
+	styles: getStylesFromTheme(Themes.light),
 	setTheme: null,
 };
 
@@ -49,14 +55,6 @@ function getStylesFromTheme(name: Themes) {
 		'--unselectedIconColor': theme.colors.unselectedIconColor,
 		'--keyColor': theme.colors.keyColor,
 		'--keySelectedColor': theme.colors.keySelectedColor,
-		'--objectColor': theme.colors.objectColor,
-		'--arrayColor': theme.colors.arrayColor,
-		'--stringColor': theme.colors.stringColor,
-		'--numberColor': theme.colors.numberColor,
-		'--booleanColor': theme.colors.booleanColor,
-		'--nullColor': theme.colors.nullColor,
-		'--undefinedColor': theme.colors.undefinedColor,
-		'--emptyColor': theme.colors.emptyColor,
 		'--toastify-color-info': theme.colors['toastify-info'],
 		'--toastify-color-success': theme.colors['toastify-success'],
 		'--toastify-color-warning': theme.colors['toastify-warning'],
@@ -75,6 +73,16 @@ function getStylesFromTheme(name: Themes) {
 	} as IThemeStyles & IReactToastifyStyles;
 }
 
+function getEditorTheme(name: Themes) {
+	console.log('getting theme:', name);
+	console.log('theme val: ', githubLight);
+	switch (name) {
+		case 'light': return githubLight;
+		case 'tokyo-night': return tokyoNightStorm;
+		default: return githubLight;
+	}
+}
+
 export const ThemeProvider = ({
 	defaultThemeName,
 	children,
@@ -91,11 +99,14 @@ export const ThemeProvider = ({
 
 	return (
 		<ThemeContext.Provider
-			value={{
-				theme: theme,
-				styles: getStylesFromTheme(theme),
-				setTheme: setTheme,
-			}}>
+			value={useMemo(() => {
+				return {
+					theme: theme,
+					editorTheme: getEditorTheme(theme),
+					styles: getStylesFromTheme(theme),
+					setTheme: setTheme,
+				};
+			}, [theme])}>
 			{children}
 		</ThemeContext.Provider>
 	);

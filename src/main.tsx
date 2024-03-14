@@ -17,7 +17,7 @@ const router = createHashRouter([
 
 ReactDOM.createRoot(document.getElementById('sessionStorageHub')!).render(
 	<React.StrictMode>
-		<ThemeProvider defaultThemeName={Themes.a11yLight}>
+		<ThemeProvider defaultThemeName={Themes.light}>
 			<StorageDataProvider>
 				<RouterProvider router={router} />
 			</StorageDataProvider>
