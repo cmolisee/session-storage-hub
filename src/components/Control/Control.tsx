@@ -14,10 +14,10 @@ const Control = ({ className, children, onClickCallback }: IControlProps) => {
 	return (
 		<button
 			className={[
-				className,
 				styleClassNames,
 				spacingClassNames,
 				hoverClassNames,
+				className,
 			].join(' ')}
 			onClick={onClickCallback}>
 			{children}

@@ -27,7 +27,7 @@ const requestMessageListener = (
 	response: TResponse
 ) => {
 	if (validateSender(Sender.Extension, Action.Request, message, sender)) {
-		const data = Object.assign({}, sessionStorage);
+		const data = JSON.parse(JSON.stringify(sessionStorage));
 
 		response({
 			error: !data ? 'Error retrieving session storage' : null,
@@ -45,7 +45,7 @@ const updateMessageListener = (
 ) => {
 	if (validateSender(Sender.Extension, Action.Update, message, sender)) {
 		try {
-			Object.entries(message.message?.clipboard ?? {}).forEach((e) => {
+			Object.entries(message.message?.updatedData ?? {}).forEach((e) => {
 				sessionStorage.setItem(e[0], e[1] as string);
 			});
 
@@ -54,6 +54,85 @@ const updateMessageListener = (
 		} catch {
 			response({
 				error: 'Error updating session storage data',
+				data: null,
+			});
+		}
+		return true; // we will eventually return a response
+	}
+	return false; // do not expect a response
+};
+
+const cleanMessageListener = (
+	message: IChromeMessage,
+	sender: chrome.runtime.MessageSender,
+	response: TResponse
+) => {
+	if (validateSender(Sender.Extension, Action.Clean, message, sender)) {
+		try {
+			sessionStorage.clear();
+			Object.entries(message.message.data).forEach((e) => {
+				sessionStorage.setItem(e[0], e[1] as string);
+			});
+
+			const data = Object.assign({}, sessionStorage);
+			response({ error: null, data: data });
+		} catch {
+			response({
+				error: 'Error cleaning session storage data',
+				data: null,
+			});
+		}
+		return true; // we will eventually return a response
+	}
+	return false; // do not expect a response
+};
+
+const clearMessageListener = (
+	message: IChromeMessage,
+	sender: chrome.runtime.MessageSender,
+	response: TResponse
+) => {
+	if (validateSender(Sender.Extension, Action.Clear, message, sender)) {
+		try {
+			sessionStorage.clear();
+			response({ error: null, data: {} });
+		} catch {
+			response({
+				error: 'Error clearing session storage data',
+				data: null,
+			});
+		}
+		return true; // we will eventually return a response
+	}
+	return false; // do not expect a response
+};
+
+const fillStorageMessageListener = (
+	message: IChromeMessage,
+	sender: chrome.runtime.MessageSender,
+	response: TResponse
+) => {
+	if (validateSender(Sender.Extension, Action.FillStorage, message, sender)) {
+		try {
+			let x = 8;
+
+			while (x > 0) {
+				try {
+					window.sessionStorage.setItem(
+						'@utility-fill-' +
+						window.sessionStorage.length.toString(),
+						'@'.repeat(2 ** x)
+					);
+				} catch (e) {
+					x -= 1;
+				}
+			}
+
+			const data = Object.assign({}, sessionStorage);
+			response({ error: null, data: data });
+		} catch {
+			response({
+				error: 'Error filling session storage.',
 				data: null,
 			});
 		}
@@ -85,7 +164,7 @@ const checkReleaseListener = (
 					!data ||
 					!data.timestamp ||
 					convertMsToHr(message.message.timestamp - data.timestamp) >
-						5
+					5
 				) {
 					fetch(
 						'https://api.github.com/repos/cmolisee/session-storage-hub/releases/latest'
@@ -107,7 +186,7 @@ const checkReleaseListener = (
 							response({ error: null, data: resData });
 						})
 						.catch((err) => {
-							return console.log(err);
+							return console.error('Session Storage Hub:', err);
 						});
 				} else {
 					// otherwise data exists, is up to date
@@ -126,11 +205,47 @@ const checkReleaseListener = (
 	return false; // do not expect a response
 };
 
+export const copyStorageToClipboard = (
+	message: IChromeMessage,
+	sender: chrome.runtime.MessageSender,
+	response: TResponse
+) => {
+	if (validateSender(Sender.Extension, Action.Copy, message, sender)) {
+		const keys = message.message.keys;
+		const dataToCopy: any = {};
+		Object.entries(sessionStorage).forEach(([key, value]: [string, any]) => {
+			if (keys.includes(key)) {
+				dataToCopy[key] = value;
+			}
+		});
+
+		response({
+			error: null,
+			data: dataToCopy,
+		});
+		return true; // we will eventually return a response
+	}
+	return false; // do not expect a response
+}
+
 const main = () => {
+	// prevent duplicate listeners
+	chrome.runtime.onMessage.removeListener(requestMessageListener);
+	chrome.runtime.onMessage.removeListener(updateMessageListener);
+	chrome.runtime.onMessage.removeListener(cleanMessageListener);
+	chrome.runtime.onMessage.removeListener(clearMessageListener);
+	chrome.runtime.onMessage.removeListener(fillStorageMessageListener);
+	chrome.runtime.onMessage.removeListener(checkReleaseListener);
+	chrome.runtime.onMessage.removeListener(copyStorageToClipboard);
+
 	// Fired when a message is sent from either an extension process or a content script.
 	chrome.runtime.onMessage.addListener(requestMessageListener);
 	chrome.runtime.onMessage.addListener(updateMessageListener);
+	chrome.runtime.onMessage.addListener(cleanMessageListener);
+	chrome.runtime.onMessage.addListener(clearMessageListener);
+	chrome.runtime.onMessage.addListener(fillStorageMessageListener);
 	chrome.runtime.onMessage.addListener(checkReleaseListener);
+	chrome.runtime.onMessage.addListener(copyStorageToClipboard);
 };
 
 main();

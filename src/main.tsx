@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom/client';
 import { RouterProvider, createHashRouter } from 'react-router-dom';
 import Popup from './views/popup';
 import Options from './views/options';
-import { ToastContainer, Flip } from 'react-toastify';
+import { ToastContainer, Zoom } from 'react-toastify';
 import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ThemeProvider } from './providers/useTheme';
+import { StorageDataProvider } from './providers/useStorageData'
 import { Themes } from './types/types';
 
 const router = createHashRouter([
@@ -16,22 +17,18 @@ const router = createHashRouter([
 
 ReactDOM.createRoot(document.getElementById('sessionStorageHub')!).render(
 	<React.StrictMode>
-		<ThemeProvider defaultThemeName={Themes.a11yLight}>
-			<RouterProvider router={router} />
+		<ThemeProvider defaultThemeName={Themes.light}>
+			<StorageDataProvider>
+				<RouterProvider router={router} />
+			</StorageDataProvider>
 		</ThemeProvider>
 		<ToastContainer
 			position="bottom-center"
-			transition={Flip}
-			autoClose={500}
+			transition={Zoom}
 			hideProgressBar
-			limit={1}
-			newestOnTop
-			closeOnClick
-			rtl={false}
-			pauseOnFocusLoss={false}
-			draggable={false}
-			pauseOnHover
 			theme="colored"
+			draggable
+			limit={3}
 		/>
 	</React.StrictMode>
 );

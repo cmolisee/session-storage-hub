@@ -1,23 +1,10 @@
-import { Themes } from '../types/types';
+import { IChromeMessage, IMessageResponse, Themes } from '../types/types';
+import { errorToast } from './Utils';
 
-export const getCurrentTabUId = (callback: (id?: number) => void): void => {
-	if (!chrome?.tabs) {
-		console.error('Chrome api is not available.');
-		return;
-	}
-
-	const queryInfo = { active: true, currentWindow: true };
-
-	chrome.tabs &&
-		chrome.tabs.query(queryInfo, (tabs) => {
-			callback(tabs.length ? tabs[0].id : 0);
-		});
-};
-
-export const saveOptions = (
+export function saveOptionData(
 	options: { name: Themes },
 	callback?: () => void
-) => {
+) {
 	if (!chrome?.storage) {
 		console.error('Chrome api is not available.');
 		return;
@@ -26,9 +13,12 @@ export const saveOptions = (
 	chrome.storage.sync.set({ options: options }, () => {
 		return callback && callback();
 	});
-};
+}
 
-export const requestData = (key: string, callback?: (items: any) => void) => {
+export function requestOptionData(
+	key: string,
+	callback?: (items: any) => void
+) {
 	if (!chrome?.storage) {
 		console.error('Chrome api is not available.');
 		return;
@@ -37,4 +27,50 @@ export const requestData = (key: string, callback?: (items: any) => void) => {
 	chrome.storage.sync.get(key, (items) => {
 		return callback && callback(items);
 	});
-};
+}
+
+export function chromeApi(
+	chromeMessage: IChromeMessage,
+	successCallback: (res: IMessageResponse) => void
+) {
+	if (!chrome?.tabs) {
+		errorToast('503', 'Chrome tabs API is not available.');
+	}
+
+	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+		const id = tabs[0]?.id as number;
+		if (!id) {
+			errorToast('503', 'Could not retrieve active tab id.');
+		}
+
+		chrome.tabs.sendMessage(
+			id,
+			chromeMessage,
+			async (res: IMessageResponse) => {
+				if (chrome.runtime.lastError) {
+					errorToast(
+						'401',
+						'Cannot establish connection on this page.'
+					);
+					return;
+				}
+
+				if (res && res.error) {
+					errorToast('sendMessageResponseError', res.error);
+					return;
+				}
+
+				if (res && res.data) {
+					successCallback(res);
+				} else {
+					errorToast(
+						'requestError',
+						'There was an error retrieving latest release information.'
+					);
+				}
+
+				return;
+			}
+		);
+	});
+}

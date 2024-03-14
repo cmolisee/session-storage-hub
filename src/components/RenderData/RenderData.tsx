@@ -45,9 +45,8 @@ const renderArray = (data: any[], isOpen: boolean = false) => {
 		if (key.length > 20) {
 			const formatted = key.substring(0, 20);
 			const lastComma = formatted.lastIndexOf(',');
-			return `[${
-				lastComma > 0 ? formatted.substring(0, lastComma) : formatted
-			},...]`;
+			return `[${lastComma > 0 ? formatted.substring(0, lastComma) : formatted
+				},...]`;
 		}
 
 		return `[${key}]`;

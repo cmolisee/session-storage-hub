@@ -15,7 +15,7 @@ module.exports = {
 			'never',
 			['sentence-case', 'start-case', 'pascal-case', 'upper-case'],
 		],
-        'scope-empty': [0, 'always'],
+		'scope-empty': [0, 'always'],
 		'subject-empty': [2, 'never'],
 		'subject-full-stop': [0, 'never', '.'],
 		'type-case': [2, 'always', 'lower-case'],

@@ -1,3 +1,5 @@
+import { ToastOptions } from 'react-toastify';
+
 export enum Sender {
 	Webpage,
 	Extension,
@@ -6,16 +8,30 @@ export enum Sender {
 export enum Action {
 	Request,
 	Update,
+	Clean,
+	Clear,
 	Post,
 	Check,
+	FillStorage,
+	Copy,
 }
 
 export enum Themes {
-	a11yLight = 'a11y-light',
-	darkOrange = 'dark-orange',
-	retroSunset = 'retro-sunset',
-	mfDracula = 'mf-dracula',
+	light = 'light',
+	dark = 'dark',
+	tokyoNight = 'tokyo-night',
+	noctisLight = 'noctis-light',
+	bespin = 'bespin',
+	andromeda = 'andromeda',
 }
+
+export type TDataTypes =
+	| 'string'
+	| 'number'
+	| 'boolean'
+	| 'array'
+	| 'object'
+	| 'none';
 
 export interface IChromeMessage {
 	from: Sender;
@@ -28,20 +44,25 @@ export interface IMessageResponse {
 	data: any;
 }
 
-export type TOptionType = { value: string; label: string };
-
-export interface ISelectDropdownProps {
-	label: string;
-	initial?: TOptionType;
-	options: TOptionType[];
-	changeCallback?: (option: any) => void;
-}
-
 export type TVersionData = {
 	isUpToDate?: boolean;
 	timestamp?: number;
 	releaseUrl?: string;
 };
+
+export interface IUseToastProps {
+	toastOps?: ToastOptions;
+	message: React.ReactNode;
+	acceptText?: string;
+	declineText?: string;
+	acceptCallback?: () => void;
+	declineCallback?: () => void;
+}
+
+export interface IMsgProps {
+	closeToast?: () => void;
+	content: IUseToastProps;
+}
 
 export type TFontWeight =
 	| 'thin'
@@ -82,14 +103,6 @@ export interface IColors {
 	unselectedIconColor: string;
 	keyColor: string;
 	keySelectedColor: string;
-	objectColor: string;
-	arrayColor: string;
-	stringColor: string;
-	numberColor: string;
-	booleanColor: string;
-	nullColor: string;
-	undefinedColor: string;
-	emptyColor: string;
 }
 
 export interface IThemeStyles {
@@ -103,12 +116,19 @@ export interface IThemeStyles {
 	'--unselectedIconColor': string;
 	'--keyColor': string;
 	'--keySelectedColor': string;
-	'--objectColor': string;
-	'--arrayColor': string;
-	'--stringColor': string;
-	'--numberColor': string;
-	'--booleanColor': string;
-	'--nullColor': string;
-	'--undefinedColor': string;
-	'--emptyColor': string;
+}
+
+export interface IReactToastifyStyles {
+	'--toastify-color-info': string;
+	'--toastify-color-success': string;
+	'--toastify-color-warning': string;
+	'--toastify-color-error': string;
+	'--toastify-toast-background': string;
+	'--toastify-text-color-info': string;
+	'--toastify-text-color-success': string;
+	'--toastify-text-color-warning': string;
+	'--toastify-text-color-error': string;
+	// default
+	'--toastify-text-color-light': string;
+	'--toastify-color-light': string;
 }

@@ -44,7 +44,7 @@ const DataItem = ({
 					onClick={() => {
 						return setShowData(!showData);
 					}}
-					show-data={showData}>
+					show-data={showData.toString()}>
 					<span className={'text-xs pr-0.5'}>
 						{showData ? <CaretDownFilled /> : <CaretRightFilled />}
 					</span>

@@ -3,38 +3,33 @@ import { useStorageData } from '../../providers/useStorageData';
 
 interface IViewGridKeyProps {
 	keyName: string;
-	callback: () => void;
 }
 
-const ViewGridKey = ({ keyName, callback }: IViewGridKeyProps) => {
-	const { selectedKeys, setSelectedKeys, dataKey } = useStorageData();
-
-	const handleIsChecked = () => {
-		return selectedKeys?.includes(keyName) ?? false;
-	};
+const ViewGridKey = ({ keyName }: IViewGridKeyProps) => {
+	const { activeKey, setActiveKey, selectedKeys, setSelectedKeys } = useStorageData();
 
 	const handleOnChange = () => {
-		if (selectedKeys?.includes(keyName)) {
-			setSelectedKeys(
-				selectedKeys.filter((k) => {
-					return k !== keyName;
-				})
-			);
+		if (!selectedKeys.includes(keyName)) {
+			setSelectedKeys([...selectedKeys, keyName]);
 		} else {
-			setSelectedKeys([...(selectedKeys as string[]), keyName]);
+			setSelectedKeys(selectedKeys.filter((k) => { return k !== keyName }));
 		}
-	};
+	}
+
+	const handleSetActiveKey = () => {
+		setActiveKey(keyName);
+	}
 
 	return (
 		<div
 			className={'ViewGridKey'}
-			aria-selected={dataKey === keyName}>
+			aria-selected={activeKey === keyName}>
 			<input
 				type={'checkbox'}
-				checked={handleIsChecked()}
+				checked={selectedKeys.includes(keyName)}
 				onChange={handleOnChange}
 			/>
-			<p onClick={callback}>{keyName}</p>
+			<p onClick={handleSetActiveKey}>{keyName}</p>
 		</div>
 	);
 };

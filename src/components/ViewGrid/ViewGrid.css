@@ -1,6 +1,6 @@
 .ViewGrid {
 	display: grid;
-	grid-template-columns: 3fr 7fr;
+	grid-template-columns: 3fr 9fr;
 	grid-template-areas: 'key value';
 	border: 0.0625rem solid var(--borderColor);
 	padding: 0.325rem;
@@ -24,6 +24,7 @@
 	word-wrap: break-word;
 	word-break: break-all;
 	overflow-x: clip;
+	padding: 0 0.125rem;
 }
 
 .ViewGrid__70 {

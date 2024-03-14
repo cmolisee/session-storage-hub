@@ -6,20 +6,34 @@ import {
 	SetStateAction,
 	useState,
 	useEffect,
+	useMemo,
 } from 'react';
 import jsonThemes from '../assets/themes.json';
-import { requestData } from '../utils/ChromeUtils';
-import { Themes, IThemeStyles, ITheme } from '../types/types';
+import { requestOptionData } from '../utils/ChromeUtils';
+import {
+	Themes,
+	IThemeStyles,
+	ITheme,
+	IReactToastifyStyles,
+} from '../types/types';
+import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
+import { tokyoNightStorm } from '@uiw/codemirror-theme-tokyo-night-storm'
+import { Extension } from '@uiw/react-codemirror';
+import { noctisLilac } from '@uiw/codemirror-theme-noctis-lilac';
+import { bespin } from '@uiw/codemirror-theme-bespin';
+import { andromeda } from '@uiw/codemirror-theme-andromeda';
 
 interface IThemeContextProps {
 	theme: Themes;
-	styles: IThemeStyles;
+	editorTheme: Extension;
+	styles: IThemeStyles & IReactToastifyStyles;
 	setTheme: Dispatch<SetStateAction<Themes>> | null;
 }
 
 const DefaultTheme = {
-	theme: Themes.a11yLight,
-	styles: getStylesFromTheme(Themes.a11yLight),
+	theme: Themes.light,
+	editorTheme: githubLight,
+	styles: getStylesFromTheme(Themes.light),
 	setTheme: null,
 };
 
@@ -44,15 +58,36 @@ function getStylesFromTheme(name: Themes) {
 		'--unselectedIconColor': theme.colors.unselectedIconColor,
 		'--keyColor': theme.colors.keyColor,
 		'--keySelectedColor': theme.colors.keySelectedColor,
-		'--objectColor': theme.colors.objectColor,
-		'--arrayColor': theme.colors.arrayColor,
-		'--stringColor': theme.colors.stringColor,
-		'--numberColor': theme.colors.numberColor,
-		'--booleanColor': theme.colors.booleanColor,
-		'--nullColor': theme.colors.nullColor,
-		'--undefinedColor': theme.colors.undefinedColor,
-		'--emptyColor': theme.colors.emptyColor,
-	} as IThemeStyles;
+		'--toastify-color-info': theme.colors['toastify-info'],
+		'--toastify-color-success': theme.colors['toastify-success'],
+		'--toastify-color-warning': theme.colors['toastify-warning'],
+		'--toastify-color-error': theme.colors['toastify-error'],
+		'--toastify-toast-background': theme.colors['toastify-background'],
+		'--toastify-text-color-info': theme.colors['toastify-text-color-info'],
+		'--toastify-text-color-success':
+			theme.colors['toastify-text-color-success'],
+		'--toastify-text-color-warning':
+			theme.colors['toastify-text-color-warning'],
+		'--toastify-text-color-error':
+			theme.colors['toastify-text-color-error'],
+		'--toastify-text-color-light':
+			theme.colors['toastify-text-color-light'],
+		'--toastify-color-light': theme.colors['toastify-color-light'],
+	} as IThemeStyles & IReactToastifyStyles;
+}
+
+function getEditorTheme(name: Themes) {
+	console.log('getting theme:', name);
+	console.log('theme val: ', githubLight);
+	switch (name) {
+		case 'light': return githubLight;
+		case 'dark': return githubDark;
+		case 'tokyo-night': return tokyoNightStorm;
+		case 'noctis-light': return noctisLilac;
+		case 'bespin': return bespin;
+		case 'andromeda': return andromeda;
+		default: return githubLight;
+	}
 }
 
 export const ThemeProvider = ({
@@ -62,7 +97,7 @@ export const ThemeProvider = ({
 	const [theme, setTheme] = useState<Themes>(defaultThemeName);
 
 	useEffect(() => {
-		requestData('options', (items) => {
+		requestOptionData('options', (items: any) => {
 			if (Object.values(Themes).includes(items.options?.name)) {
 				setTheme(items.options?.name);
 			}
@@ -71,11 +106,14 @@ export const ThemeProvider = ({
 
 	return (
 		<ThemeContext.Provider
-			value={{
-				theme: theme,
-				styles: getStylesFromTheme(theme),
-				setTheme: setTheme,
-			}}>
+			value={useMemo(() => {
+				return {
+					theme: theme,
+					editorTheme: getEditorTheme(theme),
+					styles: getStylesFromTheme(theme),
+					setTheme: setTheme,
+				};
+			}, [theme])}>
 			{children}
 		</ThemeContext.Provider>
 	);
