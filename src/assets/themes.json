@@ -26,6 +26,32 @@
 		}
 	},
 	{
+		"name": "dark",
+		"colors": {
+			"backgroundColor": "#1e1e1e",
+			"textColor": "#6a9955",
+			"specialTextColor": "#72a1ff",
+			"buttonColor": "#6a9955",
+			"buttonHoverColor": "#72a1ff",
+			"borderColor": "#72a1ff",
+			"selectedIconColor": "#4ec9b0",
+			"unselectedIconColor": "#ce9178",
+			"keyColor": "#6a9955",
+			"keySelectedColor": "#d4d4d4",
+			"toastify-info": "#569cd6",
+			"toastify-success": "#4ec9b0",
+			"toastify-warning": "#ce9178",
+			"toastify-error": "#C586C0",
+			"toastify-background": "#1e1e1e",
+			"toastify-text-color-info": "#1e1e1e",
+			"toastify-text-color-success": "#1e1e1e",
+			"toastify-text-color-warning": "#1e1e1e",
+			"toastify-text-color-error": "#1e1e1e",
+			"toastify-text-color-light": "#6a9955",
+			"toastify-color-light": "#1e1e1e"
+		}
+	},
+	{
 		"name": "tokyo-night",
 		"colors": {
 			"backgroundColor": "#24283b",
@@ -37,7 +63,7 @@
 			"selectedIconColor": "#9ece6a",
 			"unselectedIconColor": "#ff5370",
 			"keyColor": "#7982a9",
-			"keySelectedColor": "#89ddff",
+			"keySelectedColor": "#D9DBE7",
 			"toastify-info": "#bb9af7",
 			"toastify-success": "#9ece6a",
 			"toastify-warning": "#f7b79a",

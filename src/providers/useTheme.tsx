@@ -16,7 +16,7 @@ import {
 	ITheme,
 	IReactToastifyStyles,
 } from '../types/types';
-import { githubLight } from '@uiw/codemirror-theme-github';
+import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
 import { tokyoNightStorm } from '@uiw/codemirror-theme-tokyo-night-storm'
 import { Extension } from '@uiw/react-codemirror';
 import { noctisLilac } from '@uiw/codemirror-theme-noctis-lilac';
@@ -81,6 +81,7 @@ function getEditorTheme(name: Themes) {
 	console.log('theme val: ', githubLight);
 	switch (name) {
 		case 'light': return githubLight;
+		case 'dark': return githubDark;
 		case 'tokyo-night': return tokyoNightStorm;
 		case 'noctis-light': return noctisLilac;
 		case 'bespin': return bespin;

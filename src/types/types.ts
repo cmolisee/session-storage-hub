@@ -18,6 +18,7 @@ export enum Action {
 
 export enum Themes {
 	light = 'light',
+	dark = 'dark',
 	tokyoNight = 'tokyo-night',
 	noctisLight = 'noctis-light',
 	bespin = 'bespin',
