@@ -19,8 +19,9 @@ export enum Action {
 export enum Themes {
 	light = 'light',
 	tokyoNight = 'tokyo-night',
-	retroSunset = 'retro-sunset',
-	mfDracula = 'mf-dracula',
+	noctisLight = 'noctis-light',
+	bespin = 'bespin',
+	andromeda = 'andromeda',
 }
 
 export type TDataTypes =

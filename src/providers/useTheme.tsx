@@ -19,6 +19,9 @@ import {
 import { githubLight } from '@uiw/codemirror-theme-github';
 import { tokyoNightStorm } from '@uiw/codemirror-theme-tokyo-night-storm'
 import { Extension } from '@uiw/react-codemirror';
+import { noctisLilac } from '@uiw/codemirror-theme-noctis-lilac';
+import { bespin } from '@uiw/codemirror-theme-bespin';
+import { andromeda } from '@uiw/codemirror-theme-andromeda';
 
 interface IThemeContextProps {
 	theme: Themes;
@@ -79,6 +82,9 @@ function getEditorTheme(name: Themes) {
 	switch (name) {
 		case 'light': return githubLight;
 		case 'tokyo-night': return tokyoNightStorm;
+		case 'noctis-light': return noctisLilac;
+		case 'bespin': return bespin;
+		case 'andromeda': return andromeda;
 		default: return githubLight;
 	}
 }

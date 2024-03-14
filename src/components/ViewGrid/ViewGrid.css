@@ -24,6 +24,7 @@
 	word-wrap: break-word;
 	word-break: break-all;
 	overflow-x: clip;
+	padding: 0 0.125rem;
 }
 
 .ViewGrid__70 {
