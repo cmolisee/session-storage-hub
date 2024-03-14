@@ -155,7 +155,7 @@ const Editor = () => {
 
 	const handleCancelEdits = useCallback(() => {
 		setIsEditing(false);
-		setCode(activeValue);
+		setCode(JSON.stringify(getDataAsFormattedJson(activeValue), null, 2));
 	}, [sessionStorageData, activeKey, activeValue]);
 
 	useEffect(() => {
