@@ -1,0 +1,50 @@
+{
+  "name": "Session Storage Hub",
+  "description": "Utilities for session storage",
+  "version": "5.0.1",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Session Storage Utilities"
+  },
+  "options_ui": {
+    "page": "index.html"
+  },
+  "icons": {
+    "32": "icon-32.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "assets/content.ts-loader-f965fd53.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "devtools_page": "index.html",
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "storage"
+  ],
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "resources": [
+        "assets/types-68586616.js",
+        "assets/content.ts-98fbb95d.js"
+      ],
+      "use_dynamic_url": true
+    }
+  ]
+}
