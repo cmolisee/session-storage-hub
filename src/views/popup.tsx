@@ -11,7 +11,6 @@ import { chromeApi } from '../utils/ChromeUtils';
 import { useTheme } from '../providers/useTheme';
 import Control from '../components/Control/Control';
 import ViewGrid from '../components/ViewGrid/ViewGrid';
-import DropdownMenu from '../components/DropdownMenu/DropdownMenu';
 import { errorToast, infoToast, promptToast, sortObjectByKeys, successToast } from '../utils/Utils';
 import { useStorageData } from '../providers/useStorageData';
 
@@ -216,8 +215,8 @@ const Popup = () => {
 	return (
 		<>
 			<Header viewLink={'options'} />
-			<div className={'flex justify-between text-[var(--borderColor)]'}>
-				<div>
+			<div className={'grid grid-cols-12 text-[var(--borderColor)]'}>
+				<div className={'col-span-3 flex justify-between items-end border-[1px] border-r-0 border-b-0 border-[var(--borderColor)]'}>
 					<Control
 						onClickCallback={selectAllKeys}>
 						Select All
@@ -227,55 +226,50 @@ const Popup = () => {
 						Unselect All
 					</Control>
 				</div>
-				<div>
-					<Control
-						className={'font-bold'}
-						onClickCallback={handleCopy}>
-						Copy
-					</Control>
-					<Control
-						className={'font-bold'}
-						onClickCallback={handlePaste}>
-						Paste
-					</Control>
-				</div>
-				<div>
-					<DropdownMenu
-						label={'Utitlies'}
-						options={[
-							{
-								label: 'Fill Storage',
-								onClickCallback: () => {
-									promptToast(
-										'utility',
-										'Caution: This will cause some slowness.\n' +
-										'Are you sure you want to fill all session storage memory?',
-										handleFillSessionStorageUtility
-									);
-								},
-							},
-							{
-								label: 'Clear Storage',
-								onClickCallback: () => {
-									promptToast(
-										'utility',
-										'Are you sure you want to clear all session storage memory?',
-										handleClearSessionStorageUtility
-									);
-								},
-							},
-							{
-								label: 'Clean Storage',
-								onClickCallback: () => {
-									promptToast(
-										'utility',
-										'Are you sure you want to clean all session storage memory?',
-										handleCleanSessionStorageUtility
-									);
-								},
-							},
-						]}
-					/>
+				<div className={'col-span-9 flex flex-1 flex-wrap border-[1px] border-b-0 border-[var(--borderColor)]'}>
+					<div className={'w-full'}>
+						<Control
+							onClickCallback={handleCopy}>
+							Copy
+						</Control>
+						<Control
+							onClickCallback={handlePaste}>
+							Paste
+						</Control>
+					</div>
+					<div className={'w-full'}>
+						<Control
+							onClickCallback={() => {
+								promptToast(
+									'utility',
+									'Caution: This will cause some slowness.\n' +
+									'Are you sure you want to fill all session storage memory?',
+									handleFillSessionStorageUtility
+								);
+							}}>
+							Fill Storage
+						</Control>
+						<Control
+							onClickCallback={() => {
+								promptToast(
+									'utility',
+									'Are you sure you want to clear all session storage memory?',
+									handleClearSessionStorageUtility
+								);
+							}}>
+							Clear Storage
+						</Control>
+						<Control
+							onClickCallback={() => {
+								promptToast(
+									'utility',
+									'Are you sure you want to clean all session storage memory?',
+									handleCleanSessionStorageUtility
+								);
+							}}>
+							Clean Storage
+						</Control>
+					</div>
 				</div>
 			</div>
 			<ViewGrid />

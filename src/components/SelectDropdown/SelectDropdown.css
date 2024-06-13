@@ -1,7 +1,0 @@
-.selectDropdown:hover,
-.selectDropdown:hover .selectDropdown-text,
-.selectDropdown:hover .selectDropdown-label,
-.selectDropdown-text.active {
-	border-color: var(--buttonHoverColor);
-	color: var(--buttonHoverColor);
-}
