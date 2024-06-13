@@ -27,8 +27,8 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 
 	return (
 		<>
-			<div className={`ViewGrid ${className ?? ''}`}>
-				<div className={'ViewGrid__30'}>
+			<div className={`ViewGrid ${className ?? ''} grid grid-cols-12`}>
+				<div className={'ViewGrid__30 col-span-3'}>
 					{keys &&
 						keys.map((key, i) => {
 							return (
@@ -39,7 +39,7 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 							);
 						})}
 				</div>
-				<div className={'ViewGrid__70'}>
+				<div className={'ViewGrid__70 col-span-9'}>
 					<ViewGridValue />
 				</div>
 			</div>
