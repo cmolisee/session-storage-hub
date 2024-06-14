@@ -77,8 +77,6 @@ function getStylesFromTheme(name: Themes) {
 }
 
 function getEditorTheme(name: Themes) {
-	console.log('getting theme:', name);
-	console.log('theme val: ', githubLight);
 	switch (name) {
 		case 'light': return githubLight;
 		case 'dark': return githubDark;

@@ -228,6 +228,58 @@ export const copyStorageToClipboard = (
 	return false; // do not expect a response
 }
 
+const addMessageListener = (
+	message: IChromeMessage,
+	sender: chrome.runtime.MessageSender,
+	response: TResponse
+) => {
+	if (validateSender(Sender.Extension, Action.Add, message, sender)) {
+		try {
+			const itemKey = new Date().getTime().toString();
+			sessionStorage.setItem(itemKey, '{}');
+
+			const data = {
+				obj: Object.assign({}, sessionStorage),
+				itemKey: itemKey,
+			}
+
+			response({ error: null, data: data });
+		} catch {
+			response({
+				error: 'Error adding session storage item',
+				data: null,
+			});
+		}
+		return true; // we will eventually return a response
+	}
+	return false; // do not expect a response
+};
+
+const deleteMessageListener = (
+	message: IChromeMessage,
+	sender: chrome.runtime.MessageSender,
+	response: TResponse
+) => {
+	if (validateSender(Sender.Extension, Action.Delete, message, sender)) {
+		try {
+			console.log('deleteMessageListener', message);
+			message.message?.data.forEach((k: string) => {
+				sessionStorage.removeItem(k);
+			});
+
+			const data = Object.assign({}, sessionStorage);
+			response({ error: null, data: data });
+		} catch {
+			response({
+				error: 'Error adding session storage item',
+				data: null,
+			});
+		}
+		return true; // we will eventually return a response
+	}
+	return false; // do not expect a response
+};
+
 const main = () => {
 	// prevent duplicate listeners
 	chrome.runtime.onMessage.removeListener(requestMessageListener);
@@ -237,6 +289,8 @@ const main = () => {
 	chrome.runtime.onMessage.removeListener(fillStorageMessageListener);
 	chrome.runtime.onMessage.removeListener(checkReleaseListener);
 	chrome.runtime.onMessage.removeListener(copyStorageToClipboard);
+	chrome.runtime.onMessage.removeListener(addMessageListener);
+	chrome.runtime.onMessage.removeListener(deleteMessageListener);
 
 	// Fired when a message is sent from either an extension process or a content script.
 	chrome.runtime.onMessage.addListener(requestMessageListener);
@@ -246,6 +300,8 @@ const main = () => {
 	chrome.runtime.onMessage.addListener(fillStorageMessageListener);
 	chrome.runtime.onMessage.addListener(checkReleaseListener);
 	chrome.runtime.onMessage.addListener(copyStorageToClipboard);
+	chrome.runtime.onMessage.addListener(addMessageListener);
+	chrome.runtime.onMessage.addListener(deleteMessageListener);
 };
 
 main();

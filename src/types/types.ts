@@ -14,6 +14,8 @@ export enum Action {
 	Check,
 	FillStorage,
 	Copy,
+	Add,
+	Delete
 }
 
 export enum Themes {

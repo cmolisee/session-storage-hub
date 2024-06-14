@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { RefObject, createRef, useCallback, useEffect, useState } from 'react';
 import Header from '../components/Header/Header';
 import {
 	Action,
@@ -11,13 +11,27 @@ import { chromeApi } from '../utils/ChromeUtils';
 import { useTheme } from '../providers/useTheme';
 import Control from '../components/Control/Control';
 import ViewGrid from '../components/ViewGrid/ViewGrid';
-import { errorToast, infoToast, promptToast, sortObjectByKeys, successToast } from '../utils/Utils';
+import { errorToast, infoToast, promptDeleteToast, promptToast, sortObjectByKeys, successToast } from '../utils/Utils';
 import { useStorageData } from '../providers/useStorageData';
+import Checkbox from '../components/Checkbox/Checkbox';
 
 const Popup = () => {
 	const { styles } = useTheme();
 	const [versionData, setVersionData] = useState<TVersionData>();
 	const { sessionStorageData, setSessionStorageData, selectAllKeys, unselectAllKeys, selectedKeys, keys } = useStorageData();
+	const deleteCheckboxRefs: RefObject<HTMLInputElement>[] = keys.map(() => { return createRef<HTMLInputElement>(); });
+	// a list of checkboxes
+	// maintain an array of keys corresponding to only to a checked box (ignore not checked boxes)
+	// on continue pass the array of checked items to the callback...
+	const deleteList = () => {
+		return (
+			<div className={'grid grid-cols-2'}>
+				{keys && keys.map((k, i) => {
+					return <Checkbox key={i} label={k} ref={deleteCheckboxRefs[i]} />;
+				})}
+			</div>
+		);
+	}
 
 	const handleCopy = useCallback(() => {
 		chromeApi(
@@ -62,6 +76,60 @@ const Popup = () => {
 
 		return;
 	}
+
+	const handleAdd = () => {
+		chromeApi(
+			{
+				from: Sender.Extension,
+				action: Action.Add,
+				message: null,
+			} as IChromeMessage,
+			async (res: IMessageResponse) => {
+				if (!chrome?.storage) {
+					errorToast('503', 'Chrome Storage API is not available.');
+					return;
+				}
+
+				await chrome.storage.local.set({ data: res.data.obj });
+				successToast(null, 'Added new Session Storage item: ' + res.data.itemKey);
+			}
+		);
+
+		return;
+	};
+
+	const handleDelete = () => {
+		const keysToDelete = deleteCheckboxRefs.reduce((keys: string[], ele: RefObject<HTMLInputElement>) => {
+			if (ele.current?.checked) {
+				keys.push(ele.current.id);
+			}
+
+			return keys;
+		}, []);
+
+		console.log(keysToDelete);
+
+		chromeApi(
+			{
+				from: Sender.Extension,
+				action: Action.Delete,
+				message: { data: keysToDelete },
+			} as IChromeMessage,
+			async (res: IMessageResponse) => {
+				if (!chrome?.storage) {
+					errorToast('503', 'Chrome Storage API is not available.');
+					return;
+				}
+
+				await chrome.storage.local.set({ data: res.data });
+				successToast(null, 'Deleted Session Storage keys: ' + keysToDelete.join(', '));
+			}
+		);
+	};
+
+	// //////////////
+	// TODO: add right click and edit functionality to the keys...
+	// //////////////
 
 	const handleFillSessionStorageUtility = () => {
 		chromeApi(
@@ -235,6 +303,26 @@ const Popup = () => {
 						<Control
 							onClickCallback={handlePaste}>
 							Paste
+						</Control>
+						<Control
+							onClickCallback={() => {
+								promptToast(
+									'utility',
+									'Are you sure you want to add a new Item?',
+									handleAdd,
+								);
+							}}>
+							Add
+						</Control>
+						<Control
+							onClickCallback={() => {
+								promptDeleteToast(
+									'utility',
+									deleteList(),
+									handleDelete,
+								);
+							}}>
+							Delete
 						</Control>
 					</div>
 					<div className={'w-full'}>

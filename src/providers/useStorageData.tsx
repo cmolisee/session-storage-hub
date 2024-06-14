@@ -26,6 +26,7 @@ interface IExtendedDataProps extends IDataProps {
 
 function reducer(state: any, action: { type: string; data: any }) {
 	switch (action.type) {
+		// use for add and delete
 		case 'setSessionStorageData': {
 			const d = action.data.sessionStorageData;
 			const k = Object.keys(d);

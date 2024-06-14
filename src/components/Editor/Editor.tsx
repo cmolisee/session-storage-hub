@@ -67,8 +67,6 @@ const Editor = () => {
 	const { editorTheme } = useTheme();
 	const [code, setCode] = useState<string>('');
 
-
-	console.log('theme', editorTheme);
 	const customLinter = () => {
 		return (view: EditorView): Diagnostic[] => {
 			try {
