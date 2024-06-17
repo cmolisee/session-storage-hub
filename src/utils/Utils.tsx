@@ -110,6 +110,26 @@ export function promptToast(
 	});
 }
 
+export function promptDeleteToast(
+	id: string | null,
+	msg: JSX.Element,
+	callback: () => void
+) {
+	createToast({
+		toastOps: {
+			toastId: id ?? undefined,
+			type: 'default',
+			autoClose: false,
+			closeOnClick: false,
+			pauseOnHover: true,
+		},
+		message: msg,
+		acceptText: 'Continue',
+		declineText: 'Cancel',
+		acceptCallback: callback,
+	});
+}
+
 export function getDataAsFormattedJson(object: any) {
 	try {
 		return JSON.parse(object);

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { RefObject, createRef, useCallback, useEffect, useState } from 'react';
 import Header from '../components/Header/Header';
 import {
 	Action,
@@ -11,14 +11,25 @@ import { chromeApi } from '../utils/ChromeUtils';
 import { useTheme } from '../providers/useTheme';
 import Control from '../components/Control/Control';
 import ViewGrid from '../components/ViewGrid/ViewGrid';
-import DropdownMenu from '../components/DropdownMenu/DropdownMenu';
-import { errorToast, infoToast, promptToast, sortObjectByKeys, successToast } from '../utils/Utils';
+import { errorToast, infoToast, promptDeleteToast, promptToast, sortObjectByKeys, successToast } from '../utils/Utils';
 import { useStorageData } from '../providers/useStorageData';
+import Checkbox from '../components/Checkbox/Checkbox';
 
 const Popup = () => {
 	const { styles } = useTheme();
 	const [versionData, setVersionData] = useState<TVersionData>();
 	const { sessionStorageData, setSessionStorageData, selectAllKeys, unselectAllKeys, selectedKeys, keys } = useStorageData();
+	const deleteCheckboxRefs: RefObject<HTMLInputElement>[] = keys.map(() => { return createRef<HTMLInputElement>(); });
+
+	const deleteList = () => {
+		return (
+			<div className={'grid grid-cols-2'}>
+				{keys && keys.map((k, i) => {
+					return <Checkbox key={i} label={k} ref={deleteCheckboxRefs[i]} />;
+				})}
+			</div>
+		);
+	}
 
 	const handleCopy = useCallback(() => {
 		chromeApi(
@@ -63,6 +74,54 @@ const Popup = () => {
 
 		return;
 	}
+
+	const handleAdd = () => {
+		chromeApi(
+			{
+				from: Sender.Extension,
+				action: Action.Add,
+				message: null,
+			} as IChromeMessage,
+			async (res: IMessageResponse) => {
+				if (!chrome?.storage) {
+					errorToast('503', 'Chrome Storage API is not available.');
+					return;
+				}
+
+				await chrome.storage.local.set({ data: res.data.obj });
+				successToast(null, 'Added new Session Storage item: ' + res.data.itemKey);
+			}
+		);
+
+		return;
+	};
+
+	const handleDelete = () => {
+		const keysToDelete = deleteCheckboxRefs.reduce((keys: string[], ele: RefObject<HTMLInputElement>) => {
+			if (ele.current?.checked) {
+				keys.push(ele.current.id);
+			}
+
+			return keys;
+		}, []);
+
+		chromeApi(
+			{
+				from: Sender.Extension,
+				action: Action.Delete,
+				message: { data: keysToDelete },
+			} as IChromeMessage,
+			async (res: IMessageResponse) => {
+				if (!chrome?.storage) {
+					errorToast('503', 'Chrome Storage API is not available.');
+					return;
+				}
+
+				await chrome.storage.local.set({ data: res.data });
+				successToast(null, 'Deleted Session Storage keys: ' + keysToDelete.join(', '));
+			}
+		);
+	};
 
 	const handleFillSessionStorageUtility = () => {
 		chromeApi(
@@ -216,8 +275,8 @@ const Popup = () => {
 	return (
 		<>
 			<Header viewLink={'options'} />
-			<div className={'flex justify-between text-[var(--borderColor)]'}>
-				<div>
+			<div className={'grid grid-cols-12 text-[var(--borderColor)]'}>
+				<div className={'col-span-3 flex justify-between items-end border-[1px] border-r-0 border-b-0 border-[var(--borderColor)]'}>
 					<Control
 						onClickCallback={selectAllKeys}>
 						Select All
@@ -227,55 +286,70 @@ const Popup = () => {
 						Unselect All
 					</Control>
 				</div>
-				<div>
-					<Control
-						className={'font-bold'}
-						onClickCallback={handleCopy}>
-						Copy
-					</Control>
-					<Control
-						className={'font-bold'}
-						onClickCallback={handlePaste}>
-						Paste
-					</Control>
-				</div>
-				<div>
-					<DropdownMenu
-						label={'Utitlies'}
-						options={[
-							{
-								label: 'Fill Storage',
-								onClickCallback: () => {
-									promptToast(
-										'utility',
-										'Caution: This will cause some slowness.\n' +
-										'Are you sure you want to fill all session storage memory?',
-										handleFillSessionStorageUtility
-									);
-								},
-							},
-							{
-								label: 'Clear Storage',
-								onClickCallback: () => {
-									promptToast(
-										'utility',
-										'Are you sure you want to clear all session storage memory?',
-										handleClearSessionStorageUtility
-									);
-								},
-							},
-							{
-								label: 'Clean Storage',
-								onClickCallback: () => {
-									promptToast(
-										'utility',
-										'Are you sure you want to clean all session storage memory?',
-										handleCleanSessionStorageUtility
-									);
-								},
-							},
-						]}
-					/>
+				<div className={'col-span-9 flex flex-1 flex-wrap border-[1px] border-b-0 border-[var(--borderColor)]'}>
+					<div className={'w-full'}>
+						<Control
+							onClickCallback={handleCopy}>
+							Copy
+						</Control>
+						<Control
+							onClickCallback={handlePaste}>
+							Paste
+						</Control>
+						<Control
+							onClickCallback={() => {
+								promptToast(
+									'utility',
+									'Are you sure you want to add a new Item?',
+									handleAdd,
+								);
+							}}>
+							Add
+						</Control>
+						<Control
+							onClickCallback={() => {
+								promptDeleteToast(
+									'utility',
+									deleteList(),
+									handleDelete,
+								);
+							}}>
+							Delete
+						</Control>
+					</div>
+					<div className={'w-full'}>
+						<Control
+							onClickCallback={() => {
+								promptToast(
+									'utility',
+									'Caution: This will cause some slowness.\n' +
+									'Are you sure you want to fill all session storage memory?',
+									handleFillSessionStorageUtility
+								);
+							}}>
+							Fill Storage
+						</Control>
+						<Control
+							onClickCallback={() => {
+								promptToast(
+									'utility',
+									'Are you sure you want to clear all session storage memory?',
+									handleClearSessionStorageUtility
+								);
+							}}>
+							Clear Storage
+						</Control>
+						<Control
+							onClickCallback={() => {
+								promptToast(
+									'utility',
+									'Are you sure you want to clean all session storage memory?',
+									handleCleanSessionStorageUtility
+								);
+							}}>
+							Clean Storage
+						</Control>
+					</div>
 				</div>
 			</div>
 			<ViewGrid />

@@ -56,12 +56,3 @@ const Options = () => {
 };
 
 export default Options;
-
-// TODO:
-// consider configuring tailwind/vite nested styles
-// once dev server is displaying things as expected move onto the build configs
-// build the appropriate files and sources to the correct directory
-// adjust manifest to point to the right files
-// translate and modify the workflow files, pipelines, scripts, and other path dependent devops stuff
-// now modify to use with docker
-//
