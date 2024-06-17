@@ -29,15 +29,14 @@ const ViewGrid = ({ className }: IViewGridProps) => {
 		<>
 			<div className={`ViewGrid ${className ?? ''} grid grid-cols-12`}>
 				<div className={'ViewGrid__30 col-span-3'}>
-					{keys &&
-						keys.map((key, i) => {
-							return (
-								<ViewGridKey
-									key={i}
-									keyName={key}
-								/>
-							);
-						})}
+					{keys && keys.map((key) => {
+						return (
+							<ViewGridKey
+								key={key}
+								keyName={key}
+							/>
+						);
+					})}
 				</div>
 				<div className={'ViewGrid__70 col-span-9'}>
 					<ViewGridValue />

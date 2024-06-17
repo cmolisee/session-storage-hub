@@ -20,9 +20,7 @@ const Popup = () => {
 	const [versionData, setVersionData] = useState<TVersionData>();
 	const { sessionStorageData, setSessionStorageData, selectAllKeys, unselectAllKeys, selectedKeys, keys } = useStorageData();
 	const deleteCheckboxRefs: RefObject<HTMLInputElement>[] = keys.map(() => { return createRef<HTMLInputElement>(); });
-	// a list of checkboxes
-	// maintain an array of keys corresponding to only to a checked box (ignore not checked boxes)
-	// on continue pass the array of checked items to the callback...
+
 	const deleteList = () => {
 		return (
 			<div className={'grid grid-cols-2'}>
@@ -107,8 +105,6 @@ const Popup = () => {
 			return keys;
 		}, []);
 
-		console.log(keysToDelete);
-
 		chromeApi(
 			{
 				from: Sender.Extension,
@@ -126,10 +122,6 @@ const Popup = () => {
 			}
 		);
 	};
-
-	// //////////////
-	// TODO: add right click and edit functionality to the keys...
-	// //////////////
 
 	const handleFillSessionStorageUtility = () => {
 		chromeApi(

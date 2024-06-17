@@ -12,7 +12,7 @@
 	border-radius: 0.25rem;
 }
 
-.ViewGridKey input {
+.ViewGridKey input[type="checkbox"] {
 	appearance: none;
 	margin: 0;
 	color: var(--selectedIconColor);
@@ -25,7 +25,7 @@
 	cursor: pointer;
 }
 
-.ViewGridKey input::before {
+.ViewGridKey input[type="checkbox"]::before {
 	content: '';
 	width: 1.15em;
 	height: 1.15em;
@@ -35,11 +35,11 @@
 	clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }
 
-.ViewGridKey input:checked::before {
+.ViewGridKey input[type="checkbox"]:checked::before {
 	transform: scale(1);
 }
 
-.ViewGridKey input:not(:checked) {
+.ViewGridKey input[type="checkbox"]:not(:checked) {
 	box-shadow: inset 1em 1em var(--unselectedIconColor);
 	clip-path: polygon(
 		20% 0%,
@@ -58,7 +58,6 @@
 }
 
 .ViewGridKey p {
-	margin: 0 0.25rem;
 	font-size: 1rem;
 	cursor: pointer;
 	width: 100%;

@@ -1,6 +1,5 @@
 .ViewGrid {
 	border: 0.0625rem solid var(--borderColor);
-	padding: 0.325rem;
 	max-height: 21rem;
 	height: 100%;
 	overflow: hidden;

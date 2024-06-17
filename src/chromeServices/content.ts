@@ -280,6 +280,30 @@ const deleteMessageListener = (
 	return false; // do not expect a response
 };
 
+const updateKeyMessageListener = (
+	message: IChromeMessage,
+	sender: chrome.runtime.MessageSender,
+	response: TResponse
+) => {
+	if (validateSender(Sender.Extension, Action.UpdateKey, message, sender)) {
+		try {
+			const { newKey, oldKey } = message.message;
+
+			sessionStorage.setItem(newKey, sessionStorage.getItem(oldKey) as string);
+			sessionStorage.removeItem(oldKey);
+
+			response({ error: null, data: Object.assign({}, sessionStorage) });
+		} catch {
+			response({
+				error: 'Error updating session storage data',
+				data: null,
+			});
+		}
+		return true; // we will eventually return a response
+	}
+	return false; // do not expect a response
+};
+
 const main = () => {
 	// prevent duplicate listeners
 	chrome.runtime.onMessage.removeListener(requestMessageListener);
@@ -291,6 +315,7 @@ const main = () => {
 	chrome.runtime.onMessage.removeListener(copyStorageToClipboard);
 	chrome.runtime.onMessage.removeListener(addMessageListener);
 	chrome.runtime.onMessage.removeListener(deleteMessageListener);
+	chrome.runtime.onMessage.removeListener(updateKeyMessageListener);
 
 	// Fired when a message is sent from either an extension process or a content script.
 	chrome.runtime.onMessage.addListener(requestMessageListener);
@@ -302,6 +327,7 @@ const main = () => {
 	chrome.runtime.onMessage.addListener(copyStorageToClipboard);
 	chrome.runtime.onMessage.addListener(addMessageListener);
 	chrome.runtime.onMessage.addListener(deleteMessageListener);
+	chrome.runtime.onMessage.addListener(updateKeyMessageListener);
 };
 
 main();
