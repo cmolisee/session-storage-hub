@@ -6,7 +6,7 @@ activate the virtual environment assuming you are in terminal at the project roo
 1. `python3 -m venv ~/Downloads/virtual-envs/jirapy`
 2. `source ~/Downloads/virtual-envs/jirapy/bin/acitvate`
 
-To deactive simply enter 'deactivate'.
+To deactive simply enter `deactivate`.
 * it might show an error but that error is false *
 
 To install and build with setuptools from the root
