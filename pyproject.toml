@@ -3,10 +3,11 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "jirapy"
+name = "jirakpy"
 dynamic = ["version"]
 dependencies = [
-    "typer>=0.9.0"
+    "typer>=0.9.0",
+    "questionary"
 ]
 requires-python = ">=3.8"
 
@@ -14,10 +15,10 @@ requires-python = ">=3.8"
 test = ["pytest>=7.0.0"]
 
 [project.scripts]
-jirapy = "jirapy.cli:app"
+jirakpy = "jirakpy.cli:app"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools.dynamic]
-version = {attr = "jirapy.__version__"}
+version = {attr = "jirakpy.__version__"}
