@@ -5,53 +5,48 @@ from rich import box
 from rich.layout import Layout
 from rich.table import Table
 from rich.panel import Panel
-from rich.align import Align
-from rich.console import Group
 
 
 def make_layout() -> Layout:
-    """Define the Layout with header, 30/70 body"""
+    """Define the Layout."""
     layout = Layout(name="root")
 
     layout.split(
-        Layout(name="header", size=3),
-        Layout(name="main", ratio=1),
+        Layout(name="main"),
     )
     layout["main"].split_row(
-        Layout(name="side"),
-        Layout(name="body", ratio=2, minimum_size=60),
+        Layout(name="side", ratio=4),
+        Layout(name="body", ratio=6),
     )
     return layout
     
 def make_side_panel(content: any) -> Panel:
     """Side panel."""
-    side = Table.grid(padding=1)
-    side.add_column(style="magenta", justify="left")
-    side.add_row(content)
-
-    side_panel = Panel(
-        side,
+    return Panel(
+        content,
         box=box.ROUNDED,
-        padding=(1, 2),
+        padding=(1),
         title="Details",
         border_style="bright_blue",
     )
-    return side_panel
 
 def make_main_panel(title: str, content: any) -> Panel:
     """Main panel."""
-    main = Table.grid(padding=1)
-    main.add_column(style="magenta", justify="center")
-    main.add_row(content)
-    
-    main_panel = Panel(
-        Align.center(
-            Group("\n", Align.center(main)),
-            vertical="middle",
-        ),
+    return Panel(
+        content,
         box=box.ROUNDED,
-        padding=(1, 2),
+        padding=(2),
         title=title,
         border_style="bright_blue",
     )
-    return main_panel
+
+def make_table(name: str, data: dict) -> Table:
+    table = Table(title=name, style="magenta")
+    
+    table.add_column("KPI", style="bold", justify="left")
+    table.add_column("Value", justify="right")
+    
+    for k,v in data.items():
+        table.add_row(f"{k}", f"{v}")
+        
+    return table
