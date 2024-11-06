@@ -20,8 +20,7 @@ kpi_options_dict = {
 
 dataset_target_dict = {
     "By my jira filters": 0,
-    "By another users filters": 1,
-    "By JQL query": 2,
+    "By JQL query": 1,
 }
 
 keyset_dict = {

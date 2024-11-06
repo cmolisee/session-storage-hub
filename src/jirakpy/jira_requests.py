@@ -36,11 +36,16 @@ class jiraRequest:
     def get_issues(self, url: str, user: str, pwd: str):
         """Make request to specified url"""
         auth = HTTPBasicAuth(user, pwd)
+        query = {
+            'maxResults': '5000',
+            'fields': '*all',
+        }
         try:
             response = requests.request(
                 "GET",
                 url,
                 headers=self.headers,
+                params=query,
                 auth=auth,
                 verify=False,
             )
@@ -67,28 +72,12 @@ class jiraRequest:
             raise Exception("Error requesting favorite filters: ", response)
         
         return response.text
-        
-    def get_filters_by_accountId(self, accountId: str, user: str, pwd: str):
-        """Make request for filters of specified accountId"""
-        auth = HTTPBasicAuth(user, pwd)
-        response = requests.request(
-            "GET",
-            f"https://creditonebank.atlassian.net/rest/api/3/filter/search?accountId={accountId}&expand=searchUrl",
-            headers=self.headers,
-            auth=auth,
-            verify=False,
-        )
-        
-        if response.status_code != 200:
-            raise Exception("Error requesting favorite filters: ", response)
-        
-        return response.text
     
-    def get_issues_by_jql(self, jql: str, user: str, pwd: str):
+    def get_issues_by_jql(self, raw_jql: str, user: str, pwd: str):
         """Make request with JQL"""
         auth = HTTPBasicAuth(user, pwd)
         query = {
-            'jql': urllib.parse.quote(jql),
+            'jql': urllib.parse.quote(raw_jql),
             'maxResults': '5000',
             'fields': '*all',
         }

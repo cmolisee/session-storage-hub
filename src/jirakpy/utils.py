@@ -1,6 +1,5 @@
 import queue
 from threading import Thread
-from rich.console import Console
         
 class state():
     def __init__(self):

@@ -1,22 +1,23 @@
 """jirakpy cli"""
 # jirakpy/cli.py
 
-import json
-
-import rich.columns
-import rich.panel
-import rich.table
 from . import __app_name__, __version__
-import calendar
+from datetime import timedelta
 from jirakpy.config_manager import configManager
 from jirakpy.jira_requests import jiraRequest
-from jirakpy.layout import make_layout, make_main_panel, make_side_panel, make_table
+from jirakpy.layout import make_table
 from jirakpy.types import *
 from jirakpy.utils import get_key_given_value, state
 from questionary import Choice
 from typing_extensions import Annotated
+import calendar
+import json
+import pandas as pd
 import questionary
 import rich
+import rich.columns
+import rich.panel
+import rich.table
 import typer
 
 # TODO:
@@ -26,7 +27,7 @@ import typer
 # alpha sort choice options
 # add ability to specify stat labels
 # update the deficit to not be negative
-# fix layout to show all stats in a single continuout table
+# fix layout to show all stats in a single continuous table
 # fix layout to not have colored borders
 # fix layout to remove panel
 # fix layout to conditionally render user choices as console print instead of being formated in a panel with rich
@@ -83,19 +84,11 @@ questions = [
     {
         "name": "dataset_filter",
         "question": questionary.select(
-            "Choose how to define the target dataset:",
+            "Choose a dataset:",
             [Choice(k,v) for k, v in dataset_target_dict.items()],
         ),
         "if": lambda x: True,
-    }, 
-    {
-        "name": "jira_accountId",
-        "question": questionary.text(
-            "Enter the accountId of the user:",
-            validate=lambda x: len(str(x)) > 0
-        ),
-        "if": lambda x: x["dataset_filter"] == 1,
-    }, 
+    },
     {
         "name": "jira_jql",
         "question": questionary.text("Enter the jql for your target dataset:"),
@@ -107,36 +100,20 @@ def show_version() -> None:
     """Show application name and version"""
     typer.secho(f"🤌 {__app_name__} v{__version__}", fg=typer.colors.MAGENTA)
     raise typer.Exit()
-    
-def parse_prompt_results(results: dict) -> str:
-    """formats the prompt results for the output to the user"""
-    SP=" " * 2
-    res = ""
-    
-    for key, value in keyset_dict.items():
-        if key not in results:
-            continue
-        
-        v = results[key]
-        res += f"{key.upper()}:\n"
-        
-        if isinstance(v, list):
-            res += f"{SP}{f"\n{SP}".join([get_key_given_value(value, i) for i in v])}\n\n"
-        elif isinstance(value, dict):
-            res += f"{SP}{get_key_given_value(value,v)}\n\n"
-        else:
-            res += f"{SP}{v}\n\n"
-    
-    return res
 
-def handle_filter_processing(data):
+def handle_filter_processing(filter_results):
+    """
+        Process jira request data for filters.
+        Retrieve name, id, and searchUrl and store in app state.
+        Create prompt to present filters to user.
+    """
     console.print("[cyan]Retrieving filters from jira...")
-    data = json.loads(data)
+    filter_data = json.loads(filter_results)
     
     console.print("[cyan]Processing request and response...")
     try:
-        filters = [Choice(f["name"], f["id"]) for f in data]
-        appState.set_item("filters", json.dumps([{ "name": f["name"], "id": f["id"], "url": f["searchUrl"] } for f in data]))
+        filters = [Choice(f["name"], f["id"]) for f in filter_data]
+        appState.set_item("filters", json.dumps([{ "name": f["name"], "id": f["id"], "url": f["searchUrl"] } for f in filter_data]))
     except Exception as e:
         console.print(f"[red]Error parsing data: {e}")
         exit()
@@ -155,33 +132,34 @@ def handle_filter_processing(data):
     
     console.print("[green]Processing complete...")
 
-def handle_issue_processing(data): 
+def handle_filter_choice(question, answers):
+    """Process user filter choice to return searchUrl for request"""
+    console.print("[cyan]Evaluating response...")
+    filters = json.loads(appState.get_item("filters"))
+    f_id = answers[question["name"]]
+    for f in filters:
+        if f["id"] == f_id:
+            answers[question["name"]] = f"{f["name"]}({f["id"]})"
+            return f["url"]
+    return None
+                    
+def handle_label_processing(issue_results):
+    """
+        Process jira request data for labels.
+        Retrieve all unique label names and store in app state.
+        Create prompt to present labels to user.
+    """
     console.print("[cyan]Processing response...")
-    data = json.loads(data)
-    appState.set_item("data", data)
+    data = json.loads(issue_results)
+    df = pd.json_normalize(data["issues"])
     
-    console.print("[cyan]Processing labels and statistics...")
-    stats = {}
-    total = data["total"]
-    sp_total = sum(issue["fields"]["customfield_10028"] for issue in data["issues"] if issue["fields"]["customfield_10028"] or None is not None)
-    nt_total = sum(1 for issue in data["issues"] if issue["fields"]["timespent"] or None is not None)
-    stats["total_issues"] = total
-    stats["story_point_avg"] = sp_total / total
-    stats["no_tracking_sum"] = nt_total
-    stats["no_tracking_deficit"] = ((nt_total / total) * 100) - 100
-    stats["enhancements"] = sum(1 for issue in data["issues"] if "Enhancement" in issue["fields"]["labels"] or [])
-    stats["bugs"] = sum(1 for issue in data["issues"] if "Bug" in issue["fields"]["labels"] or [])
-    stats["defects"] = sum(1 for issue in data["issues"] if "Defect" in issue["fields"]["labels"] or [])
-    stats["spike"] = sum(1 for issue in data["issues"] if "Spike" in issue["fields"]["labels"] or [])
-    
-    appState.set_item("stats", { "all": stats })
+    appState.set_item("df", df)
     
     console.print("[cyan]Building label options...")
     labels = set()
-    for issue in data["issues"]:
-        for l in issue["fields"]["labels"]:
-            labels.add(l) 
-        
+    for l in df["fields.labels"]:
+        labels.update(l)
+    
     appState.set_item("labels", labels)
         
     console.print("[cyan]Updating prompt...")
@@ -196,7 +174,47 @@ def handle_issue_processing(data):
         }
     )
     console.print("[green]Processing complete...")
-            
+        
+def handle_statistic_processing(selected_labels: list):
+    df = appState.get_item("df")
+    stats = {}
+    
+    console.print("[cyan]Processing data sets...")
+    dataset = {}
+    dataset["total_issues"] = df.shape[0]
+    if df.shape[0] > 0:
+        dataset["story_point_sum"] = df["fields.customfield_10028"].sum()
+        dataset["total_time_spent"] =  timedelta(seconds=df["fields.timespent"].sum())
+        dataset["total_no_time_tracking"] = df["fields.timespent"].isna().sum()
+        dataset["total_enhancements"] = df[df["fields.labels"].apply(lambda x: "Enhancement" in x)].shape[0]
+        dataset["total_bugs"] = df[df["fields.labels"].apply(lambda x: "Bug" in x)].shape[0]
+        dataset["total_defects"] = df[df["fields.labels"].apply(lambda x: "Defect" in x)].shape[0]
+        dataset["total_spikes"] = df[df["fields.labels"].apply(lambda x: "Spike" in x)].shape[0]
+        # calculated
+        dataset["story_point_average"] = round(dataset["story_point_sum"] / dataset["total_issues"], 3)
+        dataset["no_tracking_deficit"] = round((dataset["total_no_time_tracking"] / dataset["total_issues"]) * 100, 3)
+    stats["dataset"] = dataset
+    
+    for l in selected_labels:
+        tmp = {}
+        sub = df[df["fields.labels"].apply(lambda x: l in x)]
+        tmp["total_issues"] = sub.shape[0]
+        if sub.shape[0] > 0:
+            tmp["story_point_sum"] = sub["fields.customfield_10028"].sum()
+            tmp["total_time_spent"] = timedelta(seconds=sub["fields.timespent"].sum())
+            tmp["total_no_time_tracking"] = sub["fields.timespent"].isna().sum()
+            tmp["total_enhancements"] = sub[sub["fields.labels"].apply(lambda x: "Enhancement" in x)].shape[0]
+            tmp["total_bugs"] = sub[sub["fields.labels"].apply(lambda x: "Bug" in x)].shape[0]
+            tmp["total_defects"] = sub[sub["fields.labels"].apply(lambda x: "Defect" in x)].shape[0]
+            tmp["total_spikes"] = sub[sub["fields.labels"].apply(lambda x: "Spike" in x)].shape[0]
+            # calculated
+            tmp["story_point_average"] = round(tmp["story_point_sum"] / tmp["total_issues"], 3)
+            tmp["no_tracking_deficit"] = round((tmp["total_no_time_tracking"] / tmp["total_issues"]) * 100, 3)
+        stats[l] = tmp
+    
+    appState.set_item("stats", stats)
+    console.print("[green]Processing complete...")
+    
 @app.callback(invoke_without_command=True)
 def main(
      version: Annotated[
@@ -230,60 +248,20 @@ def main(
         
         if question["name"] == "dataset_filter" and answers[question["name"]] == 0:
             handle_filter_processing(jira.get_my_filters(config.get("email"), config.get("token")))
-        if question["name"] == "jira_accountId":
-            handle_filter_processing(
-                jira.get_filters_by_accountId(answers[question["name"]], 
-                    config.get("email"),
-                    config.get("token")
-                )
-            )
-        # if question["name"] == "jira_jql":
-        #     # run jql query for issues
+            
+        if question["name"] == "jira_jql":
+            handle_label_processing(jira.get_issues_by_jql(answers[question["name"]], config.get("email"), config.get("token")))
+        
         if question["name"] == "filter_choice":
-            console.print("[cyan]Evaluating response...")
-            filters = json.loads(appState.get_item("filters"))
-            f_id = answers[question["name"]]
-            for f in filters:
-                if f["id"] == f_id:
-                    answers[question["name"]] = f"{f["name"]}({f["id"]})"
-                    url = f["url"]
-            handle_issue_processing(jira.get_issues(url, config.get("email"), config.get("token")))
+            url = handle_filter_choice(question, answers)
+            handle_label_processing(jira.get_issues(url, config.get("email"), config.get("token")))
             
         if question["name"] == "labels":
-            data = appState.get_item("data")
-            stats = appState.get_item("stats")
-            subsets = {l: list() for l in answers[question["name"]]} # instantiate dict with label and empty list pairs
-            
-            for issue in data["issues"]:
-                for label in answers[question["name"]]:
-                    if label in issue["fields"]["labels"]:
-                        subsets[label].append(issue)
-            
-            # get stats on each subset
-            for k,v in subsets.items():
-                res = {}
-                total = len(v)
-                sp_total = sum(issue["fields"]["customfield_10028"] for issue in v if issue["fields"]["customfield_10028"] or None is not None)
-                nt_total = sum(1 for issue in v if issue["fields"]["timespent"] or None is not None)
-                res["total_issues"] = total
-                res["story_point_avg"] = sp_total / total
-                res["no_tracking_sum"] = nt_total
-                res["no_tracking_deficit"] = ((nt_total / total) * 100) - 100
-                res["enhancements"] = sum(1 for issue in v if "Enhancement" in issue["fields"]["labels"] or [])
-                res["bugs"] = sum(1 for issue in v if "Bug" in issue["fields"]["labels"] or [])
-                res["defects"] = sum(1 for issue in v if "Defect" in issue["fields"]["labels"] or [])
-                res["spike"] = sum(1 for issue in v if "Spike" in issue["fields"]["labels"] or [])
-                stats[k] = res
-            
-            appState.set_item("stats", stats)
-    
-    content = rich.columns.Columns( [make_table(k,v) for k,v in appState.get_item("stats").items()], )
-        
-    layout = make_layout()
-    layout["body"].update(make_main_panel(f"🐌 {get_key_given_value(output_type_dict, answers["output_type"])}", content))
-    layout["side"].update(make_side_panel(parse_prompt_results(answers)))
-    
-    console.print(layout)
+            handle_statistic_processing(answers[question["name"]])
+
+    # finally, for prompt version
+    table = make_table(get_key_given_value(output_type_dict, answers["output_type"]), appState.get_item("stats"))
+    console.print(table)
 
 if __name__ == "__main__":
     app()
