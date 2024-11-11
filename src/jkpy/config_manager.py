@@ -1,3 +1,6 @@
+"""config class"""
+#  jkpy/config_manager.py
+
 from pathlib import Path
 import json
 
@@ -16,7 +19,7 @@ class configManager():
             with self.config_file_path.open("r") as f:
                 data = f.read()
                 
-            return {} if data is "" else json.loads(data)
+            return {} if data == "" else json.loads(data)
         except Exception as e:
             raise e
     
@@ -36,7 +39,6 @@ class configManager():
         """Set value for key"""
         if not self.config_file_path.exists():
             try:
-                print("calling set: file dne. attempting to create/write")
                 with self.config_file_path.open("w") as f:
                     f.write(json.dumps({ k: v }))
             except Exception as e:
@@ -47,7 +49,6 @@ class configManager():
                 
                 data[k] = v
                 with self.config_file_path.open("w") as f:
-                    print("opening file to write")
                     f.write(json.dumps(data))
             except Exception as e:
                 raise e

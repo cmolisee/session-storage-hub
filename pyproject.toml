@@ -3,7 +3,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "jirakpy"
+name = "jkpy"
 dynamic = ["version"]
 dependencies = [
     "typer>=0.9.0",
@@ -11,6 +11,7 @@ dependencies = [
     "cryptography",
     "requests",
     "pandas",
+    "openpyxl",
 ]
 requires-python = ">=3.8"
 
@@ -18,10 +19,10 @@ requires-python = ">=3.8"
 test = ["pytest>=7.0.0"]
 
 [project.scripts]
-jirakpy = "jirakpy.cli:app"
+jkpy = "jkpy.cli:app"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools.dynamic]
-version = {attr = "jirakpy.__version__"}
+version = {attr = "jkpy.__version__"}

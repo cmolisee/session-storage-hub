@@ -1,10 +1,9 @@
-"""jirakpy jira_requests"""
-# jirakpy/jira_requests.py
+"""request class"""
+# jkpy/jira_requests.py
 
 from requests.auth import HTTPBasicAuth
 from rich.console import Console
 import requests
-import urllib.parse
 import urllib3
 
 urllib3.disable_warnings()
@@ -33,51 +32,28 @@ class jiraRequest:
     # story points: issues[n].fields.customfield_10028
     # time tracking: issues[n].fields.timespent (in seconds)
         # or issues[n].fields.aggregateprogress.progress (in seconds)
-    def get_issues(self, url: str, user: str, pwd: str):
-        """Make request to specified url"""
-        auth = HTTPBasicAuth(user, pwd)
-        query = {
-            'maxResults': '5000',
-            'fields': '*all',
-        }
-        try:
-            response = requests.request(
-                "GET",
-                url,
-                headers=self.headers,
-                params=query,
-                auth=auth,
-                verify=False,
-            )
-        except:
-            pass
-        
-        if response.status_code != 200:
-            raise Exception("Error requesting favorite filters: ", response)
-        
-        return response.text
-    
-    def get_my_filters(self, user: str, pwd: str):
+    def get_my_filters(self, email: str, token: str):
         """Make request for user filters"""
-        auth = HTTPBasicAuth(user, pwd)
+        auth = HTTPBasicAuth(email, token)
         response = requests.request(
             "GET",
-            "https://creditonebank.atlassian.net/rest/api/3/filter/my?expand=searchUrl",
+            "https://creditonebank.atlassian.net/rest/api/3/filter/my",
             headers=self.headers,
             auth=auth,
             verify=False,
         )
         
         if response.status_code != 200:
-            raise Exception("Error requesting favorite filters: ", response)
+            raise Exception("Error requesting filters: ", response)
         
         return response.text
     
-    def get_issues_by_jql(self, raw_jql: str, user: str, pwd: str):
+    def get_issues_by_jql(self, raw_jql: str, email: str, token: str):
         """Make request with JQL"""
-        auth = HTTPBasicAuth(user, pwd)
+        auth = HTTPBasicAuth(email, token)
         query = {
-            'jql': urllib.parse.quote(raw_jql),
+            # 'jql': urllib.parse.quote(raw_jql),
+            'jql': raw_jql,
             'maxResults': '5000',
             'fields': '*all',
         }
@@ -92,6 +68,6 @@ class jiraRequest:
         )
         
         if response.status_code != 200:
-            raise Exception("Error requesting favorite filters: ", response)
+            raise Exception("Error requesting issues: ", response)
         
         return response.text
