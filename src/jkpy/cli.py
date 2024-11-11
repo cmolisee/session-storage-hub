@@ -1,12 +1,13 @@
 """jkpy cli"""
 # jkpy/cli.py
 
+import os
 from . import __app_name__, __version__
 from datetime import timedelta
 from jkpy.config_manager import configManager
 from jkpy.jira_requests import jiraRequest
 from jkpy.types import *
-from jkpy.utils import make_table, state, verify_config
+from jkpy.utils import get_timestamp, make_table, split_by_last, state, verify_config
 from pathlib import Path
 from questionary import Choice
 from typing_extensions import Annotated
@@ -42,9 +43,26 @@ questions = [
     #     "if": lambda x: True,
     # },
     {
-        "name": "opt_export",
-        "question": questionary.text("Path to export results (leave blank to decline export):"),
+        "name": "export_flag",
+        "question": questionary.confirm("Do you want to export"),
         "if": lambda x: True,
+    },
+    {
+        "name": "export_path",
+        "question": questionary.text(
+            "Path to export results:",
+            default=os.path.expanduser("~/Downloads"),
+            validate=lambda x: os.path.isdir(os.path.expanduser(x)),
+        ),
+        "if": lambda x: x.get("export_flag") is True,
+    },
+    {
+        "name": "export_file_name",
+        "question": questionary.text(
+            f"File name to export (default: jkpy_<timestamp>):",
+            default=f"jkpy_{get_timestamp()}",
+        ),
+        "if": lambda x: x.get("export_flag") is True,
     },
     {
         "name": "email",
@@ -118,7 +136,7 @@ def handle_label_processing():
     console.print("[cyan]Building label options...")
     df = appState.get_item("df")
     labels = set()
-    for l in df.get("fields.labels") or []:
+    for l in df.get("fields.labels"):
         labels.update(l)
     labels = sorted(labels)
     appState.set_item("labels", labels)
@@ -232,16 +250,12 @@ def export_results(path: str) -> None:
     if "." in path:
         path = path[:path.index(".")]
     
-    if path.endswith("/"):
-        path.strip("/")
-        path += "/jirakpy"
-    
-    with pd.ExcelWriter(Path.home() / (path + ".xlsx")) as writer:
+    with pd.ExcelWriter(f"{path}.xlsx") as writer:
         appState.get_item("df").to_excel(writer, sheet_name='data', index=False)
         df2 = pd.DataFrame.from_dict(appState.get_item("stats"), orient="index")
         df2.to_excel(writer, sheet_name='results', index=False)
     
-    console.print(f"[green] Results exported to {Path.home() / (path + ".xlsx")}")
+    console.print(f"[green]Results exported to {path}.xlsx")
 
 @app.callback(invoke_without_command=True)
 def main(
@@ -263,15 +277,6 @@ def main(
              is_eager=True,
          )
      ] = False,
-     verifyConfig: Annotated[
-         bool,
-         typer.Option(
-             "--verify",
-             "-V",
-             help="Verify the user email and token exists.",
-             is_eager=True,
-         )
-     ] = False,
      email: Annotated[
          str,
          typer.Option(
@@ -279,7 +284,7 @@ def main(
              help="User email to make jira requests. Will override existing value. Can ommit if already exists and is valid.",
              is_eager=True,
          )
-     ] = config.get("email"),
+     ] = None,
      token: Annotated[
          str,
          typer.Option(
@@ -287,7 +292,7 @@ def main(
              help="API token to make jira requests. Will override existing value. Can ommit if already exists and is valid.",
              is_eager=True,
          )
-     ] = config.get("token"),
+     ] = None,
      jql: Annotated[
          str,
          typer.Option(
@@ -295,15 +300,15 @@ def main(
              help="JQL for the dataset.",
              is_eager=True,
          )
-     ] = "",
-     export: Annotated[
+     ] = None,
+     exportPath: Annotated[
          str,
          typer.Option(
              "--export-path",
-             help="Path to export results relative to your home path (~/path/file). Do not add a file extension. Anything after a period character will be removed. If no file name is provided (i.e. the provided path ends with a slash) then the default 'jkpy_results' will be used.",
+             help="Path to export results (ex: ~/Desktop/jkpy). Do not add a file extension.",
              is_eager=True,
          )
-     ] = "",
+     ] = None,
      labels: Annotated[
          str,
          typer.Option(
@@ -311,7 +316,7 @@ def main(
              help="Comma separated list of labels to define subsets of the main dataset. No spaces (i.e. a,b,c,d)",
              is_eager=True,
          )
-     ] = "",
+     ] = None,
      showTable: Annotated[
          bool,
          typer.Option(
@@ -332,43 +337,26 @@ def main(
     if token:
         config.set("token", token)
     
-    if verifyConfig:
-        r = verify_config(config)
-        if r == -3:
-            console.print("[red bold]'email' and 'token' are missing...")
-        if r == -2:
-            console.print("[red bold] 'token' is missing...")
-        if r == -1:
-            console.print("[red bold] 'email' is missing...")
-        if r == 0:
-            console.print("[green] 'email' and 'token' exist!")
+    config_error = verify_config(config)
+    if config_error:
+        console.print(config_error)
         exit()
     
     if prompt:
         show_prompt()
-        show_results()
-        
-        ans = appState.get_item("answers") or {}
-        path = ans.get("opt_export")
-        if path:
-            export_results(path)
-        
+        show_results()        
         
     if not prompt: 
-        console.print(f"[cyan] Initializing {__app_name__}...")
-        if verify_config() < 0:
-            console.print("[red bold] Must provide 'email' or 'token'.\n\t- Use --verify to check which is missing.\n\t- Use --email to set your email. \n\t- Use --token to set your token.")
-            exit()
-        
+        console.print(f"[cyan]Initializing {__app_name__}...")
         if jql:
-            console.print("[cyan] Parsing JQL...")
+            console.print("[cyan]Parsing JQL...")
             appState.set_item("raw_jql", jql)
         else:
-            console.print("[red bold] Must provide a filter a jql string.\n\t- Use --jql to provide jql string.")
+            console.print("[red bold]Must provide a filter a jql string.\n\t- Use --jql to provide jql string.")
             exit()
         
         if labels:
-            console.print("[cyan] Parsing Labels...")
+            console.print("[cyan]Parsing Labels...")
             appState.set_item("selected_labels", labels.split(","))
         
         handle_request()
@@ -376,12 +364,19 @@ def main(
     
         if showTable:
             show_results()
-            
-        path = export
-        if not path:
-            console.print("[red bold] No export path was provided...")
+
+    ans = appState.get_item("answers") or {}
+    
+    if ans.get("export_flag"):
+        exportPath = f"{ans.get("export_path")}/{ans.get("export_file_name")}"
+    
+    if exportPath:
+        p = os.path.expanduser(exportPath)
+        d = split_by_last(p, "/")
+        if os.path.isdir(d[0]):
+            export_results(exportPath)
         else:
-            export_results(path)
+            console.print("[red bold]directory does not exist: {d}")
     
 if __name__ == "__main__":
     app()

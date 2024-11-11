@@ -1,6 +1,7 @@
 """utilities"""
 #  jkpy/utils.py
 
+from datetime import datetime
 from rich.table import Table
         
 class state():
@@ -24,8 +25,25 @@ def verify_config(config):
         r += 1
     if config.get("token"):
         r += 2
+        
+    if r == -3:
+        return "[red bold]'email' and 'token' are missing..."
+    if r == -2:
+        return "[red bold]'token' is missing..."
+    if r == -1:
+        return "[red bold]'email' is missing..."
     
-    return r
+    return None
+
+def split_by_last(string, char):
+    last_index = string.rfind(char)
+    if last_index == -1:
+        return [string]
+    return [string[:last_index], string[last_index + 1:]]
+
+def get_timestamp():
+    now = datetime.now()
+    return f"{now.year}_{now.month}_{now.day}_{now.hour}_{now.minute}"
 
 def make_table(name: str, data: dict) -> Table:
     table = Table(title=name, style="magenta")
