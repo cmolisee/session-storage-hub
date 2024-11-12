@@ -24,18 +24,21 @@ If you installed correctly then pip3 should be installed with python3
     `jkpy --prompt ...`
 5. run `deactivate` to stop the python venv
 
+**Note: You can change or alter the venv path by editing the makefile**
+
 
 # Developer Notes
-activate the virtual environment assuming you are in terminal at the project root under ~/Documents/jirakpy.
-1. `python3 -m venv ~/Downloads/virtual-envs/jirakpy`
-2. `source ~/Downloads/virtual-envs/jirakpy/bin/acitvate`
+Building and installation is the same as above. Otherwise, manual installation and running is as follows:
+1. `python3 -m venv ~/Downloads/venv/jkpy` or your path of choice
+2. `source ~/Downloads/venv/jkpy/bin/acitvate` or your path of choice with '/bin/activate' appended to it
 
 To deactive simply enter `deactivate`.
 * it might show an error but that error is false *
 
 To install and build with setuptools from the root
-1. `pip3 install -q build`
-2. `python3 -m build`
+3. `pip3 install -q build`
+4. `python3 -m build`
 
-This will create a dist/ in the root with a .whl and a tar.gz of the project.
-install it with `pip3 install dist/jirakpy-0.1.0.tar.gz`
+A.whl and a tar.gz file will be created in the dist/ folder of the project.
+5. install to your venv with `pip3 install dist/jkpy-0.1.0.tar.gz`
+6. run with `jkpy` (hint: use `jkpy --help` for details on how to use)
