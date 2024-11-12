@@ -2,6 +2,7 @@
 #  jkpy/utils.py
 
 from datetime import datetime
+from pathlib import Path
 from rich.table import Table
         
 class state():
@@ -20,20 +21,17 @@ def get_key_given_value(dct: dict, v: int) -> str:
     return next((key for key, value in dct.items() if value == v), None)
 
 def verify_config(config):
-    r = -3
-    if config.get("email"):
-        r += 1
-    if config.get("token"):
-        r += 2
-        
-    if r == -3:
-        return "[red bold]'email' and 'token' are missing..."
-    if r == -2:
-        return "[red bold]'token' is missing..."
-    if r == -1:
-        return "[red bold]'email' is missing..."
+    e = config.get("email")
+    t = config.get("token")
     
-    return None
+    if not e and not t:
+        raise Exception("[red bold]Missing 'email' and 'token'")
+    elif not e:
+        raise Exception("[red bold]Missing 'email'")
+    elif not t:
+        raise Exception("[red bold]Missing 'token'")
+    else:
+        return True
 
 def split_by_last(string, char):
     last_index = string.rfind(char)
@@ -44,6 +42,14 @@ def split_by_last(string, char):
 def get_timestamp():
     now = datetime.now()
     return f"{now.year}_{now.month}_{now.day}_{now.hour}_{now.minute}"
+
+def validate_path(path):
+    """validate path"""
+    p = Path(path)
+
+    if not path.parent.is_dir():
+        raise ValueError(f"Parent directory does not exist: {path.parent}")
+    return p
 
 def make_table(name: str, data: dict) -> Table:
     table = Table(title=name, style="magenta")
