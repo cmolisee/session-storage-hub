@@ -157,6 +157,7 @@ def main(
              "--jql",
              "-j",
              help="JQL for the dataset.",
+             is_eager=True,
          )
      ] = None,
      exportPath: Annotated[
@@ -165,6 +166,7 @@ def main(
              "--path",
              "-p",
              help="Path to export results",
+             is_eager=True,
          )
      ] = None,
      labels: Annotated[
@@ -173,6 +175,7 @@ def main(
              "--labels",
              "-l",
              help="Labels to identify subsets for additional statistics. Must be comma separated string.",
+             is_eager=True,
          )
      ] = None,
      showTable: Annotated[
@@ -181,6 +184,7 @@ def main(
              "--show-table",
              "-s",
              help="Display results in terminal",
+             is_eager=True,
          )
      ] = False,
      debug: Annotated[
@@ -189,6 +193,7 @@ def main(
              "--debug",
              "-d",
              help="Enable debugging",
+             is_eager=True,
          )
      ] = False
 ) -> None:
