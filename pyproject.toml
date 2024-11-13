@@ -7,8 +7,6 @@ name = "jkpy"
 dynamic = ["version"]
 dependencies = [
     "typer>=0.9.0",
-    "questionary",
-    "cryptography",
     "requests",
     "pandas",
     "openpyxl",

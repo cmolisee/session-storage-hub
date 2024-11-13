@@ -1,261 +1,126 @@
 """jkpy cli"""
 # jkpy/cli.py
 
-import os
 from . import __app_name__, __version__
 from datetime import timedelta
 from jkpy.config_manager import configManager
 from jkpy.jira_requests import jiraRequest
-from jkpy.types import *
-from jkpy.utils import get_timestamp, make_table, split_by_last, state, verify_config
+from jkpy.utils import get_timestamp, make_table, state, validate_path, verify_config
 from pathlib import Path
-from questionary import Choice
 from typing_extensions import Annotated
-import calendar
-import json
+import os
 import pandas as pd
-import questionary
 import rich
-import rich.columns
-import rich.panel
-import rich.table
 import typer
 
-calendar_months = list(calendar.month_name)[1:]
 console = rich.console.Console()
 appState = state()
 config = configManager()
 jira = jiraRequest()
 app = typer.Typer(
     name=__app_name__,
-    help="An easy way to process Jira data and generate reports",
+    help="Process Jira data and create reports",
     add_completion=False,
 )
 
-questions = [
-    # bring this back later if necessary
-    # {
-    #     "name": "output_type",
-    #     "question": questionary.select(
-    #         "What kind of report do you want?", 
-    #         [Choice(k,v) for k, v in type_output.items()]
-    #     ),
-    #     "if": lambda x: True,
-    # },
-    {
-        "name": "export_flag",
-        "question": questionary.confirm("Do you want to export"),
-        "if": lambda x: True,
-    },
-    {
-        "name": "export_path",
-        "question": questionary.text(
-            "Path to export results:",
-            default=os.path.expanduser("~/Downloads"),
-            validate=lambda x: os.path.isdir(os.path.expanduser(x)),
-        ),
-        "if": lambda x: x.get("export_flag") is True,
-    },
-    {
-        "name": "export_file_name",
-        "question": questionary.text(
-            f"File name to export (default: jkpy_<timestamp>):",
-            default=f"jkpy_{get_timestamp()}",
-        ),
-        "if": lambda x: x.get("export_flag") is True,
-    },
-    {
-        "name": "email",
-        "question": questionary.text(
-            "Enter your user email associated with jira:",
-            validate=lambda x: len(x) > 0
-        ),
-        "if": lambda x: True if config.get("email") is None else False,
-    },
-    {
-        "name": "token",
-        "question": questionary.text(
-            "Enter you jira api token:",
-            validate=lambda x: len(x) > 0
-        ),
-        "if": lambda x: True if config.get("token") is None else False,
-    },
-    {
-        "name": "request_type",
-        "question": questionary.select(
-            "Choose how to request the data:",
-            [Choice(k,v) for k, v in type_request.items()],
-        ),
-        "if": lambda x: True,
-    },
-    {
-        "name": "jql",
-        "question": questionary.text("Enter the jql for your target dataset:"),
-        "if": lambda x: x.get("request_type") == 1,
-    },
-]
-
 def show_version() -> None:
     """Show application name and version"""
+    _debug(28, __name__, "printing version")
     typer.secho(f"🤌 {__app_name__} v{__version__}", fg=typer.colors.MAGENTA)
 
-def get_user_filters():
-    """Get user filters and process"""
-    console.print("[cyan]Retrieving filters from jira...")
-    filter_results = jira.get_my_filters(config.get("email"), config.get("token")) or {}
-    filter_data = json.loads(filter_results)
-    
-    console.print("[cyan]Processing request and response...")
-    filters = sorted([Choice(f"{f.get("name")}({f.get("id")})", f.get("jql")) for f in filter_data], key=lambda x: x.title)
-    appState.set_item("filters", json.dumps([{ "name": f"{f.get("name")}({f.get("id")})", "jql": f.get("jql") } for f in filter_data]))
-        
-    console.print("[cyan]Updating prompt options...")
-    questions.append(
-        {
-            "name": "filter_choice",
-            "question": questionary.select(
-                "Choose the filter for your target dataset:",
-                filters,
-            ),
-            "if": lambda x: x.get("request_type") <= 1,
-        }
-    )
-    
-    console.print("[green]Processing complete...")
+def _debug(ln, func, *args):
+    if appState.get("debug"):
+        for arg in args: 
+            console.print(f"[medium_orchid] {get_timestamp()} ::: {func}:{ln}")
+            console.print(f"\t[medium_orchid] {arg}")
 
 def handle_request():
-    """Requests issues, converts to data frame, and updates app state"""
-    console.print("[cyan]Request data...")
-    res = jira.get_issues_by_jql(appState.get_item("raw_jql"), config.get("email"), config.get("token"))
-    data = json.loads(res)
-    df = pd.json_normalize(data.get("issues"))
-    appState.set_item("df", df)
-                        
-def handle_label_processing():
-    """Process issues to retrieve labels and update prompt"""
-    console.print("[cyan]Building label options...")
-    df = appState.get_item("df")
-    labels = set()
-    for l in df.get("fields.labels"):
-        labels.update(l)
-    labels = sorted(labels)
-    appState.set_item("labels", labels)
+    """Make jira request for issues and parse into a data frame"""
+    console.print("[cyan]Making request to jira...")
+    try:
+        issues = jira.request(appState.get("user_jql"), config.get("email"), config.get("token"))
+        _debug(42, __name__, f"user_jql: {appState.get("user_jql")}", f"total issues: {len(issues)}")
+        df = pd.json_normalize(issues)
+        appState.set("df", df)
+        console.print("[green]Request successful")
+    except Exception as e:
+        _debug(47, __name__, e)
+        console.print(f"{e}")
+        exit()
+
+def _get_stats(dataset: pd.DataFrame, name):
+    """Process stats on provided dataset"""
+    console.print(f"[cyan]Processing data for '{name}'...")
+    _debug(54, __name__, f"name: {name}")
+    stats={}
+    
+    try:
+        stats["dataset_name"] = name
+        stats["total_issues"] = dataset.shape[0]
         
-    console.print("[cyan]Updating prompt...")
-    questions.append(
-        {
-            "name": "labels",
-            "question": questionary.checkbox(
-                "Choose additional labels to run stats on:",
-                [Choice(l, l) for l in labels],
-            ),
-            "if": lambda x: True,
-        }
-    )
-    console.print("[green]Processing complete...")
-        
-def handle_statistic_processing():
+        if dataset.shape[0] > 0:
+            stats["story_point_sum"] = dataset["fields.customfield_10028"].sum()
+            stats["total_time_spent"] =  timedelta(seconds=dataset["fields.timespent"].sum())
+            stats["total_no_time_tracking"] = dataset["fields.timespent"].isna().sum()
+            stats["total_enhancements"] = dataset[dataset["fields.labels"].apply(lambda x: "Enhancement" in x)].shape[0]
+            stats["total_bugs"] = dataset[dataset["fields.labels"].apply(lambda x: "Bug" in x)].shape[0]
+            stats["total_defects"] = dataset[dataset["fields.labels"].apply(lambda x: "Defect" in x)].shape[0]
+            stats["total_spikes"] = dataset[dataset["fields.labels"].apply(lambda x: "Spike" in x)].shape[0]
+            # calculated
+            stats["story_point_average"] = round(stats.get("story_point_sum") / stats.get("total_issues"), 3)
+            stats["no_tracking_deficit"] = round((stats.get("total_no_time_tracking") / stats.get("total_issues")) * 100, 3)
+    except Exception as e:
+        _debug(73, __name__, e)
+        console.print(f"[orange3]Error processing '{name}'...")
+        console.print(e)
+        exit()
+    
+    return stats
+    
+def process_data():
     """Process issues and user responses to generate statistics"""
-    df = appState.get_item("df")
-    selected_labels = appState.get_item("selected_labels") or []
+    df = appState.get("df")
+    user_labels = appState.get("user_labels") or []
     stats = {}
     
-    console.print("[cyan]Processing data sets...")
-    dataset = {}
-    dataset["label"] = "(all labels)"
-    dataset["total_issues"] = df.shape[0]
+    stats["dataset"] = _get_stats(df, "dataset")
     
-    if df.shape[0] > 0:
-        dataset["story_point_sum"] = df["fields.customfield_10028"].sum()
-        dataset["total_time_spent"] =  timedelta(seconds=df["fields.timespent"].sum())
-        dataset["total_no_time_tracking"] = df["fields.timespent"].isna().sum()
-        dataset["total_enhancements"] = df[df["fields.labels"].apply(lambda x: "Enhancement" in x)].shape[0]
-        dataset["total_bugs"] = df[df["fields.labels"].apply(lambda x: "Bug" in x)].shape[0]
-        dataset["total_defects"] = df[df["fields.labels"].apply(lambda x: "Defect" in x)].shape[0]
-        dataset["total_spikes"] = df[df["fields.labels"].apply(lambda x: "Spike" in x)].shape[0]
-        # calculated
-        dataset["story_point_average"] = round(dataset.get("story_point_sum") / dataset.get("total_issues"), 3)
-        dataset["no_tracking_deficit"] = round((dataset.get("total_no_time_tracking") / dataset.get("total_issues")) * 100, 3)
-    stats["full dataset"] = dataset
+    for l in user_labels:
+        subset = df[df["fields.labels"].apply(lambda x: l in x)]
+        stats[l] = _get_stats(subset, l)
     
-    for l in selected_labels:
-        tmp = {}
-        sub = df[df["fields.labels"].apply(lambda x: l in x)]
-        tmp["label"] = l
-        tmp["total_issues"] = sub.shape[0]
-        if sub.shape[0] > 0:
-            tmp["story_point_sum"] = sub["fields.customfield_10028"].sum()
-            tmp["total_time_spent"] = timedelta(seconds=sub["fields.timespent"].sum())
-            tmp["total_no_time_tracking"] = sub["fields.timespent"].isna().sum()
-            tmp["total_enhancements"] = sub[sub["fields.labels"].apply(lambda x: "Enhancement" in x)].shape[0]
-            tmp["total_bugs"] = sub[sub["fields.labels"].apply(lambda x: "Bug" in x)].shape[0]
-            tmp["total_defects"] = sub[sub["fields.labels"].apply(lambda x: "Defect" in x)].shape[0]
-            tmp["total_spikes"] = sub[sub["fields.labels"].apply(lambda x: "Spike" in x)].shape[0]
-            # calculated
-            tmp["story_point_average"] = round(tmp.get("story_point_sum") / tmp.get("total_issues"), 3)
-            tmp["no_tracking_deficit"] = round((tmp.get("total_no_time_tracking") / tmp.get("total_issues")) * 100, 3)
-        stats[l] = tmp
-    
-    appState.set_item("stats", stats)
-    console.print("[green]Processing complete...")
-    
-def show_prompt() -> None:
-    """Prompt question loop and flow control"""
-    answers = {}
-    for question in questions:
-        if not question.get("if")(answers):
-            continue
-        
-        answers[question.get("name")] = question.get("question").ask()
-        
-        if question.get("name") == "email":
-            config.set("email", answers.get("email"))
-            
-        if question.get("name") == "token":
-            config.set("token", answers.get("token"))
-        
-        # if we chose jql for request_type then respond to results of jql prompt
-        if question.get("name") == "jql":
-            appState.set_item("raw_jql", answers.get("jql"))
-            handle_request()
-            handle_label_processing()
-        
-        # if we chose filters for request_type then request filters to generate prompt
-        if question.get("name") == "request_type" and answers.get("request_type") == 0:
-            get_user_filters()
-        
-        # continue prompt options from filter request_type
-        if question.get("name") == "filter_choice":
-            appState.set_item("raw_jql", answers.get("filter_choice"))
-            handle_request()
-            handle_label_processing()
-        
-        # process data after labels have been selected
-        if question.get("name") == "labels":
-            appState.set_item("selected_labels", answers.get("labels"))
-            handle_statistic_processing()
-    
-    appState.set_item("answers", answers)
+    appState.set("stats", stats)
+    _debug(93, __name__, f"Processed datasets:", ", ".join(stats.keys()))
+    console.print("[green]Processing complete")
     
 def show_results() -> None:
     """Create statistics table and print to user"""
-    table = make_table("KPI Statistics", appState.get_item("stats"))
+    table = make_table(__app_name__, appState.get("stats"))
     console.print(table)
-
-def export_results(path: str) -> None:
+    
+def export_results(path: Path) -> None:
     """Export results to .xlsx"""
-    if not path:
-        return
+    _debug(103, __name__, f"Path: {path}")
+    try:
+        with pd.ExcelWriter(path) as writer:
+            appState.get("df").to_excel(writer, sheet_name='data', index=False)
+            df2 = pd.DataFrame.from_dict(appState.get("stats"), orient="index")
+            df2.to_excel(writer, sheet_name='results', index=False)
+    except Exception as e:
+        _debug(113, __name__, e)
+        console.print(f"[red bold]Error exporting results: {e}")
+    console.print(f"[green]Results exported to {path}")
+
+def set_config(k: str, v: str):
+    """set config value"""
+    _debug(119, __name__, f"Setting {k}: {v}")
+    if k not in ("email", "token"):
+        raise ValueError("Invalid Key")
     
-    if "." in path:
-        path = path[:path.index(".")]
+    if not v:
+        raise ValueError("Invalid value")
     
-    with pd.ExcelWriter(f"{path}.xlsx") as writer:
-        appState.get_item("df").to_excel(writer, sheet_name='data', index=False)
-        df2 = pd.DataFrame.from_dict(appState.get_item("stats"), orient="index")
-        df2.to_excel(writer, sheet_name='results', index=False)
-    
-    console.print(f"[green]Results exported to {path}.xlsx")
+    config.set(k, v)
 
 @app.callback(invoke_without_command=True)
 def main(
@@ -264,16 +129,7 @@ def main(
         typer.Option(
              "--version",
              "-v",
-             help="Show version and exit.",
-             is_eager=True,
-         )
-     ] = False,
-     prompt: Annotated[
-         bool,
-         typer.Option(
-             "--prompt",
-             "-P",
-             help="Run with prompt.",
+             help="Show application version.",
              is_eager=True,
          )
      ] = False,
@@ -281,7 +137,8 @@ def main(
          str,
          typer.Option(
              "--email",
-             help="User email to make jira requests. Will override existing value. Can ommit if already exists and is valid.",
+             "-e",
+             help="Set user email for making jira requests.",
              is_eager=True,
          )
      ] = None,
@@ -289,7 +146,8 @@ def main(
          str,
          typer.Option(
              "--token",
-             help="API token to make jira requests. Will override existing value. Can ommit if already exists and is valid.",
+             "-t",
+             help="Set api token for making jira requests.",
              is_eager=True,
          )
      ] = None,
@@ -297,32 +155,40 @@ def main(
          str,
          typer.Option(
              "--jql",
+             "-j",
              help="JQL for the dataset.",
-             is_eager=True,
          )
      ] = None,
      exportPath: Annotated[
          str,
          typer.Option(
-             "--export-path",
-             help="Path to export results (ex: ~/Desktop/jkpy). Do not add a file extension.",
-             is_eager=True,
+             "--path",
+             "-p",
+             help="Path to export results",
          )
      ] = None,
      labels: Annotated[
          str,
          typer.Option(
              "--labels",
-             help="Comma separated list of labels to define subsets of the main dataset. No spaces (i.e. a,b,c,d)",
-             is_eager=True,
+             "-l",
+             help="Labels to identify subsets for additional statistics. Must be comma separated string.",
          )
      ] = None,
      showTable: Annotated[
          bool,
          typer.Option(
              "--show-table",
-             help="Will display results in a formatted table in the terminal.",
-             is_eager=True,
+             "-s",
+             help="Display results in terminal",
+         )
+     ] = False,
+     debug: Annotated[
+         bool,
+         typer.Option(
+             "--debug",
+             "-d",
+             help="Enable debugging",
          )
      ] = False
 ) -> None:
@@ -330,53 +196,49 @@ def main(
     if version:
         show_version()
         exit()
+
+    if debug:
+        appState.set("debug", True)
+        _debug(205, __name__, "Enabling Debug Mode")
         
     if email:
-        config.set("email", email)
+        set_config("email", email)
         
     if token:
-        config.set("token", token)
+        set_config("token", token)
     
-    config_error = verify_config(config)
-    if config_error:
-        console.print(config_error)
+    try:
+        verify_config(config)
+    except Exception as e:
+        _debug(216, __name__, e)
+        console.print(f"{e}")
+        exit()       
+    
+    console.print(f"[cyan]Starting {__app_name__}...")
+    
+    if jql:
+        _debug(223, __name__, f"user_jql: {jql}")
+        appState.set("user_jql", jql)
+    else:
+        console.print("[orange3]No JQL specified. Exiting...")
         exit()
-    
-    if prompt:
-        show_prompt()
-        show_results()        
-        
-    if not prompt: 
-        console.print(f"[cyan]Initializing {__app_name__}...")
-        if jql:
-            console.print("[cyan]Parsing JQL...")
-            appState.set_item("raw_jql", jql)
-        else:
-            console.print("[red bold]Must provide a filter a jql string.\n\t- Use --jql to provide jql string.")
-            exit()
-        
-        if labels:
-            console.print("[cyan]Parsing Labels...")
-            appState.set_item("selected_labels", labels.split(","))
-        
-        handle_request()
-        handle_statistic_processing()
-    
-        if showTable:
-            show_results()
 
-    ans = appState.get_item("answers") or {}
+    if labels:
+        _debug(230, __name__, f"user_labels: {labels}")
+        appState.set("user_labels", labels.split(","))
     
-    if ans.get("export_flag"):
-        exportPath = f"{ans.get("export_path")}/{ans.get("export_file_name")}"
+    handle_request()
+    process_data()
+    
+    if showTable:
+        show_results()
     
     if exportPath:
-        p = os.path.expanduser(exportPath)
-        d = split_by_last(p, "/")
-        if os.path.isdir(d[0]):
-            export_results(exportPath)
-        else:
-            console.print("[red bold]directory does not exist: {d}")
+        try:
+            path = validate_path(os.path.expanduser(exportPath))
+            export_results(path)
+        except Exception as e:
+            console.print(f"{e}")
     
 if __name__ == "__main__":
     app()

@@ -1,6 +1,7 @@
 """request class"""
 # jkpy/jira_requests.py
 
+import json
 from requests.auth import HTTPBasicAuth
 from rich.console import Console
 import requests
@@ -11,6 +12,7 @@ console = Console()
 
 class jiraRequest:    
     def __init__(self, headers: dict = {}):
+        """Initialize object"""
         self.headers = {
             "Accept": "application/json",
             **headers
@@ -31,43 +33,40 @@ class jiraRequest:
     # sprint number: issues[n].fields.customfield_10020[n].name
     # story points: issues[n].fields.customfield_10028
     # time tracking: issues[n].fields.timespent (in seconds)
-        # or issues[n].fields.aggregateprogress.progress (in seconds)
-    def get_my_filters(self, email: str, token: str):
-        """Make request for user filters"""
-        auth = HTTPBasicAuth(email, token)
-        response = requests.request(
-            "GET",
-            "https://creditonebank.atlassian.net/rest/api/3/filter/my",
-            headers=self.headers,
-            auth=auth,
-            verify=False,
-        )
+    #   or issues[n].fields.aggregateprogress.progress (in seconds)
+    def _request(self, params, auth):
+        res = requests.request(
+                "GET",
+                f"https://creditonebank.atlassian.net/rest/api/2/search/jql",
+                headers=self.headers,
+                params=params,
+                auth=auth,
+                verify=False,
+            )
         
-        if response.status_code != 200:
-            raise Exception("Error requesting filters: ", response)
-        
-        return response.text
+        if res.status_code != 200:
+                raise Exception("Error requesting issues: ", res)
+            
+        return json.loads(res.text)
     
-    def get_issues_by_jql(self, raw_jql: str, email: str, token: str):
+    def request(self, raw_jql: str, email: str, token: str):
         """Make request with JQL"""
+        issues = []
+        nextPageToken = None
         auth = HTTPBasicAuth(email, token)
-        query = {
-            # 'jql': urllib.parse.quote(raw_jql),
-            'jql': raw_jql,
-            'maxResults': '5000',
-            'fields': '*all',
-        }
         
-        response = requests.request(
-            "GET",
-            f"https://creditonebank.atlassian.net/rest/api/3/search/jql",
-            headers=self.headers,
-            params=query,
-            auth=auth,
-            verify=False,
-        )
+        while True:
+            query = {
+                'jql': raw_jql,
+                'fields': '*all',
+                'nextPageToken': nextPageToken,
+            }
+            
+            data = self._request(query, auth)
+            issues += data.get("issues")
+            nextPageToken = data.get("nextPageToken")
+            
+            if not nextPageToken:
+                break;
         
-        if response.status_code != 200:
-            raise Exception("Error requesting issues: ", response)
-        
-        return response.text
+        return issues
