@@ -33,7 +33,7 @@ class configManager():
                 
                 if k in data:
                     return data[k]
-            except Exception as e:
+            except Exception:
                 return None
         return None
 
@@ -47,7 +47,7 @@ class configManager():
                 raise e
         else:
             try:
-                data = self._get_json()
+                data = self._json()
                 
                 data[k] = v
                 with self.config_file_path.open("w") as f:
@@ -61,7 +61,7 @@ class configManager():
             return
         
         try:
-            data = self._get_json()
+            data = self._json()
                 
             del data[k]
             with self.config_file_path.open("w") as f:
