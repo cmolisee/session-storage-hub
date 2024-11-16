@@ -14,7 +14,7 @@ dependencies = [
 requires-python = ">=3.8"
 
 [project.optional-dependencies]
-test = ["pytest>=7.0.0"]
+test = []
 
 [project.scripts]
 jkpy = "jkpy.cli:app"
