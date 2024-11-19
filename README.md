@@ -13,8 +13,10 @@ Ensure you have the following:
 If you installed correctly then `pip3` and `venv` should be installed with `python3`.
 
 ## Install Application
-1. Pull the main branch `https://github.com/cmolisee/jkpy.git` or `git@github.com:cmolisee/jkpy.git`.
-2. Install with `make install` or manually with:
+1. Pull the main branch `git clone https://github.com/cmolisee/jkpy.git` or `git clone git@github.com:cmolisee/jkpy.git`.
+2. Install with `make install`
+
+You can manually install as follows:
     1. `python3 -m venv ~/Downloads/venv/jkpy` or a path of your choice.
     2. `your-venv-path/bin/pip3 install -q build`.
     3. `your-venv-path/bin/python3 -m build`.
@@ -22,6 +24,58 @@ If you installed correctly then `pip3` and `venv` should be installed with `pyth
 
 `~/Downloads/venv/jkpy` is the default VENV path set in the Makefile.
 You can update this to create the python venv in a path of your choice by editing the Makefile.
+
+## Running Inside venv
+venv (or similar) is simply a container environment to run python. To run custom commands from the terminal you must
+start your venv manually:
+
+`source your-venv-path/bin/activate` (i.e. `source ~/Downloads/venv/jkpy/bin/activate`)
+
+This will start the venv so that any commands you run with `pip3`, `python3`, or other installed packages in this environment will be recognized.
+If you installed the application as defined above then you will be able to run `jkpy` without the need for `python3` command. As long as the venv
+is active you can run the application or any other installed python packages.
+
+To deactivate the venv simply run `deactivate`.
+
+## Makefile
+The project comes with a defaul makefile called `Makefile` which includes the target to install the project. This default
+makefile also imports a file called `local.mk` which is intended for user defined targets. This is helpful in creating snippets
+that you can run without having to activate and deactivate your venv.
+
+The project Makefile includes:
+* VENV global variable which is used with `make install` target to create the venv for this application. This is important for running
+other targets if you have a `local.mk` file
+* `include local.mk` which is basically an import for your local makefile targets.
+
+## `local.mk` Example Targets
+For ease of use you can update the Makefile with your own commands. Notice the use of `$(VENV)/bin/...` as a special requirement
+to running `jkpy` commands without activating the venv.
+
+Example 1:
+
+``run1:
+    $(VENV)/bin/jkpy -d -s -j "Labels = Code" -p "~/Desktop/output.txt" -l "a,b,c"
+``
+
+You can then run the above command with `make run1` and it will execute the command in its own subshell.
+* `$(VENV)` is the venv path variable specified in the Makefile and should be the same path you used when running install.
+* If you installed manually or created the venv at a different path then make sure you use that path with `/bin/jkpy` appended to it.
+
+Note: This is the same command as described at the bottom of the 'Basic Usage'
+
+***
+
+Example 2:
+
+``run2:
+    $(VENV)/bin/jkpy -d -s -j $(ARG1) -p $(ARG2) -l $(ARG3)
+``
+
+This is similar to example 1 except you can pass arguments.
+`make run2 ARG1='"Labels = Code"' ARG2='"~/Desktop/output.txt"' ARG3='"a,b,c"'`
+* Notice the single quote and the double quote. Arguments for jkpy need to be wrapped in double quotes and to pass those arguments properly 
+through the Makefile command requires this syntax (or you can use escaped double quotes `"\"Labels = Code\""`)
+
 
 ## Basic Usage
 | option 	| shortcut 	| description 	|
@@ -77,31 +131,3 @@ and will contain the entire dataset pulled from jira. The second sheet will be n
 This file will be created and saved to the path specified in the command.
 
 When using the `--show-table` or `-s` command, the results will be printed to the terminal in a formatted table.
-
-## Makefile
-For ease of use you can update the Makefile with your own commands.
-
-Example 1:
-
-``run1:
-    $(VENV)/bin/jkpy -d -s -j "Labels = Code" -p "~/Desktop/output.txt" -l "a,b,c"
-``
-
-You can then run the above command with `make run1` and it will execute the command in its own subshell.
-* `$(VENV)` is the venv path variable specified in the Makefile and should be the same path you used when running install.
-* If you installed manually or created the venv at a different path then make sure you use that path with `/bin/jkpy` appended to it.
-
-Note: This is the same command as described at the bottom of the 'Basic Usage'
-
-***
-
-Example 2:
-
-``run2:
-    $(VENV)/bin/jkpy -d -s -j $(ARG1) -p $(ARG2) -l $(ARG3)
-``
-
-This is similar to example 1 except you can pass arguments.
-`make run2 ARG1='"Labels = Code"' ARG2='"~/Desktop/output.txt"' ARG3='"a,b,c"'`
-* Notice the single quote and the double quote. Arguments for jkpy need to be wrapped in double quotes and to pass those arguments properly 
-through the Makefile command requires this syntax (or you can use escaped double quotes `"\"Labels = Code\""`)

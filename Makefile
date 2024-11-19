@@ -8,4 +8,3 @@ install:
 	$(VENV)/bin/pip3 install -q build
 	$(VENV)/bin/python3 -m build
 	$(VENV)/bin/pip3 install dist/jkpy-0.1.0.tar.gz
-
