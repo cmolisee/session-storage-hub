@@ -1,6 +1,12 @@
 # Jira KP(y)
 Terminal based application for building statistics on Jira issues.
 
+## tl;dr
+1. Clone the repository `git clone https://github.com/cmolisee/jkpy.git` or `git clone git@github.com:cmolisee/jkpy.git`.
+3. Install python `brew install python`.
+4. Create a `local.mk` file in the root of the project `touch local.mk`.
+5. Add targets to the `local.mk` to run the program using `make <target_name>` or start the venv (see below).
+
 ## Pre-Installation
 Ensure you have the following:
 1. `python3`.
