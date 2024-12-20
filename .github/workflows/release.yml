@@ -20,6 +20,7 @@ jobs:
                 token: ${{ secrets.RELEASE_PAT }}
 
             - name: Import GPG key
+              id: import_gpg
               uses: crazy-max/ghaction-import-gpg@v6
               with:
                 gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
@@ -28,11 +29,17 @@ jobs:
                 git_user_signingkey: true
                 git_commit_gpgsign: true
 
+            # Add these debug steps
+            - name: Debug GPG
+              run: |
+                echo "GPG Key ID: ${{ steps.import_gpg.outputs.keyid }}"
+                git config --global --list
+                gpg --list-secret-keys --keyid-format LONG
+
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
                 node-version: '20.x'
-
 
             - name: Install dependencies
               run: |
@@ -41,4 +48,7 @@ jobs:
             - name: Release
               env:
                 GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
-              run: npx semantic-release
+                GPG_KEY_ID: ${{ steps.import_gpg.outputs.keyid }}
+              run: |
+                git config --global user.signingkey $GPG_KEY_ID
+                npx semantic-release
