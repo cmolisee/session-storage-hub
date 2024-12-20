@@ -1,0 +1,21 @@
+.ViewGrid {
+	border: 0.0625rem solid var(--borderColor);
+	height: 450px;
+	overflow: hidden;
+}
+
+.ViewGrid__30,
+.ViewGrid__70 {
+	display: flex;
+	width: 100%;
+	overflow-wrap: break-word;
+}
+
+.ViewGrid__30 {
+	border-right: 0.0125rem solid var(--borderColor);
+	flex-direction: column;
+	word-wrap: break-word;
+	word-break: break-all;
+	overflow-x: clip;
+	padding: 0 0.125rem;
+}
