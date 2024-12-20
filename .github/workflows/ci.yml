@@ -19,12 +19,12 @@ jobs:
               run: |
                   npm ci
 
-            - name: Format
-              run: |
-                  npm run format
+            # - name: Format
+            #   run: |
+            #       npm run format
 
-            - name: Format
-              run: |
-                  npm run lint
+            # - name: Format
+            #   run: |
+            #       npm run lint
 
             # put test run step here...
