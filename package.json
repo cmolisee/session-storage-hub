@@ -2,7 +2,7 @@
     "name": "Session-Storage-Hub",
     "description": "Extension to make using session storage better.",
     "private": false,
-    "version": "6.0.0",
+    "version": "5.4.1",
     "type": "module",
     "config": {
         "commitizen": {
@@ -38,11 +38,11 @@
                         },
                         {
                             "path": "dist/edge-mv3",
-                            "label": "Firefox Extension"
+                            "label": "Edge Extension"
                         },
                         {
                             "path": "dist/safari-mv2",
-                            "label": "Firefox Extension"
+                            "label": "Safari Extension"
                         }
                     ]
                 }
