@@ -4,6 +4,11 @@
   "private": false,
   "version": "5.1.0",
   "type": "module",
+  "config": {
+    "commitizen": {
+        "path": "cz-conventional-changelog"
+    }
+  },
   "scripts": {
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
@@ -12,7 +17,8 @@
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
     "compile": "tsc --noEmit",
-    "postinstall": "wxt prepare"
+    "postinstall": "wxt prepare",
+    "commit": "cz"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
@@ -38,6 +44,8 @@
   "devDependencies": {
     "@wxt-dev/module-solid": "^1.1.2",
     "autoprefixer": "^10.4.20",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
     "typescript": "^5.6.3",
