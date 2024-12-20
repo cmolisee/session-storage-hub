@@ -33,8 +33,17 @@ jobs:
             - name: Verify the integrity of provenance attestations and registry signatures
               run: npm audit signatures
 
-            - name: Build
+            - name: Build Chrome
               run: npm run build
+
+            - name: Build Firefox
+              run: npm run build:firefox
+
+            - name: Build safari
+              run: npm run build:safari
+
+            - name: Build edge
+              run: npm run build:edge
 
             - name: Release
               env:

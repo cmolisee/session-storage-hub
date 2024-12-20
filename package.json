@@ -37,6 +37,14 @@
                         {
                             "path": "dist/firefox-mv2",
                             "label": "Firefox Extension"
+                        },
+                        {
+                            "path": "dist/edge-mv3",
+                            "label": "Firefox Extension"
+                        },
+                        {
+                            "path": "dist/safari-mv2",
+                            "label": "Firefox Extension"
                         }
                     ]
                 }
@@ -53,8 +61,12 @@
     "scripts": {
         "dev": "wxt",
         "dev:firefox": "wxt -b firefox",
+        "dev:safari": "wxt -b safari",
+        "dev:edge": "wxt -b edge",
         "build": "wxt build",
         "build:firefox": "wxt build -b firefox",
+        "build:safari": "wxt build -b safari",
+        "build:edge": "wxt build -b edge",
         "zip": "wxt zip",
         "zip:firefox": "wxt zip -b firefox",
         "compile": "tsc --noEmit",
