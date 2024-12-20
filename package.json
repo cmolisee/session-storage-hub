@@ -2,7 +2,7 @@
     "name": "Session-Storage-Hub",
     "description": "Extension to make using session storage better.",
     "private": false,
-    "version": "5.4.1",
+    "version": "6.0.0",
     "type": "module",
     "config": {
         "commitizen": {
