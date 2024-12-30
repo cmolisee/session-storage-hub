@@ -2,7 +2,7 @@
     "name": "Session-Storage-Hub",
     "description": "Extension to make using session storage better.",
     "private": false,
-    "version": "6.0.0",
+    "version": "5.11.11",
     "type": "module",
     "config": {
         "commitizen": {
@@ -24,24 +24,27 @@
                 }
             ],
             "@semantic-release/changelog",
+            ["@semantic-release/exec", {
+                "prepareCmd": "zip -r chrome.zip ./dist/chrome-mv3 && zip -r edge.zip ./dist/edge-mv3 && zip -r firefox.zip ./dist/firefox-mv2 && zip -r safari.zip ./dist/safari-mv2"
+            }],
             [
                 "@semantic-release/github",
                 {
                     "assets": [
                         {
-                            "path": "dist/chrome-mv3",
+                            "path": "chrome.zip",
                             "label": "Chrome Extension"
                         },
                         {
-                            "path": "dist/firefox-mv2",
-                            "label": "Firefox Extension"
-                        },
-                        {
-                            "path": "dist/edge-mv3",
+                            "path": "edge.zip",
                             "label": "Edge Extension"
                         },
                         {
-                            "path": "dist/safari-mv2",
+                            "path": "firefox.zip",
+                            "label": "Firefox Extension"
+                        },
+                        {
+                            "path": "safari.zip",
                             "label": "Safari Extension"
                         }
                     ]
