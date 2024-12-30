@@ -17,9 +17,7 @@
 <div align="center">
   <h1 align="center">Session Storage Hub</h1>
   <p align="center">
-    Chrome browser extension to easily view, copy, and paste session storage data from one tab to another.
-    <br />
-    <a href="https://github.com/cmolisee/session-storage-hub/wiki"><strong>Explore the Wiki</strong></a>
+    Chrome browser extension to easily view, copy/paste, and manipulate session storage data.
     <br />
     <br />
     <a href="https://github.com/cmolisee/session-storage-hub/wiki/Session-Storage-Hub-%E2%80%90-Report-an-Issue">Report Bug</a>
@@ -31,13 +29,33 @@
 </div>
 
 <div align="center">
-  <h3>Table of Contents</h3>
-  <div><a href="https://github.com/cmolisee/session-storage-hub/wiki/How-To-Install">Installation</a></div>
-  <div><a href="https://github.com/cmolisee/session-storage-hub/wiki/Session-Storage-Hub-%E2%80%90-Usage">Usage</a></div>
-  <dib><a href="https://github.com/cmolisee/session-storage-hub/wiki/Session-Storage-Hub-%E2%80%90-Submit-an-Idea">Submit an Idea</a></div>
-  <div><a href="https://github.com/cmolisee/session-storage-hub/wiki/Session-Storage-Hub-%E2%80%90-Report-an-Issue">Report an Issue</a></div>
+  <h2 align="center">Wiki Table of Contents</h3>
+  <div align="center"><a href="https://github.com/cmolisee/session-storage-hub/wiki/How-To-Install">Installation</a></div>
+  <div align="center"><a href="https://github.com/cmolisee/session-storage-hub/wiki/Session-Storage-Hub-%E2%80%90-Usage">Usage</a></div>
+  <dib align="center"><a href="https://github.com/cmolisee/session-storage-hub/wiki/Session-Storage-Hub-%E2%80%90-Submit-an-Idea">Submit an Idea</a></div>
+  <div align="center"><a href="https://github.com/cmolisee/session-storage-hub/wiki/Session-Storage-Hub-%E2%80%90-Report-an-Issue">Report an Issue</a></div>
 </div>
 
+<div>
+    <h2>Quick Guides</h2>
+    <h3>Chrome/Edge Installation</h3>
+    <ol>
+        <li>Go to the <a href="https://github.com/cmolisee/session-storage-hub/releases/latest">latest release page</a>.</li>
+        <li>Download the <em>Source code</em> file and unpack.</li>
+        <li>Go to <em>Extension Manager</em> on Google Chrome and enable developer mode.</li>
+        <li>Select Load unpacked and choose the /dist/chrome-mv3 folder from the unpacked source code files you downloaded.</li>
+        <li>Reload your browser and you should now be able to use the extension.</li>
+        (Optional: pin the extension to your toolbar).
+    </ol>
+    <hr>
+    <h3>Safari/Firefox Installation</h3>
+    <ol>
+        <li>Go to the <a href="https://github.com/cmolisee/session-storage-hub/releases/latest">latest release page</a>.</li>
+        <li>Download the <em>Source code</em> file and unpack.</li>
+        <li>Follow the safari/Edge documentation for installing an unsigned extension.</li>
+    </ol>
+    <hr>
+</div>
 <!-- shields -->
 
 [version-shield]:
