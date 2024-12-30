@@ -1,6 +1,23 @@
 # [6.0.0](https://github.com/cmolisee/session-storage-hub/compare/v5.2.0...v6.0.0) (2024-12-30)
 
 
+### Bug Fixes
+
+* **fix release:** update assets in release config to fix conflicts ([03bb1c6](https://github.com/cmolisee/session-storage-hub/commit/03bb1c694fd48b152b4914257457d880f80b879a))
+
+
+### Features
+
+* **version:** manually update version to overcome workflow hiccup ([d141d44](https://github.com/cmolisee/session-storage-hub/commit/d141d4497b04bb71acbcd3a75b8326c62e9d2e85))
+
+
+### BREAKING CHANGES
+
+* **version:** version
+
+# [6.0.0](https://github.com/cmolisee/session-storage-hub/compare/v5.2.0...v6.0.0) (2024-12-30)
+
+
 ### Features
 
 * **version:** manually update version to overcome workflow hiccup ([d141d44](https://github.com/cmolisee/session-storage-hub/commit/d141d4497b04bb71acbcd3a75b8326c62e9d2e85))
