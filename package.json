@@ -2,7 +2,7 @@
     "name": "Session-Storage-Hub",
     "description": "Extension to make using session storage better.",
     "private": false,
-    "version": "6.0.0",
+    "version": "5.9.9",
     "type": "module",
     "config": {
         "commitizen": {
@@ -28,7 +28,22 @@
                 "@semantic-release/github",
                 {
                     "assets": [
-                        "dist/**/*"
+                        {
+                            "path": "dist/chrome-mv3",
+                            "label": "Chrome Extension"
+                        },
+                        {
+                            "path": "dist/firefox-mv2",
+                            "label": "Firefox Extension"
+                        },
+                        {
+                            "path": "dist/edge-mv3",
+                            "label": "Firefox Extension"
+                        },
+                        {
+                            "path": "dist/safari-mv2",
+                            "label": "Firefox Extension"
+                        }
                     ]
                 }
             ],
@@ -39,7 +54,10 @@
                         "CHANGELOG.md",
                         "package-lock.json",
                         "package.json",
-                        "dist/**/*"
+                        "dist/chrome-mv3",
+                        "dist/firefox-mv2",
+                        "dist/edge-mv3",
+                        "dist/safari-mv2"
                     ],
                     "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
                 }
