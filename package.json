@@ -27,24 +27,7 @@
             [
                 "@semantic-release/github",
                 {
-                    "assets": [
-                        {
-                            "path": "dist/chrome-mv3",
-                            "label": "Chrome Extension"
-                        },
-                        {
-                            "path": "dist/firefox-mv2",
-                            "label": "Firefox Extension"
-                        },
-                        {
-                            "path": "dist/edge-mv3",
-                            "label": "Edge Extension"
-                        },
-                        {
-                            "path": "dist/safari-mv2",
-                            "label": "Safari Extension"
-                        }
-                    ]
+                    "assets": ["dist/**/*"]
                 }
             ],
             [
@@ -53,7 +36,8 @@
                     "assets": [
                         "CHANGELOG.md",
                         "package-lock.json",
-                        "package.json"
+                        "package.json",
+                        "dist/**/*"
                     ],
                     "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
                 }
