@@ -27,7 +27,7 @@
             [
                 "@semantic-release/exec",
                 {
-                    "prepareCmd": "zip -r chrome.zip ./dist/chrome-mv3 && zip -r edge.zip ./dist/edge-mv3 && zip -r firefox.zip ./dist/firefox-mv2 && zip -r safari.zip ./dist/safari-mv2"
+                    "prepareCmd": "chmod +x ./tooling/prepare.sh && ./tooling/prepare.sh"
                 }
             ],
             [
