@@ -41,9 +41,9 @@
     <h3>Chrome/Edge Installation</h3>
     <ol>
         <li>Go to the <a href="https://github.com/cmolisee/session-storage-hub/releases/latest">latest release page</a>.</li>
-        <li>Download Chrome or Edge and unpack.</li>
+        <li>Download Chrome Extension or Edge Extension and unpack. Unpacking will result in the following folder structure: /dist/chrome-mv3, or similar. You can rename the /dist folder to make it easier to find as you see fit</li>
         <li>Go to <em>Extension Manager</em> on Google Chrome and enable developer mode.</li>
-        <li>Select Load unpacked and choose the /dist/chrome-mv3 folder from the unpacked source code files you downloaded.</li>
+        <li>Select Load unpacked and choose the /dist/chrome-mv3 folder (or similar) from the unpacked files you downloaded.</li>
         <li>Reload your browser and you should now be able to use the extension.</li>
         (Optional: pin the extension to your toolbar).
     </ol>
@@ -51,7 +51,7 @@
     <h3>Safari/Firefox Installation</h3>
     <ol>
         <li>Go to the <a href="https://github.com/cmolisee/session-storage-hub/releases/latest">latest release page</a>.</li>
-        <li>Download Safari or Firefox and unpack.</li>
+        <li>Download Safari Extension or Firefox Extension and unpack.</li>
         <li>Follow the safari/Edge documentation for installing an unsigned extension.</li>
     </ol>
     <hr>
