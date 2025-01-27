@@ -17,5 +17,6 @@
 	word-wrap: break-word;
 	word-break: break-all;
 	overflow-x: clip;
+	overflow-y: scroll;
 	padding: 0 0.125rem;
 }
