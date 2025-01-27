@@ -1,3 +1,10 @@
+## [6.0.1](https://github.com/cmolisee/session-storage-hub/compare/v6.0.0...v6.0.1) (2025-01-27)
+
+
+### Bug Fixes
+
+* **style:** fix scrolling ([8fa7b18](https://github.com/cmolisee/session-storage-hub/commit/8fa7b183b65fdc004a3d0c64268360db986b2868))
+
 # [6.0.0](https://github.com/cmolisee/session-storage-hub/compare/v5.2.0...v6.0.0) (2024-12-30)
 
 
