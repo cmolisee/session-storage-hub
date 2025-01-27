@@ -1,26 +1,26 @@
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires=["setuptools"]
+build-backend="setuptools.build_meta"
 
 [project]
-name = "jkpy"
-dynamic = ["version"]
-dependencies = [
+name="jkpy"
+dynamic=["version"]
+dependencies=[
     "typer>=0.9.0",
     "requests",
     "pandas",
     "openpyxl",
 ]
-requires-python = ">=3.8"
+requires-python=">=3.8"
 
 [project.optional-dependencies]
-test = []
+test=[]
 
 [project.scripts]
-jkpy = "jkpy.cli:app"
+jkpy="jkpy.cli:app"
 
 [tool.setuptools]
-package-dir = {"" = "src"}
+package-dir={""="src"}
 
 [tool.setuptools.dynamic]
-version = {attr = "jkpy.__version__"}
+version={attr="jkpy.__version__"}

@@ -1,14 +1,58 @@
-"""request class"""
-# jkpy/jira_requests.py
-
-import json
+import io
 from requests.auth import HTTPBasicAuth
-from rich.console import Console
-import requests
-import urllib3
 
-urllib3.disable_warnings()
-console = Console()
+from jkpy.jiraHandler import JiraHandler
+from jkpy.utils import parse_date, sys_exit
+
+class BuildRequestHandler(JiraHandler):
+    """build default request object"""
+    def handle(self, request):
+        request.log("BuildRequestHandler().handle().")
+        if not request.proceed:
+            sys_exit(0, request, "request.proceed is False. Exiting.")
+        
+        if not request.token:
+            sys_exit(1, request, "Could not find jira api token required for authentication.")
+        
+        if not request.email:
+            sys_exit(1, request, "Could not find jira email required for authentication.")
+
+        try:
+            headers={ "Accept": "application/json" }
+            path=f"https://creditonebank.atlassian.net/rest/api/2/search/jql"
+            auth=HTTPBasicAuth(request.email, request.token)
+            jql=io.StringIO()
+            jql.write("\"Team Name[Dropdown]\" in ")
+            jql.write("(" + ', '.join(str(s) for s in request.teamLabels) + ") ") # filter by team labels
+            jql.write("and status CHANGED TO ")
+            jql.write("(" + ', '.join(str(s) for s in request.statusTypes) + ") ") # filter by status type changed too
+            jql.write("AFTER " + parse_date(request.startDate, 1, 1) + " ") # status change date from
+            jql.write("BEFORE " + parse_date(request.endDate, 12, 31)  + " ") # status change date too
+            jql.write("AND type IN (Task, Story, Epic, Bug, Enhancement) ") # include only valid ticket types
+            jql.write("AND labels NOT IN (QA, Content-Only, Release-Management) ") # exclude specific labels
+            jql.write("AND Sprint != EMPTY ") # exclude tickets w/o sprint
+            jql.write("ORDER BY created DESC")
+            fields='assignee,created,customfield_10003,customfield_10014,customfield_10235,customfield_10303,customfield_10157,fixVersion,labels,status,statuscategorychangedate,key,customfield_10020,customfield_10028,timespent'
+
+            request.log(f"JQL Query: {jql.getvalue()}.")
+            
+            
+            request.requestData={
+                "type": "default",
+                "method": "GET",
+                "path": path,
+                "headers": headers,
+                "query": {
+                    'jql': jql.getvalue(),
+                    'fields': fields
+                },
+                "auth": auth,
+            }
+
+        except Exception as e:
+            sys_exit(1, request, f"exception occured building jira request: {e}")
+        
+        return super().handle(request)
 
 # [
 #     # {
@@ -300,49 +344,3 @@ console = Console()
 #     "watches",
 #     "workratio",
 # ]
-fields = 'assignee,created,customfield_10003,customfield_10014,customfield_10235,customfield_10303,customfield_10157,fixVersion,labels,status,key,customfield_10020,customfield_10028,timespent'
-
-class jiraRequest:    
-    def __init__(self, headers: dict = {}):
-        """Initialize object"""
-        self.headers = {
-            "Accept": "application/json",
-            **headers
-        }
-    
-    def _request(self, params, auth):
-        res = requests.request(
-                "GET",
-                f"https://creditonebank.atlassian.net/rest/api/2/search/jql",
-                headers=self.headers,
-                params=params,
-                auth=auth,
-                verify=False,
-            )
-        
-        if res.status_code != 200:
-                raise Exception("Error requesting issues: ", res)
-            
-        return json.loads(res.text)
-    
-    def request(self, raw_jql: str, email: str, token: str):
-        """Make request with JQL"""
-        issues = []
-        nextPageToken = None
-        auth = HTTPBasicAuth(email, token)
-        
-        while True:
-            query = {
-                'jql': raw_jql,
-                'fields': fields,
-                'nextPageToken': nextPageToken,
-            }
-            
-            data = self._request(query, auth)
-            issues += data.get("issues")
-            nextPageToken = data.get("nextPageToken")
-            
-            if not nextPageToken:
-                break;
-        
-        return issues

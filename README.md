@@ -61,7 +61,7 @@ to running `jkpy` commands without activating the venv.
 Example 1:
 
 ``run1:
-    $(VENV)/bin/jkpy -d -s -j "Labels = Code" -p "~/Desktop/output.txt" -l "a,b,c"
+    $(VENV)/bin/jkpy -d -s -j "Labels=Code" -p "~/Desktop/output.txt" -l "a,b,c"
 ``
 
 You can then run the above command with `make run1` and it will execute the command in its own subshell.
@@ -79,9 +79,9 @@ Example 2:
 ``
 
 This is similar to example 1 except you can pass arguments.
-`make run2 ARG1='"Labels = Code"' ARG2='"~/Desktop/output.txt"' ARG3='"a,b,c"'`
+`make run2 ARG1='"Labels=Code"' ARG2='"~/Desktop/output.txt"' ARG3='"a,b,c"'`
 * Notice the single quote and the double quote. Arguments for jkpy need to be wrapped in double quotes and to pass those arguments properly 
-through the Makefile command requires this syntax (or you can use escaped double quotes `"\"Labels = Code\""`)
+through the Makefile command requires this syntax (or you can use escaped double quotes `"\"Labels=Code\""`)
 
 
 ## Basic Usage
@@ -107,7 +107,7 @@ through the Makefile command requires this syntax (or you can use escaped double
 
 ***
 
-`jkpy -d -s -j "Labels = Code" -p "~/Desktop/output.txt" -l "a,b,c"`
+`jkpy -d -s -j "Labels=Code" -p "~/Desktop/output.txt" -l "a,b,c"`
 * `-d` will show debug logs in terminal.
 * `-s` will print table to terminal.
 * `-j` will request the dataset for all issues where 'Code' is a label.
