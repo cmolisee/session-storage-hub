@@ -25,19 +25,11 @@ export function jsonFormat(value: any): string {
     }
 
     if (typeof value === 'string') {
-      return JSON.stringify(value);
+      return JSON.stringify(value, null , 4);
     }
 
-    if (Array.isArray(value)) {
-      const formattedArray = value.map(item => jsonFormat(item));
-      return `[${formattedArray.join(', ')}]`;
-    } else if (typeof value === 'object') {
-      const formattedEntries = Object.entries(value).map(([key, val]) => {
-        const formattedKey = JSON.stringify(key);
-        const formattedValue = jsonFormat(val);
-        return `${formattedKey}: ${formattedValue}`;
-      });
-      return `{${formattedEntries.join(', ')}}`;
+    if (typeof value === 'object') {
+      return JSON.stringify(value, null, 4);
     }
 
     return '';
