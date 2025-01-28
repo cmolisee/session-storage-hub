@@ -38,6 +38,16 @@
 
 <div>
     <h2>Quick Guides</h2>
+    <div>
+    	:warning: **WARNING** When updating the extension you need to ensure that you reload your tabs.
+    </div>
+    <div>
+    	:warning: **WARNING** Keeping tabs open for extended periods of time can generate errors.
+    </div>
+    </br>
+    <div>
+	ℹ️ **NOTE** Reloading the tabs or regularly closing them when done should resolve issues.
+    </div>
     <h3>Chrome/Edge Installation</h3>
     <ol>
         <li>Go to the <a href="https://github.com/cmolisee/session-storage-hub/releases/latest">latest release page</a>.</li>
