@@ -1,4 +1,5 @@
 import { IStorageContext, IStorageShape } from "@/types/hooks";
+import { notification } from "@/utils/utils";
 
 const initialStorage: IStorageShape = {
     sessionStorageData: {},
@@ -74,6 +75,7 @@ export const StorageProvider = (props: any) => {
      * Set selectedKeys in storage to array of all availalbe keys.
      */
 	const selectAllKeys = () => {
+        notification('All keys selected.');
 		setStore('selectedKeys', deepCopy(store.keys) );
 	};
 
@@ -81,6 +83,7 @@ export const StorageProvider = (props: any) => {
      * Set selectedKeys in storage to empty array.
      */
 	const unselectAllKeys = () => {
+        notification('All keys unselected.');
 		setStore('selectedKeys', []);
 	};
 

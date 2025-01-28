@@ -61,6 +61,7 @@ declare global {
   const lazy: typeof import('solid-js')['lazy']
   const mapArray: typeof import('solid-js')['mapArray']
   const mergeProps: typeof import('solid-js')['mergeProps']
+  const notification: typeof import('/Users/cmolisee/Documents/session-storage-hub/src/utils/utils')['notification']
   const observable: typeof import('solid-js')['observable']
   const on: typeof import('solid-js')['on']
   const onCleanup: typeof import('solid-js')['onCleanup']

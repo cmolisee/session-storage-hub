@@ -100,7 +100,8 @@
         "@uiw/codemirror-theme-tokyo-night-storm": "^4.23.6",
         "@webext-core/messaging": "^2.1.0",
         "codemirror": "^6.0.1",
-        "solid-js": "^1.9.3"
+        "solid-js": "^1.9.3",
+        "solid-toast": "^0.5.0"
     },
     "devDependencies": {
         "@semantic-release/changelog": "^6.0.3",
