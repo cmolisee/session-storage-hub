@@ -3,6 +3,7 @@ import Control from '@/components/control';
 import ViewGrid from '@/components/ViewGrid';
 import { storage as wxtStorage } from '@wxt-dev/storage';
 import Tooltip from '@/components/tooltip';
+import { version } from '../../../package.json';
 
 function Popup() {
     const { storage, setSessionStorageData, selectAllKeys, unselectAllKeys } = useStorage();
@@ -116,7 +117,7 @@ function Popup() {
 			<ViewGrid />
 			<div class={'flex m-1 justify-start text-[var(--borderColor)]'}>
 				<div class={'cursor-default mr-4'}>
-					TODO: import extension version
+					{version}
 				</div>
 			</div>
 		</>
