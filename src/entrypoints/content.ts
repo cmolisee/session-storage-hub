@@ -28,6 +28,16 @@ export default defineContentScript({
                 });
         });
 
+        /** Receive update request because activeTab has changed and pass to webpage */
+        extensionMessenger.onMessage('requestUpdate', async (message) => {
+            return await windowMessenger.sendMessage('getUpdate', undefined)
+                .then(() => true)
+                .catch((error) => {
+                    console.debug(error);
+                    return false;
+                });
+        });
+
         init();
     },
 });

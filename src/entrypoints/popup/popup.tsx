@@ -3,6 +3,9 @@ import Control from '@/components/control';
 import ViewGrid from '@/components/ViewGrid';
 import { storage as wxtStorage } from '@wxt-dev/storage';
 import Tooltip from '@/components/tooltip';
+import { version } from '../../../package.json';
+import { Toaster } from 'solid-toast';
+import { notification } from '@/utils/utils';
 
 function Popup() {
     const { storage, setSessionStorageData, selectAllKeys, unselectAllKeys } = useStorage();
@@ -17,14 +20,17 @@ function Popup() {
         }
 
         await extensionClipboard.setValue(dataToCopy)
+            .then(() => notification('Session Storage Data Copied.'))
             .catch((error) => console.debug('Failed to set extensionClipboard:', error));
     }
 
     const pasteCallback = async () => {
         const dataToPaste = await extensionClipboard.getValue()
+            .then(() => notification('Session Storage Data Pasted.'))
             .catch((error) => console.debug('Failed to get extensionClipboard:', error));
 
         await extensionMessenger.sendMessage('sendToBackground', dataToPaste)
+            .then(() => notification('Session Storage on webpage has been updated.'))
             .catch((error) => console.debug(error));
     }
 
@@ -32,21 +38,26 @@ function Popup() {
         const newKey = new Date().getTime().toString();
         const dataToAdd = deepCopy(storage.sessionStorageData);
         Object.assign(dataToAdd, { [newKey]: '{}' });
+        notification(`New key-value pair added with key: ${newKey}.`);
 
         await extensionMessenger.sendMessage('sendToBackground', dataToAdd)
+            .then(() => notification('Session Storage on webpage has been updated.'))
             .catch((error) => console.debug(error));
     }
 
     const deleteCallback = async () => {
         const dataUpdate = deepCopy(storage.sessionStorageData);
+        notification(`key: ${storage.activeKey} has been deleted.`);
         delete dataUpdate[storage.activeKey];
         
         await extensionMessenger.sendMessage('sendToBackground', dataUpdate)
+            .then(() => notification('Session Storage on webpage has been updated.'))
             .catch((error) => console.debug(error));
     }
 
     const clearCallback = async () => {
         await extensionMessenger.sendMessage('sendToBackground', {})
+            .then(() => notification('Session Storage has been cleared.'))
             .catch((error) => console.debug(error));
     }
     
@@ -114,9 +125,10 @@ function Popup() {
 				</div>
 			</div>
 			<ViewGrid />
+            <Toaster />
 			<div class={'flex m-1 justify-start text-[var(--borderColor)]'}>
 				<div class={'cursor-default mr-4'}>
-					TODO: import extension version
+					{version}
 				</div>
 			</div>
 		</>

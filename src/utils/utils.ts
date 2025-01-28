@@ -1,3 +1,5 @@
+import toast from "solid-toast";
+
 /**
  * Merge css class strings together.
  * Necessary for tailwind to properly build css since it cannot handle dynamic classes.
@@ -25,19 +27,11 @@ export function jsonFormat(value: any): string {
     }
 
     if (typeof value === 'string') {
-      return JSON.stringify(value);
+      return JSON.stringify(value, null , 4);
     }
 
-    if (Array.isArray(value)) {
-      const formattedArray = value.map(item => jsonFormat(item));
-      return `[${formattedArray.join(', ')}]`;
-    } else if (typeof value === 'object') {
-      const formattedEntries = Object.entries(value).map(([key, val]) => {
-        const formattedKey = JSON.stringify(key);
-        const formattedValue = jsonFormat(val);
-        return `${formattedKey}: ${formattedValue}`;
-      });
-      return `{${formattedEntries.join(', ')}}`;
+    if (typeof value === 'object') {
+      return JSON.stringify(value, null, 4);
     }
 
     return '';
@@ -87,4 +81,26 @@ export function safeParse(obj: any, isLogging: boolean = false) {
  */
 export function deepCopy(obj: any) {
     return safeParse(JSON.stringify(obj));
+}
+
+/** Helper for displaying toast notifications. */
+export function notification(txt: string) {
+    toast(txt, {
+        duration: 3000,
+        position: 'bottom-center',
+        unmountDelay: 500,
+        style: {
+            'background-color': 'var(--specialTextColor)',
+            'font-weight': 'bold',
+            'color': 'var(--backgroundColor)'
+        },
+        iconTheme: {
+            primary: '#fff',
+            secondary: '#000',
+        },
+        ariaProps: {
+            role: 'status',
+            'aria-live': 'polite',
+        },
+    });
 }

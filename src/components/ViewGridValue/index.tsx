@@ -7,7 +7,7 @@ import { crosshairCursor, drawSelection, dropCursor, highlightActiveLine, highli
 import { EditorState } from "@codemirror/state";
 import { autocompletion, closeBrackets, closeBracketsKeymap, completionKeymap } from "@codemirror/autocomplete";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
-import { bracketMatching, defaultHighlightStyle, foldGutter, foldKeymap, indentOnInput, syntaxHighlighting } from "@codemirror/language";
+import { bracketMatching, defaultHighlightStyle, foldGutter, foldKeymap, indentOnInput, indentUnit, syntaxHighlighting } from "@codemirror/language";
 import { highlightSelectionMatches, searchKeymap } from "@codemirror/search";
 import { editorPanel } from "../EditorPanelEffect";
 import { jsonFormat } from "@/utils/utils";
@@ -87,6 +87,7 @@ export default function ViewGridValue(props: any) {
         ]));
         extension(EditorView.lineWrapping);
         extension(json());
+        extension(indentUnit.of('    '));
         extension(lintGutter());
         extension(editorLinter);
 
