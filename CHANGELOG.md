@@ -1,3 +1,16 @@
+# [6.1.0](https://github.com/cmolisee/session-storage-hub/compare/v6.0.1...v6.1.0) (2025-01-28)
+
+
+### Bug Fixes
+
+* **formatting:** fix formatting of json ([79c5736](https://github.com/cmolisee/session-storage-hub/commit/79c5736f936e4ea90487c1e244e64d3d208f2c48))
+* **storage:** fix storage values not updating when changing tabs ([75b7a46](https://github.com/cmolisee/session-storage-hub/commit/75b7a46200dcdbfd4af17cc1f10e662574312f99))
+
+
+### Features
+
+* **toast:** added toast notifications ([eb489af](https://github.com/cmolisee/session-storage-hub/commit/eb489af2ba7b7a46fb5399413a171067505ea114))
+
 ## [6.0.1](https://github.com/cmolisee/session-storage-hub/compare/v6.0.0...v6.0.1) (2025-01-27)
 
 
