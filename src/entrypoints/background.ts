@@ -27,4 +27,18 @@ export default defineBackground(() => {
                 return false;
             });
     });
+
+    /**
+     * whenever the active tab is changed, send a request to get that tabs session 
+     * storage and update the extension data.
+     */
+    browser.tabs.onActivated.addListener(async (activeInfo) => {
+        console.log(activeInfo);
+        return await extensionMessenger.sendMessage('requestUpdate', undefined, activeInfo.tabId)
+            .then(() => true)
+            .catch((error) => {
+                console.debug(error);
+                return false;
+            });
+    })
 });

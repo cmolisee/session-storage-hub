@@ -4,6 +4,7 @@ import { defineWindowMessaging } from "@webext-core/messaging/page";
 export interface WebsiteMessengerSchema {
     updateToExtension(data: any): boolean;
     updateFromExtension(data: any): boolean;
+    getUpdate(): boolean; // respond to request to update the session data (i.e. new active tab)
 };
 
 /** 
